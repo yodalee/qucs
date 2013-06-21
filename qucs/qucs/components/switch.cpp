@@ -46,7 +46,7 @@ Switch::Switch()
 Component* Switch::newOne()
 {
   Switch *p = new Switch();
-  p->Props.getFirst()->Value = Props.getFirst()->Value;
+  p->Props.first()->Value = Props.first()->Value;
   p->recreate(0);
   return p;
 }
@@ -71,12 +71,12 @@ QString Switch::netlist()
   s += " "+Ports.next()->Connection->Name;
 
   // output all properties
-  Property *p2 = Props.first();
+  Property *p2 = Props[0];
   s += " "+p2->Name+"=\""+p2->Value+"\"";
-  p2 = Props.next();
+  p2 = Props[1];
   s += " "+p2->Name+"=\"["+p2->Value+"]\"";
-  for(p2 = Props.next(); p2 != 0; p2 = Props.next())
-    s += " "+p2->Name+"=\""+p2->Value+"\"";
+  for(int i=2; i <= Props.count(); i++)
+    s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
 
   return s + '\n';
 }
@@ -84,7 +84,7 @@ QString Switch::netlist()
 // -------------------------------------------------------
 void Switch::createSymbol()
 {
-  if(Props.getFirst()->Value != "on") {
+  if(Props.first()->Value != "on") {
     Lines.append(new Line(-15,  0, 15,-15,QPen(Qt::darkBlue,2)));
     y1 = -17;
   }

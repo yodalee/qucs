@@ -171,10 +171,16 @@ void ChangeDialog::slotButtReplace()
   QString str;
   int i1, i2;
   // search through all components
-  for(pc = Doc->Components->first(); pc!=0; pc = Doc->Components->next()) {
+  QListIterator<Component *> ic(Doc->Components);
+  while (ic.hasNext()){
+    pc = ic.next();
+  //for(pc = Doc->Components->first(); pc!=0; pc = Doc->Components->next()) {
     if(matches(pc->Model)) {
-      if(Expr.search(pc->Name) >= 0)
-        for(Property *pp = pc->Props.first(); pp!=0; pp = pc->Props.next())
+      if(Expr.search(pc->Name) >= 0){
+        QListIterator<Property *> ip(pc->Props);
+        while (ip.hasNext()){
+          Property *pp = ip.next();
+        //for(Property *pp = pc->Props.first(); pp!=0; pp = pc->Props.next())
           if(pp->Name == PropNameEdit->currentText()) {
             pb = new QCheckBox(pc->Name);
             Dia_Box->addWidget(pb);   
@@ -195,6 +201,8 @@ void ChangeDialog::slotButtReplace()
             pb->setEnabled(false);
             break;
           }
+        }
+    }
     }
   }
 /*
@@ -223,10 +231,16 @@ void ChangeDialog::slotButtReplace()
     pb = i.next();
     if(!pb->isChecked())  continue;
 
-    for(pc = Doc->Components->first(); pc!=0; pc = Doc->Components->next()) {
+    QListIterator<Component *> ic(Doc->Components);
+    while (ic.hasNext()){
+      pc = ic.next();
+    //for(pc = Doc->Components->first(); pc!=0; pc = Doc->Components->next()) {
       if(pb->text() != pc->Name)  continue;
 
-      for(Property *pp = pc->Props.first(); pp!=0; pp = pc->Props.next()) {
+      QListIterator<Property *> ip(pc->Props);
+      while (ip.hasNext()){
+        Property *pp = ip.next();
+      //for(Property *pp = pc->Props.first(); pp!=0; pp = pc->Props.next()) {
         if(pp->Name != PropNameEdit->currentText())  continue;
 
         int tx_Dist, ty_Dist, tmp;

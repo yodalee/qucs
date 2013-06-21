@@ -55,7 +55,7 @@ Subcircuit::Subcircuit()
 Component* Subcircuit::newOne()
 {
   Subcircuit *p = new Subcircuit();
-  p->Props.getFirst()->Value = Props.getFirst()->Value;
+  p->Props.first()->Value = Props.first()->Value;
   p->recreate(0);
   return p;
 }
@@ -80,7 +80,7 @@ Element* Subcircuit::info(QString& Name, char* &BitmapFile, bool getNewOne)
 void Subcircuit::createSymbol()
 {
   int No;
-  QString FileName(Props.getFirst()->Value);
+  QString FileName(Props.first()->Value);
   FileName = getSubcircuitFile();
 
   tx = INT_MIN;
@@ -191,7 +191,7 @@ int Subcircuit::loadSymbol(const QString& DocName)
     if(Line.at(0) != '<') return -5;
     if(Line.at(Line.length()-1) != '>') return -6;
     Line = Line.mid(1, Line.length()-2); // cut off start and end character
-    Result = analyseLine(Line, 1);
+    Result = analyseLine(Line, 1); // 1 Prop - subcircuit File
     if(Result < 0) return -7;   // line format error
     z += Result;
   }
@@ -213,24 +213,29 @@ QString Subcircuit::netlist()
   s += " Type=\""+properName(f)+"\"";
 
   // output all user defined properties
-  for(Property *pp = Props.next(); pp != 0; pp = Props.next())
-    s += " "+pp->Name+"=\""+pp->Value+"\"";
+  for(int i=0; i <= Props.count(); i++)
+    s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
   return s + '\n';
 }
 
 // -------------------------------------------------------
 QString Subcircuit::vhdlCode(int)
 {
-  QString f = properFileName(Props.first()->Value);
+  Property *pr;// = Props.next();
+  QListIterator<Property *> ip(Props);
+  pr = ip.next();
+  
+  QString f = properFileName(pr->Value);
   QString s = "  " + Name + ": entity Sub_" + properName(f);
 
   // output all user defined properties
-  Property *pr = Props.next();
+  pr = ip.next();
   if (pr) {
     s += " generic map (";
     s += pr->Value;
-    for(pr = Props.next(); pr != 0; pr = Props.next())
-      s += ", " + pr->Value;
+    while (ip.hasNext())
+    //for(pr = Props.next(); pr != 0; pr = Props.next())
+      s += ", " + ip.next()->Value;
     s += ")";
   }
 
@@ -248,16 +253,21 @@ QString Subcircuit::vhdlCode(int)
 // -------------------------------------------------------
 QString Subcircuit::verilogCode(int)
 {
-  QString f = properFileName(Props.first()->Value);
+  Property *pr;// = Props.next();
+  QListIterator<Property *> ip(Props);
+  pr = ip.next();
+  
+  QString f = properFileName(pr->Value);
   QString s = "  Sub_" + properName(f);
 
   // output all user defined properties
-  Property *pr = Props.next();
+  pr = ip.next();
   if (pr) {
     s += " #(";
     s += Verilog_Param(pr->Value);
-    for(pr = Props.next(); pr != 0; pr = Props.next())
-      s += ", " + Verilog_Param(pr->Value);
+    while (ip.hasNext())
+//    for(pr = Props.next(); pr != 0; pr = Props.next())
+      s += ", " + Verilog_Param(ip.next()->Value);
     s += ")";
   }
 
@@ -276,6 +286,6 @@ QString Subcircuit::verilogCode(int)
 QString Subcircuit::getSubcircuitFile()
 {
   // construct full filename
-  QString FileName = Props.getFirst()->Value;
+  QString FileName = Props.first()->Value;
   return properAbsFileName(FileName);
 }

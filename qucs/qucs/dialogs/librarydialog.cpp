@@ -566,9 +566,11 @@ void LibraryDialog::slotSave()
 
       Stream << "  <Symbol>\n";
       Doc->createSubcircuitSymbol();
-      Painting *pp;
-      for(pp = Doc->SymbolPaints.first(); pp != 0; pp = Doc->SymbolPaints.next())
-        Stream << "    <" << pp->save() << ">\n";
+//      Painting *pp;
+      QListIterator<Painting *> ip(Doc->SymbolPaints);
+//      for(pp = Doc->SymbolPaints.first(); pp != 0; pp = Doc->SymbolPaints.next())
+      while (ip.hasNext())
+        Stream << "    <" << ip.next()->save() << ">\n";
 
       Stream << "  </Symbol>\n"
              << "</Component>\n\n";

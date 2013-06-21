@@ -842,13 +842,13 @@ void QucsApp::slotCursorLeft()
 {
   if(!editText->isHidden()) return;  // for edit of component property ?
 
-  Q3PtrList<Element> movingElements;
+  QList<Element *> movingElements;
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
-  int markerCount = Doc->copySelectedElements(&movingElements);
+  int markerCount = Doc->copySelectedElements(movingElements);
 
   if((movingElements.count() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
-      Doc->markerLeftRight(true, &movingElements);
+      Doc->markerLeftRight(true, movingElements);
       movingElements.clear();
     }
     else {
@@ -861,9 +861,9 @@ void QucsApp::slotCursorLeft()
     return;
   }
 
-  view->moveElements(&movingElements, -Doc->GridX, 0);  // move "GridX" to left
+  view->moveElements(movingElements, -Doc->GridX, 0);  // move "GridX" to left
   view->MAx3 = 1;  // sign for moved elements
-  view->endElementMoving(Doc, &movingElements);
+  view->endElementMoving(Doc, movingElements);
 }
 
 // -----------------------------------------------------------
@@ -871,13 +871,13 @@ void QucsApp::slotCursorRight()
 {
   if(!editText->isHidden()) return;  // for edit of component property ?
 
-  Q3PtrList<Element> movingElements;
+  QList<Element *> movingElements;
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
-  int markerCount = Doc->copySelectedElements(&movingElements);
+  int markerCount = Doc->copySelectedElements(movingElements);
 
   if((movingElements.count() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
-      Doc->markerLeftRight(false, &movingElements);
+      Doc->markerLeftRight(false, movingElements);
       movingElements.clear();
     }
     else {
@@ -890,9 +890,9 @@ void QucsApp::slotCursorRight()
     return;
   }
 
-  view->moveElements(&movingElements, Doc->GridX, 0);  // move "GridX" to right
+  view->moveElements(movingElements, Doc->GridX, 0);  // move "GridX" to right
   view->MAx3 = 1;  // sign for moved elements
-  view->endElementMoving(Doc, &movingElements);
+  view->endElementMoving(Doc, movingElements);
 }
 
 // -----------------------------------------------------------
@@ -918,13 +918,13 @@ void QucsApp::slotCursorUp()
     return;
   }
 
-  Q3PtrList<Element> movingElements;
+  QList<Element *> movingElements;
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
-  int markerCount = Doc->copySelectedElements(&movingElements);
+  int markerCount = Doc->copySelectedElements(movingElements);
 
   if((movingElements.count() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
-      Doc->markerUpDown(true, &movingElements);
+      Doc->markerUpDown(true, movingElements);
       movingElements.clear();
     }
     else {
@@ -937,9 +937,9 @@ void QucsApp::slotCursorUp()
     return;
   }
 
-  view->moveElements(&movingElements, 0, -Doc->GridY);  // move "GridY" up
+  view->moveElements(movingElements, 0, -Doc->GridY);  // move "GridY" up
   view->MAx3 = 1;  // sign for moved elements
-  view->endElementMoving(Doc, &movingElements);
+  view->endElementMoving(Doc, movingElements);
 }
 
 // -----------------------------------------------------------
@@ -967,13 +967,13 @@ void QucsApp::slotCursorDown()
     return;
   }
 
-  Q3PtrList<Element> movingElements;
+  QList<Element *> movingElements;
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
-  int markerCount = Doc->copySelectedElements(&movingElements);
+  int markerCount = Doc->copySelectedElements(movingElements);
 
   if((movingElements.count() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
-      Doc->markerUpDown(false, &movingElements);
+      Doc->markerUpDown(false, movingElements);
       movingElements.clear();
     }
     else {
@@ -986,9 +986,9 @@ void QucsApp::slotCursorDown()
     return;
   }
 
-  view->moveElements(&movingElements, 0, Doc->GridY);  // move "GridY" down
+  view->moveElements(movingElements, 0, Doc->GridY);  // move "GridY" down
   view->MAx3 = 1;  // sign for moved elements
-  view->endElementMoving(Doc, &movingElements);
+  view->endElementMoving(Doc, movingElements);
 }
 
 // -----------------------------------------------------------
@@ -1010,14 +1010,15 @@ void QucsApp::slotApplyCompText()
   view->MAy1 = pc->cy + pc->ty;
 
   int z, n=0;  // "n" is number of property on screen
-  pp = pc->Props.first();
+  QListIterator<Property *> ip(pc->Props);
+  pp = ip.next();
   for(z=view->MAx3; z>0; z--) {  // calculate "n"
     if(!pp) {  // should never happen
       editText->setHidden(true);
       return;
     }
     if(pp->display) n++;   // is visible ?
-    pp = pc->Props.next();
+    pp = ip.next();
   }
   
   pp = 0;
@@ -1030,9 +1031,13 @@ void QucsApp::slotApplyCompText()
       Component *pc2;
       if(!editText->text().isEmpty())
         if(pc->Name != editText->text()) {
-          for(pc2 = Doc->Components->first(); pc2!=0; pc2 = Doc->Components->next())
+          QListIterator<Component *> ip2(Doc->Components);
+          while (ip2.hasNext()) {
+            pc2 = ip2.next();
+//          for(pc2 = Doc->Components->first(); pc2!=0; pc2 = Doc->Components->next())
             if(pc2->Name == editText->text())
               break;  // found component with the same name ?
+          }
           if(!pc2) {
             pc->Name = editText->text();
             Doc->setChanged(true, true);  // only one undo state
@@ -1062,7 +1067,7 @@ void QucsApp::slotApplyCompText()
 
     while(!pp->display) {  // search for next visible property
       (view->MAx3)++;  // next property
-      pp = pc->Props.next();
+      pp = ip.next();
       if(!pp) {     // was already last property ?
         editText->setHidden(true);
         return;

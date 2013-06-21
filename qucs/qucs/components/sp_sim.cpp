@@ -87,20 +87,23 @@ Element* SP_Sim::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
 void SP_Sim::recreate(Schematic*)
 {
-  Property *pp = Props.first();
+  Property *pp;//= Props.first();
+  QListIterator<Property *> ip(Props);
+  pp = ip.next();
   if((pp->Value == "list") || (pp->Value == "const")) {
     // Call them "Symbol" to omit them in the netlist.
-    pp = Props.next();
+    pp = ip.next();
     pp->Name = "Symbol";
     pp->display = false;
-    pp = Props.next();
+    pp = ip.next();
     pp->Name = "Symbol";
     pp->display = false;
-    Props.next()->Name = "Values";
+    pp = ip.next();
+    pp->Name = "Values";
   }
   else {
-    Props.next()->Name = "Start";
-    Props.next()->Name = "Stop";
-    Props.next()->Name = "Points";
+    ip.next()->Name = "Start";
+    ip.next()->Name = "Stop";
+    ip.next()->Name = "Points";
   }
 }

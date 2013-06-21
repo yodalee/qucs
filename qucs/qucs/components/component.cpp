@@ -61,7 +61,7 @@ Component::Component()
   Ellips.setAutoDelete(true);
   Ports.setAutoDelete(true);
   Texts.setAutoDelete(true);
-  Props.setAutoDelete(true);
+  //Props.setAutoDelete(true);
 }
 
 // -------------------------------------------------------
@@ -91,7 +91,10 @@ int Component::textSize(int& _dx, int& _dy)
     _dy = metrics.height();
     count++;
   }
-  for(Property *pp = Props.first(); pp != 0; pp = Props.next())
+  Property *pp;
+  QListIterator<Property *> ip(Props);
+  while (ip.hasNext()) {
+    pp = ip.next();
     if(pp->display) {
       // get width of text
       tmp = metrics.width(pp->Name+"="+pp->Value);
@@ -99,6 +102,7 @@ int Component::textSize(int& _dx, int& _dy)
       _dy += metrics.height();
       count++;
     }
+  }   
   return count;
 }
 
@@ -159,15 +163,22 @@ int Component::getTextSelected(int x_, int y_, float Corr)
   }
 
   Property *pp;
-  for(pp = Props.first(); pp != 0; pp = Props.next())
+  int propNumber = 0;
+  QListIterator<Property *> ip(Props);
+//  for(int i=0; i <= Props.count(); i++) {
+  while (ip.hasNext()) {
+    pp = ip.next();
+    propNumber += 1;  //FIXME?
     if(pp->display)
       if((dy--) < 1) break;
+  }
   if(!pp) return -1;
 
   // get width of text
+#warning crash here
   w = metrics.width(pp->Name+"="+pp->Value);
   if(x_ > w) return -1;
-  return Props.at()+1;  // number the property
+  return propNumber+1;  // number the property
 }
 
 // -------------------------------------------------------
@@ -282,11 +293,15 @@ void Component::paint(ViewPainter *p)
     y += p->LineSpacing;
   }
   // write all properties
-  for(Property *p4 = Props.first(); p4 != 0; p4 = Props.next())
+  Property *p4;
+  QListIterator<Property *> ip(Props);
+  while (ip.hasNext()) {
+    p4 = ip.next();
     if(p4->display) {
       p->Painter->drawText(x, y, 0, 0, Qt::TextDontClip, p4->Name+"="+p4->Value);
       y += p->LineSpacing;
     }
+  }
 
   if(isActive == COMP_IS_OPEN)
     p->Painter->setPen(QPen(Qt::red,0));
@@ -456,13 +471,18 @@ void Component::rotate()
     dx = metrics.width(Name);
     dy = metrics.lineSpacing();
   }
-  for(Property *pp = Props.first(); pp != 0; pp = Props.next())
+  Property *pp;
+  QListIterator<Property *> ip(Props);
+//  for(int i=0; i <= Props.count(); i++) {
+  while (ip.hasNext()) {
+    pp = ip.next();
     if(pp->display) {
       // get width of text
       tmp = metrics.width(pp->Name+"="+pp->Value);
       if(tmp > dx) dx = tmp;
       dy += metrics.lineSpacing();
     }
+  }
   if(tx > x2) ty = y1-ty+y2;    // rotate text position
   else if(ty < y1) ty -= dy;
   else if(tx < x1) { tx += dy-dx;  ty = y1-ty+y2; }
@@ -522,8 +542,8 @@ void Component::mirrorX()
   int dy = 0;
   if(showName)
     dy = metrics.lineSpacing();   // for "Name"
-  for(Property *pp = Props.first(); pp != 0; pp = Props.next())
-    if(pp->display)  dy += metrics.lineSpacing();
+  for(int i=0; i <= Props.count(); i++) 
+    if(Props[i]->display)  dy += metrics.lineSpacing();
   if((tx > x1) && (tx < x2)) ty = -ty-dy;     // mirror text position
   else ty = y1+ty+y2;
 
@@ -581,12 +601,15 @@ void Component::mirrorY()
   int dx = 0;
   if(showName)
     dx = metrics.width(Name);
-  for(Property *pp = Props.first(); pp != 0; pp = Props.next())
+  Property *pp;
+  for(int i=0; i <= Props.count(); i++) {
+    pp = Props[i];
     if(pp->display) {
       // get width of text
       tmp = metrics.width(pp->Name+"="+pp->Value);
       if(tmp > dx)  dx = tmp;
     }
+  }
   if((ty > y1) && (ty < y2)) tx = -tx-dx;     // mirror text position
   else tx = x1+tx+x2;
 
@@ -606,10 +629,12 @@ QString Component::netlist()
     s += " "+p1->Connection->Name;   // node names
 
   // output all properties
-  for(Property *p2 = Props.first(); p2 != 0; p2 = Props.next())
+  Property *p2;
+  for(int i=0; i <= Props.count(); i++) {
+    p2 = Props[i];
     if(p2->Name != "Symbol")
       s += " "+p2->Name+"=\""+p2->Value+"\"";
-
+  }
   return s + '\n';
 }
 
@@ -686,6 +711,7 @@ QString Component::get_VHDL_Code(int NumPorts)
 // -------------------------------------------------------
 QString Component::save()
 {
+//  qDebug() << "Component::save";
 #if XML
   QDomDocument doc;
   QDomElement el = doc.createElement (Model);
@@ -722,7 +748,10 @@ QString Component::save()
   s += " "+QString::number(rotated);
 
   // write all properties
-  for(Property *p1 = Props.first(); p1 != 0; p1 = Props.next()) {
+  Property *p1;
+  QListIterator<Property *> ip(Props);
+  while (ip.hasNext()) {
+    p1 = ip.next();
     if(p1->Description.isEmpty())
       s += " \""+p1->Name+"="+p1->Value+"\"";   // e.g. for equations
     else s += " \""+p1->Value+"\"";
@@ -809,18 +838,24 @@ bool Component::load(const QString& _s)
 
   // load all properties
   Property *p1;
-  for(p1 = Props.first(); p1 != 0; p1 = Props.next()) {
+  QMutableListIterator<Property *> ip(Props);
+  while (ip.hasNext()) {
+//  for(p1 = Props.first(); p1 != 0; p1 = Props.next()) {
+    p1 = ip.next();
     z++;
     n = s.section('"',z,z);    // property value
     z++;
     // not all properties have to be mentioned (backward compatible)
     if(z > counts) {
       if(p1->Description.isEmpty())
-        Props.remove();    // remove if allocated in vain
+        ip.remove();    // remove if allocated in vain
 
       if(Model == "Diode") {
 	if(counts < 56) {  // backward compatible
-          counts >>= 1;
+#warning TODO diode backward compatibility disabled 
+        qDebug() << "diode backward compatibility disabled, please contact developers";
+        /*
+          counts >>= 1; //divide by 2
           p1 = Props.at(counts-1);
           for(; p1 != 0; p1 = Props.current()) {
             if(counts-- < 19)
@@ -831,13 +866,19 @@ bool Component::load(const QString& _s)
           }
 
           p1 = Props.at(17);
-          p1->Value = Props.at(11)->Value;
-          Props.current()->Value = "0";
+          Property *p2;
+          p2 = Props.at(11);
+          p1->Value = p2->Value;
+          p2->Value = "0";
+          */
         }
       }
       else if(Model == "AND" || Model == "NAND" || Model == "NOR" ||
 	      Model == "OR" ||  Model == "XNOR"|| Model == "XOR") {
 	if(counts < 10) {   // backward compatible
+#warning TODO digital backward compatibility disabled 
+        qDebug() << "digital backward compatibility disabled, please contact developers";
+        /*
           counts >>= 1;
           p1 = Props.at(counts);
           for(; p1 != 0; p1 = Props.current()) {
@@ -846,11 +887,13 @@ bool Component::load(const QString& _s)
             n = Props.prev()->Value;
             p1->Value = n;
           }
-          Props.current()->Value = "10";
+          Props.current()->Value = "10";*/
 	}
       }
       else if(Model == "Buf" || Model == "Inv") {
-	if(counts < 8) {   // backward compatible
+#warning TODO digital backward compatibility disabled 
+        qDebug() << "digital backward compatibility disabled, please contact developers";     
+	/*if(counts < 8) {   // backward compatible
           counts >>= 1;
           p1 = Props.at(counts);
           for(; p1 != 0; p1 = Props.current()) {
@@ -860,7 +903,7 @@ bool Component::load(const QString& _s)
             p1->Value = n;
           }
           Props.current()->Value = "10";
-	}
+	}*/
       }
 
       return true;
@@ -874,12 +917,12 @@ bool Component::load(const QString& _s)
       // allocate memory for a new property (e.g. for equations)
       if(Props.count() < (counts>>1)) {
         Props.insert(z >> 1, new Property("y", "1", true));
-        Props.prev();
+        //Props.prev(); //FIXME
       }
     }
     if(z == 6)  if(counts == 6)     // backward compatible
       if(Model == "R") {
-        Props.getLast()->Value = n;
+        Props.last()->Value = n;
         return true;
       }
     p1->Value = n;
@@ -949,14 +992,18 @@ int Component::analyseLine(const QString& Row, int numProps)
     if(i2+i4 > y2)  y2 = i2+i4;
     return 1;
   }
-  else if(s == ".ID") {
+  else if(s == ".ID") { // sub has only one Props
     if(!getIntegers(Row, &i1, &i2))  return -1;
     tx = i1;
     ty = i2;
     Name = Row.section(' ',3,3);
+    qDebug() << Name;
     if(Name.isEmpty())  Name = "SUB";
 
-    i1 = 1;
+// what about Lib components? no need to handle?
+// SUB has only one Propp
+#warning Is this needed? Subcircuit has only one Props
+    /*i1 = 1;
     Property *pp = Props.at(numProps-1);
     for(;;) {
       s = Row.section('"', i1,i1);
@@ -978,9 +1025,9 @@ int Component::analyseLine(const QString& Row, int numProps)
 
       i1 += 2;
     }
-
-    while(pp != Props.last())
-      Props.remove();
+*/
+    //while(pp != Props.last()) //subcircuit only has 1 prop
+    //  Props.remove();
     return 0;   // do not count IDs
   }
   else if(s == "Arrow") {
@@ -1188,10 +1235,14 @@ bool Component::getBrush(const QString& s, QBrush& Brush, int i)
 // ---------------------------------------------------------------------
 Property * Component::getProperty(const QString& name)
 {
-  for(Property *pp = Props.first(); pp != 0; pp = Props.next())
-    if(pp->Name == name) {
-      return pp;
+  Property *p;
+  QListIterator<Property *> ip(Props);
+  while (ip.hasNext()) {
+    p = ip.next();
+    if(p->Name == name) {
+      return p;
     }
+  }
   return NULL;
 }
 
@@ -1233,7 +1284,7 @@ void Component::copyComponent(Component *pc)
 void MultiViewComponent::recreate(Schematic *Doc)
 {
   if(Doc) {
-    Doc->Components->setAutoDelete(false);
+    //Doc->Components->setAutoDelete(false);
     Doc->deleteComp(this);
   }
 
@@ -1255,7 +1306,7 @@ void MultiViewComponent::recreate(Schematic *Doc)
 
   if(Doc) {
     Doc->insertRawComponent(this);
-    Doc->Components->setAutoDelete(true);
+    //Doc->Components->setAutoDelete(true);
   }
 }
 
@@ -1295,11 +1346,11 @@ QString GateComponent::netlist()
     s += " "+pp->Connection->Name;   // node names
 
   // output all properties
-  Property *p = Props.at(1);
+  Property *p = Props[1];
   s += " " + p->Name + "=\"" + p->Value + "\"";
-  p = Props.next();
+  p = Props[2];
   s += " " + p->Name + "=\"" + p->Value + "\"";
-  p = Props.next();
+  p = Props[3];
   s += " " + p->Name + "=\"" + p->Value + "\"\n";
   return s;
 }
@@ -1413,10 +1464,10 @@ QString GateComponent::verilogCode(int NumPorts)
 // -------------------------------------------------------
 void GateComponent::createSymbol()
 {
-  int Num = Props.getFirst()->Value.toInt();
+  int Num = Props.first()->Value.toInt();
   if(Num < 2) Num = 2;
   else if(Num > 8) Num = 8;
-  Props.getFirst()->Value = QString::number(Num);
+  Props.first()->Value = QString::number(Num);
 
   int xl, xr, y = 10*Num, z;
   x1 = -30; y1 = -y-3;
@@ -1428,7 +1479,7 @@ void GateComponent::createSymbol()
   z = 0;
   if(Model.at(0) == 'N')  z = 1;
 
-  if(Props.getLast()->Value.at(0) == 'D') {  // DIN symbol
+  if(Props.last()->Value.at(0) == 'D') {  // DIN symbol
     xl = -15;
     xr =  15;
     Lines.append(new Line( 15,-y, 15, y,QPen(Qt::darkBlue,2)));
@@ -1526,7 +1577,7 @@ Component* getComponentFromName(QString& Line)
   else if (cstr.left (6) == "SPfile" && cstr != "SPfile") {
     // backward compatible
     c = new SParamFile ();
-    c->Props.getLast()->Value = cstr.mid (6); }
+    c->Props.last()->Value = cstr.mid (6); }
   else
     c = Module::getComponent (cstr);
 

@@ -53,7 +53,7 @@ SParamFile::SParamFile()
 Component* SParamFile::newOne()
 {
   SParamFile* p = new SParamFile();
-  p->Props.getLast()->Value = Props.getLast()->Value;
+  p->Props.last()->Value = Props.last()->Value;
   p->recreate(0);
   return p;
 }
@@ -66,8 +66,8 @@ Element* SParamFile::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne) {
     SParamFile* p = new SParamFile();
-    p->Props.getFirst()->Value = "test.s3p";
-    p->Props.getLast()->Value = "3";
+    p->Props.first()->Value = "test.s3p";
+    p->Props.last()->Value = "3";
     p->recreate(0);
     return p;
   }
@@ -92,8 +92,8 @@ Element* SParamFile::info2(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne) {
     SParamFile* p = new SParamFile();
-    p->Props.getFirst()->Value = "test.s2p";
-    p->Props.getLast()->Value = "2";
+    p->Props.first()->Value = "test.s2p";
+    p->Props.last()->Value = "2";
     p->recreate(0);
     return p;
   }
@@ -104,7 +104,7 @@ Element* SParamFile::info2(QString& Name, char* &BitmapFile, bool getNewOne)
 QString SParamFile::getSubcircuitFile()
 {
   // construct full filename
-  QString FileName = Props.getFirst()->Value;
+  QString FileName = Props.first()->Value;
   return properAbsFileName(FileName);
 }
 
@@ -118,19 +118,19 @@ QString SParamFile::netlist()
     s += " "+p1->Connection->Name;   // node names
 
   // output all properties
-  Property *p2 = Props.first();
+  Property *p2 = Props[0];
   s += " "+p2->Name+"=\"{"+getSubcircuitFile()+"}\"";
 
   // data type
-  p2 = Props.next();
+  p2 = Props[1];
   s += " "+p2->Name+"=\""+p2->Value+"\"";
 
   // interpolator type
-  p2 = Props.next();
+  p2 = Props[2];
   s += " "+p2->Name+"=\""+p2->Value+"\"";
 
   // DC property
-  p2 = Props.next();
+  p2 = Props[3];
   s += " "+p2->Name+"=\""+p2->Value+"\"\n";
 
   return s;
@@ -140,13 +140,13 @@ QString SParamFile::netlist()
 void SParamFile::createSymbol()
 {
   int PortDistance = 60;
-  int Num = Props.getLast()->Value.toInt();
+  int Num = Props.last()->Value.toInt();
   if(Num < 1) Num = 1;
   else if(Num > 8) {
     PortDistance = 20;
     if(Num > 40) Num = 40;
   }
-  Props.getLast()->Value = QString::number(Num);
+  Props.last()->Value = QString::number(Num);
 
   int h = (PortDistance/2)*((Num-1)/2) + 15;
   Lines.append(new Line(-15, -h, 15, -h,QPen(Qt::darkBlue,2)));

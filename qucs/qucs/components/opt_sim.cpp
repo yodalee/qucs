@@ -122,7 +122,8 @@ bool Optimize_Sim::createASCOFiles()
 
     stream << "# Parameters #\n";
     int i=1;
-    for(pp = Props.at(2); pp != 0; pp = Props.next(), i++) {
+    for(int par=2; par <= Props.count(); par++) {
+      pp = Props.at(par);
       if(pp->Name == "Var") {
 	stream << "Parameter " << i << ":";
 	val = pp->Value.section('|',0,0);
@@ -142,7 +143,8 @@ bool Optimize_Sim::createASCOFiles()
     stream << "#\n\n";
 
     stream << "# Measurements #\n";
-    for(pp = Props.at(2); pp != 0; pp = Props.next(), i++) {
+    for(int par=2; par <= Props.count(); par++) {
+      pp = Props.at(par);
       if(pp->Name == "Goal") {
 	val = pp->Value.section('|',1,1);
 	QString Type, Value;
@@ -172,8 +174,8 @@ bool Optimize_Sim::createASCOFiles()
     if(!ExtractDir.cd("extract"))
       return false;
   }      
-
-  for(pp = Props.at(2); pp != 0; pp = Props.next()) {
+  for(int par=2; par <= Props.count(); par++) {
+    pp = Props.at(par);
     if(pp->Name == "Goal") {
       QString VarName = pp->Value.section('|',0,0);
       QFile efile(ExtractDir.filePath(VarName));
@@ -200,7 +202,8 @@ bool Optimize_Sim::createASCOnetlist()
 {
   Property* pp;
   QStringList vars;
-  for(pp = Props.at(2); pp != 0; pp = Props.next()) {
+  for(int par=2; par <= Props.count(); par++) {
+    pp = Props.at(par);
     if(pp->Name == "Var") {
       vars += pp->Value.section('|',0,0);
     }
@@ -232,7 +235,8 @@ bool Optimize_Sim::loadASCOout()
   bool changed = false;
   Property* pp;
   QStringList vars;
-  for(pp = Props.at(2); pp != 0; pp = Props.next()) {
+  for(int par=2; par <= Props.count(); par++) {
+    pp = Props.at(par);
     if(pp->Name == "Var") {
       vars += pp->Value.section('|',0,0);
     }
@@ -251,26 +255,27 @@ bool Optimize_Sim::loadASCOout()
     QString Name = *it;
     Name = Name.stripWhiteSpace();
     if(vars.contains(Name)) {
-      for(pp = Props.at(2); pp != 0; pp = Props.next()) {
-	if(pp->Name == "Var") {
-	  QString val[6];
-	  val[0] = pp->Value.section('|',0,0);
-	  if(val[0]==Name) {
-	    val[1] = pp->Value.section('|',1,1);
-	    val[2] = pp->Value.section('|',2,2);
-	    val[3] = pp->Value.section('|',3,3);
-	    val[4] = pp->Value.section('|',4,4);
-	    val[5] = pp->Value.section('|',5,5);
-	    ++it;
-	    QString Value = *it;
-	    Value = Value.stripWhiteSpace();
-	    val[2] = Value;
-	    pp->Value = val[0] + "|" + val[1] + "|" + val[2] + "|" +
-	      val[3] + "|" + val[4] + "|" + val[5];
-	    changed = true;
-	    break;
-	  }
-	}
+      for(int par=2; par <= Props.count(); par++) {
+          pp = Props.at(par);
+          if(pp->Name == "Var") {
+              QString val[6];
+              val[0] = pp->Value.section('|',0,0);
+              if(val[0]==Name) {
+                  val[1] = pp->Value.section('|',1,1);
+                  val[2] = pp->Value.section('|',2,2);
+                  val[3] = pp->Value.section('|',3,3);
+                  val[4] = pp->Value.section('|',4,4);
+                  val[5] = pp->Value.section('|',5,5);
+                  ++it;
+                  QString Value = *it;
+                  Value = Value.stripWhiteSpace();
+                  val[2] = Value;
+                  pp->Value = val[0] + "|" + val[1] + "|" + val[2] + "|" +
+                          val[3] + "|" + val[4] + "|" + val[5];
+                  changed = true;
+                  break;
+              }
+          }
       }
     }
   }

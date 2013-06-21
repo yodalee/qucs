@@ -290,7 +290,7 @@ hicumL0V1p3::hicumL0V1p3()
 Component * hicumL0V1p3::newOne()
 {
   hicumL0V1p3 * p = new hicumL0V1p3();
-  p->Props.getFirst()->Value = Props.getFirst()->Value; 
+  p->Props.first()->Value = Props.first()->Value; 
   p->recreate(0); 
   return p;
 }
@@ -312,7 +312,7 @@ Element * hicumL0V1p3::info_pnp(QString& Name, char * &BitmapFile, bool getNewOn
   if(getNewOne)
   {
     hicumL0V1p3* p = new hicumL0V1p3();
-    p->Props.getFirst()->Value = "pnp";
+    p->Props.first()->Value = "pnp";
     p->recreate(0);
     return p;
   }
@@ -338,7 +338,7 @@ void hicumL0V1p3::createSymbol()
   Lines.append(new Line(-20, 17,-20, 23,QPen(Qt::darkBlue,2)));  
 
   // arrow
-  if(Props.getFirst()->Value == "npn") {
+  if(Props.first()->Value == "npn") {
     Lines.append(new Line( -6, 15,  0, 15,QPen(Qt::darkBlue,2)));
     Lines.append(new Line(  0,  9,  0, 15,QPen(Qt::darkBlue,2)));
   } else {
@@ -387,15 +387,15 @@ QString hicumL0V1p3::netlist()
     s += " "+p1->Connection->Name;   // node names
 
   // output type npn/pnp property
-  Property *p2 = Props.first();
+  Property *p2 = Props[0];
   if(p2->Value == "npn")
     s += " npn=\"1\"";
   else
     s += " pnp=\"1\"";
 
   // output all remaining properties
-  for(p2 = Props.next(); p2 != 0; p2 = Props.next())
-    s += " "+p2->Name+"=\""+p2->Value+"\"";
+  for(int i=1; i <= Props.count(); i++)
+      s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
 
   return s + '\n';
 }

@@ -162,32 +162,44 @@ ComponentDialog::ComponentDialog(Component *c, Schematic *d)
     checkNumber = new QCheckBox(tr("display in schematic"), Tab1);
     gp->addWidget(checkNumber, row++,2);
 
-
+    Property *p2;
+    QListIterator<Property *> ip(Comp->Props);
+    
     if(Comp->Model == ".SW") {   // parameter sweep
       Component *pc;
-      for(pc=Doc->Components->first(); pc!=0; pc=Doc->Components->next())
+      QListIterator<Component *> ic(Doc->Components);
+      while (ic.hasNext()){
+        pc = ic.next();
+      //for(pc=Doc->Components->first(); pc!=0; pc=Doc->Components->next()){
         if(pc != Comp)
           if(pc->Model[0] == '.')
             editSim->insertItem(pc->Name);
-      editSim->setCurrentText(Comp->Props.first()->Value);
-
-      checkSim->setChecked(Comp->Props.current()->display);
-      s = Comp->Props.next()->Value;
-      checkType->setChecked(Comp->Props.current()->display);
-      editParam->setText(Comp->Props.next()->Value);
-      checkParam->setChecked(Comp->Props.current()->display);
+      }
+      
+      p2 = ip.next();
+      editSim->setCurrentText(p2->Value);
+      checkSim->setChecked(p2->display);
+      
+      p2 = ip.next();
+      s = p2->Value;
+      checkType->setChecked(p2->display);
+      
+      p2 = ip.next();
+      editParam->setText(p2->Value);
+      checkParam->setChecked(p2->display);
     }
     else {
-      s = Comp->Props.first()->Value;
-      checkType->setChecked(Comp->Props.current()->display);
+      p2 = ip.next();
+      s = p2->Value;
+      checkType->setChecked(p2->display);
     }
-    pp = Comp->Props.next();
+    pp = ip.next();
     editStart->setText(pp->Value);
     checkStart->setChecked(pp->display);
-    pp = Comp->Props.next();
+    pp = ip.next();
     editStop->setText(pp->Value);
     checkStop->setChecked(pp->display);
-    pp = Comp->Props.next();  // remember last property for ListView
+    pp = ip.next();  // remember last property for ListView
     editNumber->setText(pp->Value);
     checkNumber->setChecked(pp->display);
 
@@ -206,7 +218,7 @@ ComponentDialog::ComponentDialog(Component *c, Schematic *d)
     if(tNum > 1) {
       editValues->setText(
 		editNumber->text().mid(1, editNumber->text().length()-2));
-      checkValues->setChecked(Comp->Props.current()->display);
+      checkValues->setChecked(pp->display);
       editNumber->setText("2");
     }
     slotNumberChanged(0);
@@ -339,7 +351,11 @@ ComponentDialog::ComponentDialog(Component *c, Schematic *d)
   if((tmp > 0) || (tmp < -6))  ty_Dist = 0;
 
   // insert all properties into the ListBox
-  for(Property *p = Comp->Props.last(); p != 0; p = Comp->Props.prev()) {
+  Property *p;
+  QListIterator<Property *> ip(Comp->Props);
+  ip.toBack();
+  while (ip.hasPrevious()) {
+    p = ip.previous();
     if(p == pp)  break;   // do not insert if already on first tab
     if(p->display) s = tr("yes");
     else s = tr("no");
@@ -567,8 +583,8 @@ void ComponentDialog::slotApplyInput()
   if(CompNameEdit->text().isEmpty())  CompNameEdit->setText(Comp->Name);
   else
   if(CompNameEdit->text() != Comp->Name) {
-    for(pc = Doc->Components->first(); pc!=0; pc = Doc->Components->next())
-      if(pc->Name == CompNameEdit->text())
+    for(int i=0; i <= Doc->Components.count(); i++)
+      if(Doc->Components[i]->Name == CompNameEdit->text())
         break;  // found component with the same name ?
     if(pc)  CompNameEdit->setText(Comp->Name);
     else {
@@ -578,7 +594,10 @@ void ComponentDialog::slotApplyInput()
   }
 
   bool display;
-  Property *pp = Comp->Props.first();
+  Property *pp;
+//  QListIterator<Property *> ip(Comp->Props);
+  QMutableListIterator<Property *> ip(Comp->Props);
+  pp = ip.next();
   // apply all the new property values
   if(editSim) {
     display = checkSim->isChecked();
@@ -590,7 +609,7 @@ void ComponentDialog::slotApplyInput()
       pp->Value = editSim->currentText();
       changed = true;
     }
-    pp = Comp->Props.next();
+    pp = ip.next();
   }
   if(comboType) {
     display = checkType->isChecked();
@@ -608,7 +627,7 @@ void ComponentDialog::slotApplyInput()
       pp->Value = tmp;
       changed = true;
     }
-    pp = Comp->Props.next();
+    pp = ip.next();
   }
   if(checkParam) if(checkParam->isEnabled()) {
     display = checkParam->isChecked();
@@ -620,7 +639,7 @@ void ComponentDialog::slotApplyInput()
       pp->Value = editParam->text();
       changed = true;
     }
-    pp = Comp->Props.next();
+    pp = ip.next();
   }
   if(editStart) {
     if(comboType->currentItem() < 2) {
@@ -634,7 +653,7 @@ void ComponentDialog::slotApplyInput()
         pp->Value = editStart->text();
         changed = true;
       }
-      pp = Comp->Props.next();
+      pp = ip.next();
 
       display = checkStop->isChecked();
       if(pp->display != display) {
@@ -646,7 +665,7 @@ void ComponentDialog::slotApplyInput()
         pp->Value = editStop->text();
         changed = true;
       }
-      pp = Comp->Props.next();
+      pp = ip.next();
 
       display = checkNumber->isChecked();
       if(pp->display != display) {
@@ -658,17 +677,17 @@ void ComponentDialog::slotApplyInput()
         pp->Name  = "Points";
         changed = true;
       }
-      pp = Comp->Props.next();
+      pp = ip.next();
     }
     else {
       // If a value list is used, the properties "Start" and "Stop" are not
       // used. -> Call them "Symbol" to omit them in the netlist.
       pp->Name = "Symbol";
       pp->display = false;
-      pp = Comp->Props.next();
+      pp = ip.next();
       pp->Name = "Symbol";
       pp->display = false;
-      pp = Comp->Props.next();
+      pp = ip.next();
 
       display = checkValues->isChecked();
       if(pp->display != display) {
@@ -681,7 +700,7 @@ void ComponentDialog::slotApplyInput()
         pp->Name  = "Values";
         changed = true;
       }
-      pp = Comp->Props.next();
+      pp = ip.next();
     }
   }
 
@@ -720,14 +739,17 @@ void ComponentDialog::slotApplyInput()
 	  Property(item->text(0), item->text(1), display, item->text(3)));
       changed = true;
     }
-    pp = Comp->Props.next();
-  }
-  if(pp) {  // if more properties than in ListView -> delete the rest
-    pp = Comp->Props.prev();
-    Comp->Props.last();
-    while(pp != Comp->Props.current())
-      Comp->Props.remove();
-    changed = true;
+    pp = ip.next();
+  }  
+  
+  // if more properties than in ListView -> delete the rest
+  Property *plast = Comp->Props.last();
+  if(Comp->Props.indexOf(pp) > Comp->Props.indexOf(plast)) {  
+    while (ip.hasNext()){
+      pp = ip.next();
+      ip.remove();
+      changed = true;
+    }
   }
  }
 

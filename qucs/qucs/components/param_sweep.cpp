@@ -74,22 +74,23 @@ Element* Param_Sweep::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
 void Param_Sweep::recreate(Schematic*)
 {
-  Property *pp = Props.at(1);
-  Props.next();
-  if((pp->Value == "list") || (pp->Value == "const")) {
-    // Call them "Symbol" to omit them in the netlist.
-    pp = Props.next();
-    pp->Name = "Symbol";
-    pp->display = false;
-    pp = Props.next();
-    pp->Name = "Symbol";
-    pp->display = false;
-    Props.next()->Name = "Values";
-  }
-  else {
-    Props.next()->Name = "Start";
-    Props.next()->Name = "Stop";
-    Props.next()->Name = "Points";
-  }
+   Property *pp;//= Props.first();
+   QListIterator<Property *> ip(Props);
+   pp = ip.next();
+   if((pp->Value == "list") || (pp->Value == "const")) {
+       // Call them "Symbol" to omit them in the netlist.
+       pp = ip.next();
+       pp->Name = "Symbol";
+       pp->display = false;
+       pp = ip.next();
+       pp->Name = "Symbol";
+       pp->display = false;
+       pp = ip.next();
+       pp->Name = "Values";
+   }
+   else {
+       ip.next()->Name = "Start";
+       ip.next()->Name = "Stop";
+       ip.next()->Name = "Points";
+   }
 }
-

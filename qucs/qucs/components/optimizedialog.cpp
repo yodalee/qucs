@@ -276,10 +276,13 @@ OptimizeDialog::OptimizeDialog(Optimize_Sim *c_, Schematic *d_)
   // ...........................................................
 
   Component *pc;
-  for(pc=Doc->Components->first(); pc!=0; pc=Doc->Components->next())
+  QListIterator<Component *> ic(Doc->Components);
+  while (ic.hasNext()) {
+    pc = ic.next();
     if(pc != Comp)
       if(pc->Model[0] == '.' && pc->Model != ".Opt")
         SimEdit->insertItem(pc->Name);
+  }
 
   Property *pp;
   pp = Comp->Props.at(0);
@@ -302,7 +305,8 @@ OptimizeDialog::OptimizeDialog(Optimize_Sim *c_, Schematic *d_)
 
   NameEdit->setText(Comp->Name);
 
-  for(pp = Comp->Props.at(2); pp != 0; pp = Comp->Props.next()) {
+  for( int i=2; i <= Comp->Props.count(); i++) {
+    pp = Comp->Props.at(i);
     if(pp->Name == "Var") {
       new Q3ListViewItem(VarList, pp->Value.section('|',0,0),
         pp->Value.section('|',1,1) == "yes" ? tr("yes") : tr("no"),
@@ -551,13 +555,16 @@ void OptimizeDialog::slotOK()
 void OptimizeDialog::slotApply()
 {
   Component *pc;
+  QListIterator<Component *> ic(Doc->Components);
   if(NameEdit->text().isEmpty())
     NameEdit->setText(Comp->Name);
   else
   if(NameEdit->text() != Comp->Name) {
-    for(pc = Doc->Components->first(); pc!=0; pc = Doc->Components->next())
+    while (ic.hasNext()) {
+      pc = ic.next();
       if(pc->Name == NameEdit->text())
         break;  // found component with the same name ?
+    }
     if(pc)
       NameEdit->setText(Comp->Name);
     else {
@@ -587,7 +594,11 @@ void OptimizeDialog::slotApply()
   }
 
   Q3ListViewItem *item;
-  Property *pp = Comp->Props.at(2);
+  Property *pp;// = Comp->Props.at(2);
+  QListIterator<Property *> ip(Comp->Props);
+  pp = ip.next(); //0
+  pp = ip.next(); //1
+  pp = ip.next(); //2
   // apply all the new property values in the ListView
   for(item = VarList->firstChild(); item != 0; item = item->itemBelow()) {
     Prop = item->text(0) + "|" + 
@@ -612,7 +623,7 @@ void OptimizeDialog::slotApply()
       Comp->Props.append(new Property("Var", Prop, false, ""));
       changed = true;
     }
-    pp = Comp->Props.next();
+    pp = ip.next();
   }
 
   for(item = GoalList->firstChild(); item != 0; item = item->itemBelow()) {
@@ -638,15 +649,15 @@ void OptimizeDialog::slotApply()
       Comp->Props.append(new Property("Goal", Prop, false, ""));
       changed = true;
     }
-    pp = Comp->Props.next();
+    pp = ip.next();
   }
 
   // if more properties than in ListView -> delete the rest
   if(pp) {
-    pp = Comp->Props.prev();
-    Comp->Props.last();
-    while(pp != Comp->Props.current())
-      Comp->Props.remove();
+    pp = ip.previous();
+    //Comp->Props.last();
+    while(pp != Comp->Props.last())
+      Comp->Props.removeLast();
     changed = true;
   }
 

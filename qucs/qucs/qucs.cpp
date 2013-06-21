@@ -1187,6 +1187,7 @@ void QucsApp::slotFileOpen()
 // --------------------------------------------------------------
 bool QucsApp::saveFile(QucsDoc *Doc)
 {
+  qDebug() << "QucsApp::saveFile";
   if(!Doc)
     Doc = getDoc();
 
@@ -1203,6 +1204,7 @@ bool QucsApp::saveFile(QucsDoc *Doc)
 // --------------------------------------------------------------
 void QucsApp::slotFileSave()
 {
+  qDebug() << "QucsApp::slotFileSave";
   statusBar()->message(tr("Saving file..."));
   DocumentTab->blockSignals(true);   // no user interaction during that time
   editText->setHidden(true); // disable text edit of component property
@@ -1221,6 +1223,7 @@ void QucsApp::slotFileSave()
 // --------------------------------------------------------------
 bool QucsApp::saveAs()
 {
+  qDebug() << "QucsApp::saveAs";
   QWidget *w = DocumentTab->currentPage();
   QucsDoc *Doc = getDoc();
 
@@ -1568,6 +1571,7 @@ void QucsApp::slotApplSettings()
 // --------------------------------------------------------------
 void QucsApp::updatePortNumber(QucsDoc *currDoc, int No)
 {
+  qDebug() << "QucsApp::updatePortNumber";
   if(No<0) return;
 
   QString pathName = currDoc->DocName;
@@ -1598,28 +1602,92 @@ void QucsApp::updatePortNumber(QucsDoc *currDoc, int No)
     Model = "Verilog";
   }
 
+  
+  /*
+ // update all occurencies of subcircuit in all open documents
+  No = 0;
+  QWidget *w;
+  Component *pc_tmp;
+  
+  ///for every tab
+  while((w=DocumentTab->page(No++)) != 0) {
+  
+    //skip text
+    if(isTextDocument (w))  continue;
+
+    // start from the last to omit re-appended components
+    
+    // grab the schematic
+    Schematic *Doc = (Schematic*)w;
+    
+    // loop thru components
+    // go to last component
+    for(Component *pc=Doc->Components->last(); pc!=0; ) {
+    
+      // filter components by model
+      if(pc->Model == Model) {
+      
+        // subcircuit pointed file
+        File = pc->Props.getFirst()->Value;
+        
+        if((File == pathName) || (File == Name)) {
+        
+          // peek back
+          pc_tmp = Doc->Components->prev();
+          
+          // update component
+          Doc->recreateComponent(pc);  // delete and re-append component
+          
+          // no back
+          if(!pc_tmp)  break;
+          
+          // has back, find it and set as current
+          Doc->Components->findRef(pc_tmp);
+          pc = Doc->Components->current();
+          
+          //go on
+          continue;
+        }
+      }
+      
+      // go on
+      pc = Doc->Components->prev();
+    }
+  }  */
+
   // update all occurencies of subcircuit in all open documents
   No = 0;
   QWidget *w;
   Component *pc_tmp;
+  // for every tab
   while((w=DocumentTab->page(No++)) != 0) {
     if(isTextDocument (w))  continue;
-
-    // start from the last to omit re-appended components
+    // grap the schematic
     Schematic *Doc = (Schematic*)w;
-    for(Component *pc=Doc->Components->last(); pc!=0; ) {
+    
+    // iterate its components
+    // start from the last to omit re-appended components (why??)
+    Component *pc;
+    QListIterator<Component *> ic(Doc->Components);
+    ic.toBack();
+    while (ic.hasPrevious()) {
+      pc = ic.previous();
+      
+      // only certain components
       if(pc->Model == Model) {
-        File = pc->Props.getFirst()->Value;
+        
+        // which point to a file
+        File = pc->Props.first()->Value;
         if((File == pathName) || (File == Name)) {
-          pc_tmp = Doc->Components->prev();
+          
           Doc->recreateComponent(pc);  // delete and re-append component
-          if(!pc_tmp)  break;
-          Doc->Components->findRef(pc_tmp);
-          pc = Doc->Components->current();
-          continue;
+//          if(!pc_tmp)  break;
+//          Doc->Components->findRef(pc_tmp);
+//          pc = Doc->Components->current();
+//          continue;*/
         }
       }
-      pc = Doc->Components->prev();
+//      pc = Doc->Components->prev();
     }
   }
 }
@@ -1780,7 +1848,7 @@ void QucsApp::slotIntoHierarchy()
   QString *ps = new QString("*");
   HierarchyHistory.append(ps);    // sign not to clear HierarchyHistory
 
-  QString s = QucsWorkDir.filePath(pc->Props.getFirst()->Value);
+  QString s = QucsWorkDir.filePath(pc->Props.first()->Value);
   if(!gotoPage(s)) {
     HierarchyHistory.remove();
     return;

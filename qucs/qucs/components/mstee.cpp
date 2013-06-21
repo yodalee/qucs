@@ -86,7 +86,7 @@ void MStee::createSymbol()
   Lines.append(new Line(  8,  8,  8, 18,QPen(Qt::darkBlue,2)));
   Lines.append(new Line( -8, 18,  8, 18,QPen(Qt::darkBlue,2)));
 
-  if(Props.getLast()->Value.at(0) != 'n') {
+  if(Props.last()->Value.at(0) != 'n') {
     Texts.append(new Text(-26, 3, "1"));
     Texts.append(new Text( 21, 3, "2"));
     Texts.append(new Text(  4,18, "3"));

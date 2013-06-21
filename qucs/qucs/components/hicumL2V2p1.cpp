@@ -227,7 +227,7 @@ hicumL2V2p1::hicumL2V2p1()
 Component * hicumL2V2p1::newOne()
 {
   hicumL2V2p1 * p = new hicumL2V2p1();
-  p->Props.getFirst()->Value = Props.getFirst()->Value; 
+  p->Props.first()->Value = Props.first()->Value; 
   p->recreate(0); 
   return p;
 }

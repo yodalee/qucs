@@ -99,14 +99,16 @@ bool MouseActions::pasteElements(Schematic *Doc)
   QString s = cb->text(QClipboard::Clipboard);
   Q3TextStream stream(&s, QIODevice::ReadOnly);
   movingElements.clear();
-  if(!Doc->paste(&stream, &movingElements)) return false;
+  if(!Doc->paste(&stream, movingElements)) return false;
 
   Element *pe;
   int xmax, xmin, ymax, ymin;
   xmin = ymin = INT_MAX;
   xmax = ymax = INT_MIN;
   // First, get the max and min coordinates of all selected elements.
-  for(pe = movingElements.first(); pe != 0; pe = movingElements.next()) {
+  QListIterator<Element *> ie(movingElements);
+  while (ie.hasNext()) {
+    pe = ie.next();
     if(pe->Type == isWire) {
       if(pe->x1 < xmin) xmin = pe->x1;
       if(pe->x2 > xmax) xmax = pe->x2;
@@ -126,14 +128,16 @@ bool MouseActions::pasteElements(Schematic *Doc)
   Doc->setOnGrid(xmin, ymin);
 
   // moving with mouse cursor in the midpoint
-  for(pe = movingElements.first(); pe != 0; pe = movingElements.next())
+  ie.toFront();
+  while (ie.hasNext()) {
+    pe = ie.next();
     if(pe->Type & isLabel) {
       pe->cx += xmin;  pe->x1 += xmin;
       pe->cy += ymin;  pe->y1 += ymin;
     }
     else
       pe->setCenter(xmin, ymin, true);
-
+  }
   return true;
 }
 
@@ -174,10 +178,12 @@ void MouseActions::editLabel(Schematic *Doc, WireLabel *pl)
 
 // -----------------------------------------------------------
 // Reinserts all elements (moved by the user) back into the schematic.
-void MouseActions::endElementMoving(Schematic *Doc, Q3PtrList<Element> *movElements)
+void MouseActions::endElementMoving(Schematic *Doc, QList<Element *> movElements)
 {
   Element *pe;
-  for(pe = movElements->first(); pe!=0; pe = movElements->next()) {
+  QListIterator<Element *> ie(movElements);
+  while (ie.hasNext()) {
+    pe = ie.next();
 //    pe->isSelected = false;  // deselect first (maybe afterwards pe == NULL)
     switch(pe->Type) {
       case isWire:
@@ -198,7 +204,7 @@ void MouseActions::endElementMoving(Schematic *Doc, Q3PtrList<Element> *movEleme
 	Doc->Diagrams->append((Diagram*)pe);
 	break;
       case isPainting:
-	Doc->Paintings->append((Painting*)pe);
+	Doc->Paintings.append((Painting*)pe);
 	break;
       case isComponent:
       case isAnalogComponent:
@@ -216,7 +222,7 @@ void MouseActions::endElementMoving(Schematic *Doc, Q3PtrList<Element> *movEleme
     }
   }
 
-  movElements->clear();
+  movElements.clear();
   if((MAx3 != 0) || (MAy3 != 0))  // moved or put at the same place ?
     Doc->setChanged(true, true);
 
@@ -229,11 +235,13 @@ void MouseActions::endElementMoving(Schematic *Doc, Q3PtrList<Element> *movEleme
 
 // -----------------------------------------------------------
 // Moves elements in "movElements" by x/y
-void MouseActions::moveElements(Q3PtrList<Element> *movElements, int x, int y)
+void MouseActions::moveElements(QList<Element *> movElements, int x, int y)
 {
   Wire *pw;
   Element *pe;
-  for(pe = movElements->first(); pe != 0; pe = movElements->next()) {
+  QListIterator<Element *> ie(movElements);
+  while (ie.hasNext()) {
+    pe = ie.next();
     if(pe->Type == isWire) {
       pw = (Wire*)pe;   // connected wires are not moved completely
 
@@ -414,12 +422,15 @@ void MouseActions::MMoveMoving(Schematic *Doc, QMouseEvent *Event)
   MAy3 = MAy1 = MAy2 - MAy1;
 
   movingElements.clear();
-  Doc->copySelectedElements(&movingElements);
+  Doc->copySelectedElements(movingElements);
   Doc->viewport()->repaint();
 
   Wire *pw;
   // Changes the position of all moving elements by dx/dy
-  for(Element *pe=movingElements.first(); pe!=0; pe=movingElements.next()) {
+  Element *pe;
+  QListIterator<Element *> ie(movingElements);
+  while (ie.hasNext()) {
+    pe = ie.next();
     if(pe->Type == isWire) {
       pw = (Wire*)pe;   // connecting wires are not moved completely
 
@@ -462,10 +473,11 @@ void MouseActions::MMoveMoving2(Schematic *Doc, QMouseEvent *Event)
   MAy2 = DOC_Y_POS(Event->pos().y());
 
   Element *pe;
+  QListIterator<Element *> ie(movingElements);
   if(drawn) // erase old scheme
-    for(pe = movingElements.first(); pe != 0; pe = movingElements.next())
-      pe->paintScheme(Doc);
-//      if(pe->Type == isWire)  if(((Wire*)pe)->Label)
+    while (ie.hasNext())
+        ie.next()->paintScheme(Doc);
+//      if(pe->Type == isWire)  if(((Wire*)pe)->Label) NOTME
 //        if(!((Wire*)pe)->Label->isSelected)
 //          ((Wire*)pe)->Label->paintScheme(&painter);
 
@@ -476,12 +488,14 @@ void MouseActions::MMoveMoving2(Schematic *Doc, QMouseEvent *Event)
   MAy1 = MAy2 - MAy1;
   MAx3 += MAx1;  MAy3 += MAy1;   // keep track of the complete movement
 
-  moveElements(&movingElements, MAx1, MAy1);  // moves elements by MAx1/MAy1
+  moveElements(movingElements, MAx1, MAy1);  // moves elements by MAx1/MAy1
 
   // paint afterwards to avoid conflict between wire and label painting
-  for(pe = movingElements.first(); pe != 0; pe = movingElements.next())
-    pe->paintScheme(Doc);
-//    if(pe->Type == isWire)  if(((Wire*)pe)->Label)
+//  for(pe = movingElements.first(); pe != 0; pe = movingElements.next())
+  ie.toFront();
+  while (ie.hasNext())
+    ie.next()->paintScheme(Doc);
+//    if(pe->Type == isWire)  if(((Wire*)pe)->Label) NOTME
 //      if(!((Wire*)pe)->Label->isSelected)
 //        ((Wire*)pe)->Label->paintScheme(&painter);
 
@@ -1190,7 +1204,7 @@ void MouseActions::MPressRotate(Schematic *Doc, QMouseEvent*, float fX, float fY
     case isWire:
       pl = ((Wire*)e)->Label;
       ((Wire*)e)->Label = 0;    // prevent label to be deleted
-      Doc->Wires->setAutoDelete(false);
+      //Doc->Wires->setAutoDelete(false);
       Doc->deleteWire((Wire*)e);
       ((Wire*)e)->Label = pl;
       ((Wire*)e)->rotate();
@@ -1198,8 +1212,8 @@ void MouseActions::MPressRotate(Schematic *Doc, QMouseEvent*, float fX, float fY
       Doc->setOnGrid(e->x2, e->y2);
       if(pl)  Doc->setOnGrid(pl->cx, pl->cy);
       Doc->insertWire((Wire*)e);
-      Doc->Wires->setAutoDelete(true);
-      if (Doc->Wires->containsRef ((Wire*)e))
+      //Doc->Wires->setAutoDelete(true);
+      if (Doc->Wires.indexOf((Wire*)e))
         Doc->enlargeView(e->x1, e->y1, e->x2, e->y2);
       break;
 
@@ -1294,7 +1308,7 @@ void MouseActions::MPressElement(Schematic *Doc, QMouseEvent *Event, float, floa
 
   // ***********  it is a painting !!!
   if(((Painting*)selElem)->MousePressing()) {
-    Doc->Paintings->append((Painting*)selElem);
+    Doc->Paintings.append((Painting*)selElem);
     ((Painting*)selElem)->Bounding(x1,y1,x2,y2);
     //Doc->enlargeView(x1, y1, x2, y2);
     selElem = ((Painting*)selElem)->newOne();
@@ -1553,7 +1567,7 @@ void MouseActions::MReleaseMoving(Schematic *Doc, QMouseEvent*)
 {
   // Allow all mouse buttons, because for others than the left one,
   // a menu has already created.
-  endElementMoving(Doc, &movingElements);
+  endElementMoving(Doc, movingElements);
   Doc->releaseKeyboard();  // allow keyboard inputs again
 
   QucsMain->MouseMoveAction = 0;
@@ -1635,8 +1649,11 @@ void MouseActions::MReleaseResizePainting(Schematic *Doc, QMouseEvent *Event)
 void MouseActions::paintElementsScheme(Schematic *p)
 {
   Element *pe;
-  for(pe = movingElements.first(); pe != 0; pe = movingElements.next())
+  QListIterator<Element *> ie(movingElements);
+  while (ie.hasNext()) {
+    pe = ie.next();
     pe->paintScheme(p);
+  }
 }
 
 // -----------------------------------------------------------
@@ -1645,7 +1662,9 @@ void MouseActions::moveElements(Schematic *Doc, int& x1, int& y1)
   Element *pe;
   Doc->setOnGrid(x1, y1);
 
-  for(pe=movingElements.first(); pe!=0; pe=movingElements.next()) {
+  QListIterator<Element *> ie(movingElements);
+  while (ie.hasNext()) {
+    pe = ie.next();
     if(pe->Type & isLabel) {
       pe->cx += x1;  pe->x1 += x1;
       pe->cy += y1;  pe->y1 += y1;
@@ -1662,7 +1681,9 @@ void MouseActions::rotateElements(Schematic *Doc, int& x1, int& y1)
   Element *pe;
   Doc->setOnGrid(x1, y1);
 
-  for(pe = movingElements.first(); pe != 0; pe = movingElements.next()) {
+  QListIterator<Element *> ie(movingElements);
+  while (ie.hasNext()) {
+    pe = ie.next();
     switch(pe->Type) {
     case isComponent:
     case isAnalogComponent:
@@ -1702,41 +1723,45 @@ void MouseActions::MReleasePaste(Schematic *Doc, QMouseEvent *Event)
   Element *pe;
   switch(Event->button()) {
   case Qt::LeftButton :
+    {
     // insert all moved elements into document
-    for(pe = movingElements.first(); pe!=0; pe = movingElements.next()) {
+    QListIterator<Element *> ie(movingElements);
+    while (ie.hasNext()) {
+      pe = ie.next();
       pe->isSelected = false;
       switch(pe->Type) {
-	case isWire:
-	  if(pe->x1 == pe->x2) if(pe->y1 == pe->y2)  break;
-	  Doc->insertWire((Wire*)pe);
-	  if (Doc->Wires->containsRef ((Wire*)pe))
-	    Doc->enlargeView(pe->x1, pe->y1, pe->x2, pe->y2);
-	  else pe = NULL;
-	  break;
-	case isDiagram:
-	  Doc->Diagrams->append((Diagram*)pe);
-	  ((Diagram*)pe)->loadGraphData(Info.dirPath() + QDir::separator() + 
-					Doc->DataSet);
-	  Doc->enlargeView(pe->cx, pe->cy-pe->y2, pe->cx+pe->x2, pe->cy);
-	  break;
-	case isPainting:
-	  Doc->Paintings->append((Painting*)pe);
-	  ((Painting*)pe)->Bounding(x1,y1,x2,y2);
-	  Doc->enlargeView(x1, y1, x2, y2);
-	  break;
-	case isMovingLabel:
-	  pe->Type = isNodeLabel;
-	  Doc->placeNodeLabel((WireLabel*)pe);
-	  break;
-	case isComponent:
-	case isAnalogComponent:
-	case isDigitalComponent:
-	  Doc->insertComponent((Component*)pe);
-	  ((Component*)pe)->entireBounds(x1,y1,x2,y2, Doc->textCorr());
-	  Doc->enlargeView(x1, y1, x2, y2);
-	  break;
-      }
-    }
+        case isWire:
+          if(pe->x1 == pe->x2) if(pe->y1 == pe->y2)  break;
+          Doc->insertWire((Wire*)pe);
+          if (Doc->Wires.indexOf((Wire*)pe))
+            Doc->enlargeView(pe->x1, pe->y1, pe->x2, pe->y2);
+          else pe = NULL;
+          break;
+      case isDiagram:
+          Doc->Diagrams->append((Diagram*)pe);
+          ((Diagram*)pe)->loadGraphData(Info.dirPath() + 
+                                        QDir::separator() + 
+                                        Doc->DataSet);
+          Doc->enlargeView(pe->cx, pe->cy-pe->y2, pe->cx+pe->x2, pe->cy);
+          break;
+      case isPainting:
+          Doc->Paintings.append((Painting*)pe);
+          ((Painting*)pe)->Bounding(x1,y1,x2,y2);
+          Doc->enlargeView(x1, y1, x2, y2);
+          break;
+      case isMovingLabel:
+          pe->Type = isNodeLabel;
+          Doc->placeNodeLabel((WireLabel*)pe);
+          break;
+      case isComponent:
+      case isAnalogComponent:
+      case isDigitalComponent:
+          Doc->insertComponent((Component*)pe);
+          ((Component*)pe)->entireBounds(x1,y1,x2,y2, Doc->textCorr());
+          Doc->enlargeView(x1, y1, x2, y2);
+          break;
+      } // Type
+    } // while
 
     pasteElements(Doc);
     // keep rotation sticky for pasted elements
@@ -1753,9 +1778,11 @@ void MouseActions::MReleasePaste(Schematic *Doc, QMouseEvent *Event)
     Doc->viewport()->update();
     Doc->setChanged(true, true);
     break;
+    }
 
   // ............................................................
   case Qt::RightButton :  // right button rotates the elements
+    {
     //setPainter(Doc, &painter);
 
     if(drawn) // erase old scheme
@@ -1770,8 +1797,10 @@ void MouseActions::MReleasePaste(Schematic *Doc, QMouseEvent *Event)
     movingRotated++;
     movingRotated &= 3;
     break;
+    }
 
   default: ;    // avoids compiler warnings
+  {}
   }
 }
 
@@ -1867,10 +1896,16 @@ void MouseActions::editElement(Schematic *Doc, QMouseEvent *Event)
            ComponentDialog * cd = new ComponentDialog(c, Doc);
            if(cd->exec() != 1) break;   // dialog is WDestructiveClose
 
-           Doc->Components->findRef(c);
-           Doc->Components->take();
+           // why? find, remove, append
+           /* FIXME
+           Doc->Components->findRef(c); //Finds the first occurrence of item in the list.
+           Doc->Components->take();     //Takes the current item out of the list without deleting it
            Doc->setComponentNumber(c); // for ports/power sources
-           Doc->Components->append(c);
+           Doc->Components->append(c);  //Inserts the item at the end of the list
+           */
+           Doc->Components.removeAt(Doc->Components.indexOf(c)); // remove from list
+           Doc->setComponentNumber(c); // set subcircuit and power sources ports
+           Doc->Components.append(c);  // append to list
          }
 
          Doc->setChanged(true, true);

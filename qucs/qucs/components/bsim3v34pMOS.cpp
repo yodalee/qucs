@@ -841,7 +841,7 @@ bsim3v34pMOS::bsim3v34pMOS()
 Component * bsim3v34pMOS::newOne()
 {
   bsim3v34pMOS * p = new bsim3v34pMOS();
-  p->Props.getFirst()->Value = Props.getFirst()->Value; 
+  p->Props.first()->Value = Props.first()->Value; 
   p->recreate(0); 
   return p;
 }

@@ -159,8 +159,13 @@ Graph* SweepDialog::setBiasPoints()
 
   Node *pn;
   Element *pe;
+  
+  QListIterator<Node *> in(Doc->Nodes);
+  
   // create DC voltage for all nodes
-  for(pn = Doc->Nodes->first(); pn != 0; pn = Doc->Nodes->next()) {
+  while (in.hasNext()) {
+  //for(pn = Doc->Nodes->first(); pn != 0; pn = Doc->Nodes->next()) {
+    pn =  in.next(); 
     if(pn->Name.isEmpty()) continue;
 
     pn->x1 = 0;
@@ -170,7 +175,10 @@ Graph* SweepDialog::setBiasPoints()
     }
     else {
       hasNoComp = true;
-      for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next())
+      QListIterator<Element *> ie(pn->Connections);
+      while (ie.hasNext()) {
+      //for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next())
+        pe = ie.next();
         if(pe->Type == isWire) {
           if( ((Wire*)pe)->isHorizontal() )  pn->x1 |= 2;
         }
@@ -186,8 +194,9 @@ Graph* SweepDialog::setBiasPoints()
       if(hasNoComp) {  // text only were a component is connected
         pn->Name = "";
         continue;
+        }
       }
-    }
+    } //ifelse  
 
     pg->Var = pn->Name + ".V";
     if(Diag->loadVarData(DataSet, pg)) {
@@ -199,19 +208,25 @@ Graph* SweepDialog::setBiasPoints()
     else
       pn->Name = "0V";
 
-
-    for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next())
+    QListIterator<Element *> ie2(pn->Connections); // FIXME need to redeclare? can't go toFront?
+    while (ie2.hasNext()) {
+    //for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next())
+      pe = ie2.next();  
       if(pe->Type == isWire) {
         if( ((Wire*)pe)->Port1 != pn )  // no text at next node
           ((Wire*)pe)->Port1->Name = "";
         else  ((Wire*)pe)->Port2->Name = "";
       }
-  }
-
+    }
+  } //while nodes
+  
 
   // create DC current through each probe
   Component *pc;
-  for(pc = Doc->Components->first(); pc != 0; pc = Doc->Components->next())
+  QListIterator<Component *> ic(Doc->Components); 
+  while (ic.hasNext()) {
+  //for(pc = Doc->Components->first(); pc != 0; pc = Doc->Components->next())
+    pc = ic.next();  
     if(pc->Model == "IProbe") {
       pn = pc->Ports.first()->Connection;
       if(!pn->Name.isEmpty())   // preserve node voltage ?
@@ -227,15 +242,19 @@ Graph* SweepDialog::setBiasPoints()
       }
       else
         pn->Name = "0A";
-
-      for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next())
+      QListIterator<Element *> ie(pn->Connections);
+      while (ie.hasNext()) {
+      //for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next())
+        pe = ie.next();
         if(pe->Type == isWire) {
           if( ((Wire*)pe)->isHorizontal() )  pn->x1 |= 2;
         }
         else {
           if(pn->cx < pe->cx)  pn->x1 |= 1;  // to the right is no room
         }
+      }
     }
+  } // while probes
 
 
   Doc->showBias = 1;

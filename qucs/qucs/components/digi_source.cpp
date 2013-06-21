@@ -90,11 +90,13 @@ QString Digi_Source::netlist()
   
   // output all properties
   Props.first();   // first property not needed
-  Property *pp = Props.next();
+  Property *pp; //= Props.next();
+  QListIterator<Property *> ip(Props);
+  pp = ip.next();
   s += " "+pp->Name+"=\""+pp->Value+"\"";
-  pp = Props.next();
+  pp = ip.next();
   s += " "+pp->Name+"=\"["+pp->Value+"]\"";
-  pp = Props.next();
+  pp = ip.next();
   s += " "+pp->Name+"=\""+pp->Value+"\"\n";
 
   return s;
@@ -110,8 +112,9 @@ QString Digi_Source::vhdlCode(int NumPorts)
 
   int z = 0;
   char State;
+
   if(NumPorts <= 0) {  // time table simulation ?
-    if(Props.at(0)->Value == "low")
+    if(Props.at(1)->Value == "low")
       State = '0';
     else
       State = '1';
@@ -164,7 +167,7 @@ QString Digi_Source::verilogCode(int NumPorts)
       State = '1';
     s += "  always begin\n";
 
-    t = Props.next()->Value.section(';',z,z).stripWhiteSpace();
+    t = Props.at(2)->Value.section(';',z,z).stripWhiteSpace();
     while(!t.isEmpty()) {
       if(!Verilog_Delay(t, Name))
         return t;    // time has not VHDL format
@@ -172,11 +175,11 @@ QString Digi_Source::verilogCode(int NumPorts)
       s += "   " + t + ";\n";
       State ^= 1;
       z++;
-      t = Props.current()->Value.section(';',z,z).stripWhiteSpace();
+      t = Props.at(2)->Value.section(';',z,z).stripWhiteSpace();
     }
   }
   else {  // truth table simulation
-    int Num = Props.getFirst()->Value.toInt() - 1;    
+    int Num = Props.at(0)->Value.toInt() - 1;    
     s += "  always begin\n";
     s += "    " + r + " = 0;\n";
     s += "    #"+ QString::number(1 << Num) + ";\n";

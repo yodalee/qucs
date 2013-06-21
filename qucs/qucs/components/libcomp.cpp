@@ -56,8 +56,8 @@ LibComp::LibComp()
 Component* LibComp::newOne()
 {
   LibComp *p = new LibComp();
-  p->Props.first()->Value = Props.first()->Value;
-  p->Props.next()->Value = Props.next()->Value;
+  p->Props[0]->Value = Props[0]->Value;
+  p->Props[1]->Value = Props[1]->Value;
   p->recreate(0);
   return p;
 }
@@ -94,7 +94,7 @@ int LibComp::loadSection(const QString& Name, QString& Section,
 			 QStringList *Includes)
 {
   QDir Directory(QucsSettings.LibDir);
-  QFile file(Directory.absFilePath(Props.first()->Value + ".lib"));
+  QFile file(Directory.absFilePath(Props[0]->Value + ".lib"));
   if(!file.open(QIODevice::ReadOnly))
     return -1;
 
@@ -125,7 +125,7 @@ int LibComp::loadSection(const QString& Name, QString& Section,
   }
 
   // search component
-  Line = "\n<Component " + Props.next()->Value + ">";
+  Line = "\n<Component " + Props[1]->Value + ">";
   Start = Section.find(Line);
   if(Start < 0)  return -4;  // component not found
   Start = Section.find('\n', Start);
@@ -194,7 +194,7 @@ int LibComp::loadSymbol()
     pc->Ellips.setAutoDelete(false);
     pc->Ports.setAutoDelete(false);
     pc->Texts.setAutoDelete(false);
-    pc->Props.setAutoDelete(false);
+    //pc->Props.setAutoDelete(false);
     delete pc;
 
     return 1;
@@ -213,7 +213,7 @@ int LibComp::loadSymbol()
     if(Line.at(0) != '<') return -11;
     if(Line.at(Line.length()-1) != '>') return -12;
     Line = Line.mid(1, Line.length()-2); // cut off start and end character
-    Result = analyseLine(Line, 2);
+    Result = analyseLine(Line, 2); // 2 Props, Lib and Comp
     if(Result < 0) return -13;   // line format error
     z += Result;
   }
@@ -275,8 +275,8 @@ bool LibComp::createSubNetlist(QTextStream *stream, QStringList &FileList,
 // -------------------------------------------------------
 QString LibComp::createType()
 {
-  QString Type = properFileName(Props.first()->Value);
-  return properName(Type + "_" + Props.next()->Value);
+  QString Type = properFileName(Props[0]->Value);
+  return properName(Type + "_" + Props[0]->Value);
 }
 
 // -------------------------------------------------------
@@ -292,8 +292,8 @@ QString LibComp::netlist()
   s += " Type=\""+createType()+"\"";   // type for subcircuit
 
   // output user defined parameters
-  for(Property *pp = Props.at(2); pp != 0; pp = Props.next())
-    s += " "+pp->Name+"=\""+pp->Value+"\"";
+  for(int i=2; i <= Props.count(); i++)
+    s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
 
   return s + '\n';
 }

@@ -97,7 +97,7 @@ public:
   bool  createSubcircuitSymbol();
 
   QString copySelected(bool);
-  bool    paste(Q3TextStream*, Q3PtrList<Element>*);
+  bool    paste(Q3TextStream*, QList<Element *>);
   bool    load();
   int     save();
   int     saveSymbolCpp (void);
@@ -112,13 +112,29 @@ public:
 
   // The pointers points to the current lists, either to the schematic
   // elements "Doc..." or to the symbol elements "SymbolPaints".
-  Q3PtrList<Wire>      *Wires, DocWires;
-  Q3PtrList<Node>      *Nodes, DocNodes;
+//  Q3PtrList<Wire>      *Wires, DocWires;
+  //Q3PtrList<Node>      *Nodes, DocNodes;
   Q3PtrList<Diagram>   *Diagrams, DocDiags;
-  Q3PtrList<Painting>  *Paintings, DocPaints;
-  Q3PtrList<Component> *Components, DocComps;
+//  Q3PtrList<Painting>  *Paintings, DocPaints;
+  //Q3PtrList<Component> *Components, DocComps;
+  
+  QList<Wire *>      Wires, DocWires;
+  QList<Node *>      Nodes, DocNodes;
+//  Q3PtrList<Diagram>   *Diagrams, DocDiags;
+  QList<Painting *>  Paintings, DocPaints;
+  
+  // why we have these?
+  // DocComps is only appended on insertSimpleComponent, 
+  // it happend during loadComponent (either rebuild or loadDocument)
+  
+  // Components is the one that holds the schematic.
+  // it gets the content of DocComps on becomeCurrent
+  
+  //saving should be from Componens (or its po)
+  QList<Component *> Components, DocComps;
+  
 
-  Q3PtrList<Painting>  SymbolPaints;  // symbol definition for subcircuit
+  QList<Painting *>  SymbolPaints;  // symbol definition for subcircuit
 
   QList<PostedPaintEvent>   PostedPaintEvents;
   bool symbolMode;  // true if in symbol painting mode
@@ -190,15 +206,15 @@ public:
   void  deleteWire(Wire*);
 
   Marker* setMarker(int, int);
-  void    markerLeftRight(bool, Q3PtrList<Element>*);
-  void    markerUpDown(bool, Q3PtrList<Element>*);
+  void    markerLeftRight(bool, QList<Element *>);
+  void    markerUpDown(bool, QList<Element *>);
 
   Element* selectElement(float, float, bool, int *index=0);
   void     deselectElements(Element*);
   int      selectElements(int, int, int, int, bool);
   void     selectMarkers();
-  void     newMovingWires(Q3PtrList<Element>*, Node*, int);
-  int      copySelectedElements(Q3PtrList<Element>*);
+  void     newMovingWires(QList<Element *>, Node*, int);
+  int      copySelectedElements(QList<Element *>);
   bool     deleteElements();
   bool     aligning(int);
   bool     distributeHorizontal();
@@ -254,15 +270,16 @@ private:
 
   bool loadProperties(Q3TextStream*);
   void simpleInsertComponent(Component*);
-  bool loadComponents(Q3TextStream*, Q3PtrList<Component> *List=0);
+  bool loadComponents(Q3TextStream*);
+  bool loadComponents(Q3TextStream*, QList<Component *>);
   void simpleInsertWire(Wire*);
-  bool loadWires(Q3TextStream*, Q3PtrList<Element> *List=0);
+  bool loadWires(Q3TextStream*, QList<Element *>);
   bool loadDiagrams(Q3TextStream*, Q3PtrList<Diagram>*);
-  bool loadPaintings(Q3TextStream*, Q3PtrList<Painting>*);
+  bool loadPaintings(Q3TextStream*, QList<Painting *>);
   bool loadIntoNothing(Q3TextStream*);
 
   QString createClipboardFile();
-  bool    pasteFromClipboard(Q3TextStream*, Q3PtrList<Element>*);
+  bool    pasteFromClipboard(Q3TextStream*, QList<Element *>);
 
   QString createUndoString(char);
   bool    rebuild(QString *);

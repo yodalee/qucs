@@ -518,10 +518,14 @@ void SimMessage::startSimulator()
 // ------------------------------------------------------------------------
 Component * SimMessage::findOptimization(Schematic *Doc) {
   Component *pc;
-  for(pc=Doc->Components->first(); pc!=0; pc=Doc->Components->next())
+  QListIterator<Component *> ic(Doc->Components);
+  while (ic.hasNext()){
+    pc=ic.next();
+  //for(pc=Doc->Components->first(); pc!=0; pc=Doc->Components->next()){
     if(pc->isActive)
       if(pc->Model == ".Opt")
-	return pc;
+	    return pc;
+  }
   return NULL;
 }
 

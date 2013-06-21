@@ -582,7 +582,7 @@ bsim4v30nMOS::bsim4v30nMOS()
 Component * bsim4v30nMOS::newOne()
 {
   bsim4v30nMOS * p = new bsim4v30nMOS();
-  p->Props.getFirst()->Value = Props.getFirst()->Value; 
+  p->Props.first()->Value = Props.first()->Value; 
   p->recreate(0); 
   return p;
 }

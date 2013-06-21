@@ -83,12 +83,13 @@ QString EqnDefined::netlist()
     s += " "+p1->Connection->Name;   // node names
 
   // output all properties
-  Property *p2 = Props.at(2);
-  while(p2) {
+  Property *p2; //= Props.at(2);
+  QListIterator<Property *> ip(Props);
+  while(ip.hasNext()) {
+    p2 = ip.next();
     s += " "+p2->Name+"=\""+Name+"."+p2->Name+"\"";
     e += "  Eqn:Eqn"+Name+p2->Name+" "+
       Name+"."+p2->Name+"=\""+p2->Value+"\" Export=\"no\"\n";
-    p2 = Props.next();
   }
 
   return s+e;
@@ -124,13 +125,15 @@ void EqnDefined::createSymbol()
     }
   }
 
-  // adjust property names
-  Property * p1 = Props.at(2);
-  for(i = 1; i <= Num; i++) {
+  // adjust property names (rows 2,3 / 4,5)
+  Property * p1; //= Props.at(2);
+  for(int i = 1; i <= Num; i++) {
+    p1 = Props[i*2];
     p1->Name = "I"+QString::number(i);
-    p1 = Props.next();
+    //p1 = Props.next();
+    p1 = Props[i*2+1];
     p1->Name = "Q"+QString::number(i);
-    p1 = Props.next();
+//    p1 = Props.next();
   }
 
   // draw symbol

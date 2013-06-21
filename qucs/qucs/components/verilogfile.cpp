@@ -46,7 +46,7 @@ Verilog_File::Verilog_File()
 Component* Verilog_File::newOne()
 {
   Verilog_File *p = new Verilog_File();
-  p->Props.getFirst()->Value = Props.getFirst()->Value;
+  p->Props.first()->Value = Props.first()->Value;
   p->recreate(0);
   return p;
 }
@@ -88,7 +88,7 @@ QString Verilog_File::verilogCode(int)
 // entity in this file.
 QString Verilog_File::loadFile()
 {
-  QString s, File(Props.getFirst()->Value);
+  QString s, File(Props.first()->Value);
   QFileInfo Info(File);
   if(Info.isRelative())
     File = QucsWorkDir.filePath(File);
@@ -159,7 +159,7 @@ void Verilog_File::createSymbol()
 QString Verilog_File::getSubcircuitFile()
 {
   // construct full filename
-  QString FileName = Props.getFirst()->Value;
+  QString FileName = Props.first()->Value;
   return properAbsFileName(FileName);
 }
 
@@ -169,7 +169,7 @@ bool Verilog_File::createSubNetlist(QTextStream *stream)
   ErrText = "";
 
   // check filename
-  QString FileName = Props.getFirst()->Value;
+  QString FileName = Props.first()->Value;
   if(FileName.isEmpty()) {
     ErrText += QObject::tr("ERROR: No file name in %1 component \"%2\".").
       arg(Model).arg(Name);

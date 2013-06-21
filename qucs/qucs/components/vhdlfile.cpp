@@ -46,7 +46,7 @@ VHDL_File::VHDL_File()
 Component* VHDL_File::newOne()
 {
   VHDL_File *p = new VHDL_File();
-  p->Props.getFirst()->Value = Props.getFirst()->Value;
+  p->Props.first()->Value = Props.first()->Value;
   p->recreate(0);
   return p;
 }
@@ -74,12 +74,12 @@ QString VHDL_File::vhdlCode(int)
     s = "  " + Name + ": entity " + EntityName;
 
     // output all generic properties
-    Property *pr = Props.at(1);
+    Property *pr = Props[1];
     if (pr) {
       s += " generic map (";
       s += pr->Value;
-      for(pr = Props.next(); pr != 0; pr = Props.next())
-	s += ", " + pr->Value;
+      for(int i=2; i <= Props.count(); i++)
+          s += ", " + Props[i]->Value;
       s += ")";
     }
 
@@ -98,7 +98,7 @@ QString VHDL_File::vhdlCode(int)
 // entity in this file.
 QString VHDL_File::loadFile()
 {
-  QString File(Props.getFirst()->Value);
+  QString File(Props.first()->Value);
   QFileInfo Info(File);
   if(Info.isRelative())
     File = QucsWorkDir.filePath(File);
@@ -176,7 +176,10 @@ void VHDL_File::createSymbol()
   No = 0;
   if(!GenNames.isEmpty())
     No = (GenNames.count(',')) + 1;
-  Property * pr = Props.at(1);
+  Property * pr; //= Props.at(1);
+  QListIterator<Property *> ip(Props);
+  pr = ip.next(); //0
+  pr = ip.next(); //1
   for(i=0; i<No; i++) {
     if (!pr) {
       pr = new Property(GenNames.section(',', i, i),
@@ -190,7 +193,7 @@ void VHDL_File::createSymbol()
       pr->Description =
 	QObject::tr("generic variable")+" "+QString::number(i+1);
       pr->Name = GenNames.section(',', i, i);
-      pr = Props.next();
+      pr = ip.next();
     }
   }
   // remove remaining properties if necessary
@@ -204,7 +207,7 @@ void VHDL_File::createSymbol()
 QString VHDL_File::getSubcircuitFile()
 {
   // construct full filename
-  QString FileName = Props.getFirst()->Value;
+  QString FileName = Props.first()->Value;
   return properAbsFileName(FileName);
 }
 
@@ -214,7 +217,7 @@ bool VHDL_File::createSubNetlist(QTextStream *stream)
   ErrText = "";
 
   // check filename
-  QString FileName = Props.getFirst()->Value;
+  QString FileName = Props.first()->Value;
   if(FileName.isEmpty()) {
     ErrText += QObject::tr("ERROR: No file name in %1 component \"%2\".").
       arg(Model).arg(Name);

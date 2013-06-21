@@ -135,8 +135,8 @@ MOSFET_sub::MOSFET_sub()
 Component* MOSFET_sub::newOne()
 {
   MOSFET_sub* p = new MOSFET_sub();
-  p->Props.first()->Value = Props.first()->Value;
-  p->Props.next()->Value = Props.next()->Value;
+  p->Props[0]->Value = Props[0]->Value;
+  p->Props[1]->Value = Props[1]->Value;
   p->recreate(0);
   return p;
 }
@@ -160,8 +160,8 @@ Element* MOSFET_sub::info_p(QString& Name,
 
   if(getNewOne) {
     MOSFET_sub* p = new MOSFET_sub();
-    p->Props.first()->Value = "pfet";
-    p->Props.next()->Value = "-1.0 V";
+    p->Props[0]->Value = "pfet";
+    p->Props[1]->Value = "-1.0 V";
     p->recreate(0);
     return p;
   }
@@ -177,8 +177,8 @@ Element* MOSFET_sub::info_depl(QString& Name,
 
   if(getNewOne) {
     MOSFET_sub* p = new MOSFET_sub();
-    p->Props.first();
-    p->Props.next()->Value = "-1.0 V";
+    //p->Props.first();
+    p->Props[1]->Value = "-1.0 V";
     p->recreate(0);
     return p;
   }
@@ -202,7 +202,7 @@ void MOSFET_sub::createSymbol()
 
   Lines.append(new Line( -4, 24,  4, 20,QPen(Qt::darkBlue,2)));
 
-  if(Props.first()->Value == "nfet") {
+  if(Props[0]->Value == "nfet") {
     Lines.append(new Line( -9,  0, -4, -5,QPen(Qt::darkBlue,2)));
     Lines.append(new Line( -9,  0, -4,  5,QPen(Qt::darkBlue,2)));
   }
@@ -211,8 +211,8 @@ void MOSFET_sub::createSymbol()
     Lines.append(new Line( -1,  0, -6,  5,QPen(Qt::darkBlue,2)));
   }
 
-  if((Props.next()->Value.stripWhiteSpace().at(0) == '-') ==
-     (Props.first()->Value == "nfet"))
+  if((Props[1]->Value.stripWhiteSpace().at(0) == '-') ==
+     (Props[0]->Value == "nfet"))
     Lines.append(new Line(-10, -8,-10,  8,QPen(Qt::darkBlue,3)));
   else
     Lines.append(new Line(-10, -4,-10,  4,QPen(Qt::darkBlue,3)));

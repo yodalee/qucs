@@ -194,9 +194,13 @@ void SpiceDialog::slotButtApply()
   if(CompNameEdit->text().isEmpty())  CompNameEdit->setText(Comp->Name);
   else
   if(CompNameEdit->text() != Comp->Name) {
-    for(pc = Doc->Components->first(); pc!=0; pc = Doc->Components->next())
+    QListIterator<Component *> ic(Doc->Components);
+    while (ic.hasNext()){
+      pc = ic.next();
+    //for(pc = Doc->Components->first(); pc!=0; pc = Doc->Components->next())
       if(pc->Name == CompNameEdit->text())
         break;  // found component with the same name ?
+    }
     if(pc)  CompNameEdit->setText(Comp->Name);
     else {
       Comp->Name = CompNameEdit->text();
@@ -206,7 +210,9 @@ void SpiceDialog::slotButtApply()
 
 
   // apply all the new property values
-  Property *pp = Comp->Props.first();
+  Property *pp; // = Comp->Props.first();
+  QListIterator<Property *> ip(Comp->Props);
+  pp = ip.next();
   if(pp->Value != FileEdit->text()) {
     pp->Value = FileEdit->text();
     changed = true;
@@ -221,12 +227,12 @@ void SpiceDialog::slotButtApply()
     if(!tmp.isEmpty())  tmp += ',';
     tmp += "_net" + PortsList->text(i);   // chosen ports
   }
-  pp = Comp->Props.next();
+  pp = ip.next();
   if(pp->Value != tmp) {
     pp->Value = tmp;
     changed = true;
   }
-  pp = Comp->Props.next();
+  pp = ip.next();
   if((pp->Value=="yes") != SimCheck->isChecked()) {
     if(SimCheck->isChecked()) pp->Value = "yes";
     else pp->Value = "no";
@@ -234,7 +240,7 @@ void SpiceDialog::slotButtApply()
   }
   if(pp->Value != "yes")  Comp->withSim = false;
 
-  pp = Comp->Props.next();
+  pp = ip.next();
   if(pp->Value != PrepCombo->currentText()) {
     pp->Value = PrepCombo->currentText();
     changed = true;
