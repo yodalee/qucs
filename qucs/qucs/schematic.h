@@ -114,13 +114,13 @@ public:
   // elements "Doc..." or to the symbol elements "SymbolPaints".
 //  Q3PtrList<Wire>      *Wires, DocWires;
   //Q3PtrList<Node>      *Nodes, DocNodes;
-  Q3PtrList<Diagram>   *Diagrams, DocDiags;
+//  Q3PtrList<Diagram>   *Diagrams, DocDiags;
 //  Q3PtrList<Painting>  *Paintings, DocPaints;
   //Q3PtrList<Component> *Components, DocComps;
   
   QList<Wire *>      Wires, DocWires;
   QList<Node *>      Nodes, DocNodes;
-//  Q3PtrList<Diagram>   *Diagrams, DocDiags;
+  QList<Diagram *>   Diagrams, DocDiags;
   QList<Painting *>  Paintings, DocPaints;
   
   // why we have these?
@@ -274,7 +274,7 @@ private:
   bool loadComponents(Q3TextStream*, QList<Component *>);
   void simpleInsertWire(Wire*);
   bool loadWires(Q3TextStream*, QList<Element *>);
-  bool loadDiagrams(Q3TextStream*, Q3PtrList<Diagram>*);
+  bool loadDiagrams(Q3TextStream*, QList<Diagram *>);
   bool loadPaintings(Q3TextStream*, QList<Painting *>);
   bool loadIntoNothing(Q3TextStream*);
 

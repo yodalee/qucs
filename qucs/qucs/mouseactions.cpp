@@ -201,7 +201,7 @@ void MouseActions::endElementMoving(Schematic *Doc, QList<Element *> movElements
 	Doc->insertWire((Wire*)pe);
 	break;
       case isDiagram:
-	Doc->Diagrams->append((Diagram*)pe);
+	Doc->Diagrams.append((Diagram*)pe);
 	break;
       case isPainting:
 	Doc->Paintings.append((Painting*)pe);
@@ -1294,7 +1294,7 @@ void MouseActions::MPressElement(Schematic *Doc, QMouseEvent *Event, float, floa
       return;
     }
 
-    Doc->Diagrams->append(Diag);
+    Doc->Diagrams.append(Diag);
     Doc->enlargeView(Diag->cx, Diag->cy-Diag->y2, Diag->cx+Diag->x2, Diag->cy);
     Doc->setChanged(true, true);   // document has been changed
 
@@ -1738,7 +1738,7 @@ void MouseActions::MReleasePaste(Schematic *Doc, QMouseEvent *Event)
           else pe = NULL;
           break;
       case isDiagram:
-          Doc->Diagrams->append((Diagram*)pe);
+          Doc->Diagrams.append((Diagram*)pe);
           ((Diagram*)pe)->loadGraphData(Info.dirPath() + 
                                         QDir::separator() + 
                                         Doc->DataSet);
@@ -1941,13 +1941,21 @@ void MouseActions::editElement(Schematic *Doc, QMouseEvent *Event)
 	 Doc->enlargeView(x1, x2, y1, y2);
 	 break;
 
-    case isGraph :
+    case isGraph : {
 	 pg = (Graph*)focusElement;
+     
 	 // searching diagram for this graph
-	 for(dia = Doc->Diagrams->last(); dia != 0; dia = Doc->Diagrams->prev())
-	   if(dia->Graphs.findRef(pg) >= 0)
+     bool foundDiag = false;
+     QListIterator<Diagram *> id(Doc->Diagrams);
+     id.toBack();
+     while (id.hasPrevious()) {
+       dia = id.previous();
+       if(dia->Graphs.findRef(pg) >= 0) {
+         foundDiag = true;
 	     break;
-	 if(!dia) break;
+       }
+     }
+	 if(!foundDiag) break;
 
 	 
 	 ddia = new DiagramDialog(dia,
@@ -1955,7 +1963,7 @@ void MouseActions::editElement(Schematic *Doc, QMouseEvent *Event)
 	 if(ddia->exec() != QDialog::Rejected)   // is WDestructiveClose
 	   Doc->setChanged(true, true);
          break;
-
+    }
     case isWire:
          MPressLabel(Doc, Event, fX, fY);
          break;

@@ -861,7 +861,11 @@ Marker* Schematic::setMarker(int x, int y)
 {
   int n;
   // test all diagrams
-  for(Diagram *pd = Diagrams->last(); pd != 0; pd = Diagrams->prev())
+  Diagram *pd;
+  QListIterator<Diagram *> id(Diagrams);
+  id.toBack();
+  while (id.hasPrevious()) {
+    pd = id.previous();
     if(pd->getSelected(x, y)) {
       // test all graphs of the diagram
       for(Graph *pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next()) {
@@ -874,6 +878,7 @@ Marker* Schematic::setMarker(int x, int y)
         }
       }
     }
+  }
 
   return 0;
 }
@@ -1009,8 +1014,11 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
   Graph *pg;
   Corr = 5.0 / Scale;  // size of line select and area for resizing
   // test all diagrams
-  for(Diagram *pd = Diagrams->last(); pd != 0; pd = Diagrams->prev()) {
-
+  Diagram *pd;
+  QListIterator<Diagram *> id(Diagrams);
+  id.toBack();
+  while (id.hasPrevious()) {
+    pd = id.previous();
     for(pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next())
       // test markers of graphs
       for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
@@ -1129,7 +1137,10 @@ void Schematic::deselectElements(Element *e)
     if(pn->Label) if(pn->Label != e)  pn->Label->isSelected = false;
   }
   // test all diagrams
-  for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next()) {
+  Diagram *pd;
+  QListIterator<Diagram *> id(Diagrams);
+  while (id.hasNext()) {
+    pd = id.next();
     if(e != pd)  pd->isSelected = false;
 
     // test graphs of diagram
@@ -1225,7 +1236,10 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
 
 
   // test all diagrams *******************************************
-  for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next()) {
+  Diagram *pd;
+  QListIterator<Diagram *> id(Diagrams);
+  while (id.hasNext()) {
+    pd = id.next();
     // test graphs of diagram
     for(Graph *pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next()) {
       if(pg->isSelected &= flag) z++;
@@ -1270,10 +1284,15 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
 // Selects all markers.
 void Schematic::selectMarkers()
 {
-  for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next())
+//  for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next())
+  Diagram *pd;
+  QListIterator<Diagram *> id(Diagrams);
+  while (id.hasNext()) {
+    pd = id.next();
     for(Graph *pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next())
       for(Marker *pm = pg->Markers.first(); pm!=0; pm = pg->Markers.next())
          pm->isSelected = true;
+  }
 }
 
 // ---------------------------------------------------
@@ -1393,6 +1412,7 @@ void Schematic::newMovingWires(QList<Element *> p, Node *pn, int pos)
 // list 'p' and deletes them from the document.
 int Schematic::copySelectedElements(QList<Element *> p)
 {
+  qDebug() << "Schematic::copySelectedElements  --- BADLY commented out";
   int i, count = 0;
   Port      *pp;
   Component *pc;
@@ -1538,11 +1558,14 @@ int Schematic::copySelectedElements(QList<Element *> p)
 
   count = 0;  // count markers now
   // test all diagrams **********************************
-  for(pd = Diagrams->first(); pd != 0; )
+//  for(pd = Diagrams->first(); pd != 0; )
+  QListIterator<Diagram *> id(Diagrams);
+  while (id.hasNext()) {
+    pd = id.next();
     if(pd->isSelected) {
       p.append(pd);
-      Diagrams->take();
-      pd = Diagrams->current();
+//      Diagrams->take();
+//      pd = Diagrams->current();
     }
     else {
       for(Graph *pg = pd->Graphs.first(); pg!=0; pg = pd->Graphs.next())
@@ -1555,8 +1578,9 @@ int Schematic::copySelectedElements(QList<Element *> p)
           }
           else pm = pg->Markers.next();
 
-      pd = Diagrams->next();
+//      pd = Diagrams->next();
     }
+  }
 
   return count;
 }
@@ -1599,7 +1623,11 @@ int Schematic::copyElements(int& x1, int& y1, int& x2, int& y2,
   //Components->setAutoDelete(true);
 
   // find upper most selected diagram
-  for(Diagram *pd = Diagrams->last(); pd != 0; pd = Diagrams->prev())
+  Diagram *pd;
+  QListIterator<Diagram *> id(Diagrams);
+  id.toBack();
+  while (id.hasPrevious()) {
+    pd = id.previous();
     if(pd->isSelected) {
       pd->Bounding(bx1, by1, bx2, by2);
       if(bx1 < x1) x1 = bx1;
@@ -1609,6 +1637,7 @@ int Schematic::copyElements(int& x1, int& y1, int& x2, int& y2,
       ElementCache->append(pd);
       number++;
     }
+  }
   // find upper most selected painting
 #warning why backwards?
   Painting *pp;
@@ -1634,6 +1663,7 @@ int Schematic::copyElements(int& x1, int& y1, int& x2, int& y2,
 // Deletes all selected elements.
 bool Schematic::deleteElements()
 {
+  qDebug() << "Schematic::deleteElements --- BADLY COMMENTED OUT";
   bool sel = false;
 
   Component *pc;// = Components->first();
@@ -1683,11 +1713,13 @@ bool Schematic::deleteElements()
       }
   }
 
-  Diagram *pd = Diagrams->first();
-  while(pd != 0)      // test all diagrams
+  Diagram *pd;// = Diagrams->first();
+  QListIterator<Diagram *> id(Diagrams);
+  while(id.hasNext()) {      // test all diagrams
+    pd = id.next();
     if(pd->isSelected) {
-      Diagrams->remove();
-      pd = Diagrams->current();
+//      Diagrams->remove();
+//      pd = Diagrams->current();
       sel = true;
     }
     else {
@@ -1713,8 +1745,9 @@ bool Schematic::deleteElements()
       if(wasGraphDeleted)
         pd->recalcGraphData();  // update diagram (resize etc.)
 
-      pd = Diagrams->next();
+//      pd = Diagrams->next();
     }
+  }
 
 #warning mutable?
   Painting *pp;// = Paintings->first();

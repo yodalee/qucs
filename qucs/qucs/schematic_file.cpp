@@ -101,9 +101,12 @@ QString Schematic::createClipboardFile()
   s += "</Wires>\n";
 
   s += "<Diagrams>\n";
-  for(pd = Diagrams->first(); pd != 0; pd = Diagrams->next())
+  QListIterator<Diagram *> id(Diagrams);
+  while (id.hasNext()) {
+    pd = id.next();
     if(pd->isSelected) {
       s += pd->save()+"\n";  z++; }
+  }
   s += "</Diagrams>\n";
 
   s += "<Paintings>\n";
@@ -365,8 +368,9 @@ int Schematic::saveDocument()
   stream << "</Wires>\n";
 
   stream << "<Diagrams>\n";    // save all diagrams
-  for(Diagram *pd = DocDiags.first(); pd != 0; pd = DocDiags.next())
-    stream << "  " << pd->save() << "\n";
+  QListIterator<Diagram *> id(DocDiags);
+  while (id.hasNext())
+    stream << "  " << id.next()->save() << "\n";
   stream << "</Diagrams>\n";
 
   stream << "<Paintings>\n";     // save all paintings
@@ -657,7 +661,7 @@ bool Schematic::loadWires(Q3TextStream *stream, QList<Element *> List)
 }
 
 // -------------------------------------------------------------
-bool Schematic::loadDiagrams(Q3TextStream *stream, Q3PtrList<Diagram> *List)
+bool Schematic::loadDiagrams(Q3TextStream *stream, QList<Diagram *> List)
 {
   Diagram *d;
   QString Line, cstr;
@@ -691,7 +695,7 @@ bool Schematic::loadDiagrams(Q3TextStream *stream, Q3PtrList<Diagram> *List)
       delete d;
       return false;
     }
-    List->append(d);
+    List.append(d);
   }
 
   QMessageBox::critical(0, QObject::tr("Error"),
@@ -813,8 +817,7 @@ bool Schematic::loadDocument()
       if(!loadWires(&stream, dummy)) { file.close(); return false; } }
     else
     if(Line == "<Diagrams>") {
-#warning port qt3
-      if(!loadDiagrams(&stream, &DocDiags)) { file.close(); return false; } }
+      if(!loadDiagrams(&stream, DocDiags)) { file.close(); return false; } }
     else
     if(Line == "<Paintings>") {
 #warning DocPaints or Paintings??
@@ -864,8 +867,9 @@ QString Schematic::createUndoString(char Op)
   }
   s += "</>\n";
 
-  for(pd = DocDiags.first(); pd != 0; pd = DocDiags.next())
-    s += pd->save()+"\n";
+  QListIterator<Diagram *> id(DocDiags);
+  while (id.hasNext())
+    s += id.next()->save()+"\n";
   s += "</>\n";
 
   QListIterator<Painting *> ip(DocPaints);
@@ -917,7 +921,7 @@ bool Schematic::rebuild(QString *s)
   if(!loadComponents(&stream))  return false;
   QList<Element *> dummy;
   if(!loadWires(&stream, dummy))  return false;
-  if(!loadDiagrams(&stream, &DocDiags))  return false;
+  if(!loadDiagrams(&stream, DocDiags))  return false;
   if(!loadPaintings(&stream, DocPaints)) return false;
 
   return true;

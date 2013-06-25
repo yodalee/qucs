@@ -63,7 +63,7 @@
 // just dummies for empty lists
 QList<Wire *>      SymbolWires;
 QList<Node *>      SymbolNodes;
-Q3PtrList<Diagram>   SymbolDiags;
+QList<Diagram *>   SymbolDiags;
 QList<Component *> SymbolComps;
 
 
@@ -87,7 +87,7 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
   //DocComps.setAutoDelete(true);
   //DocWires.setAutoDelete(true);
   //DocNodes.setAutoDelete(true);
-  DocDiags.setAutoDelete(true);
+//  DocDiags.setAutoDelete(true);
   //DocPaints.setAutoDelete(true);
   //SymbolPaints.setAutoDelete(true);
 
@@ -222,7 +222,7 @@ void Schematic::becomeCurrent(bool update)
   if(symbolMode) {
     Nodes = SymbolNodes;
     Wires = SymbolWires;
-    Diagrams = &SymbolDiags;
+    Diagrams = SymbolDiags;
     Paintings = SymbolPaints;
     Components = SymbolComps;
 
@@ -241,7 +241,7 @@ void Schematic::becomeCurrent(bool update)
   else {
     Nodes = DocNodes;
     Wires = DocWires;
-    Diagrams = &DocDiags;
+    Diagrams = DocDiags;
     Paintings = DocPaints;
     Components = DocComps;
 
@@ -451,8 +451,9 @@ void Schematic::drawContents(QPainter *p, int, int, int, int)
       pn->Label->paint(&Painter);  // separate because of paintSelected
   }
 
-  for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next())
-    pd->paint(&Painter);
+  QListIterator<Diagram *> id(Diagrams);
+  while (id.hasNext())
+    id.next()->paint(&Painter);
 
   QListIterator<Painting *> ip(Paintings);
   while (ip.hasNext())
@@ -706,7 +707,11 @@ void Schematic::print(QPrinter*, QPainter *Painter, bool printAll, bool fitToPag
 
   Graph  *pg;
   Marker *pm;
-  for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next())
+
+  Diagram *pd;
+  QListIterator<Diagram *> id(Diagrams);
+  while (id.hasNext()) {
+    pd = id.next();
     if(pd->isSelected || printAll) {
       // if graph or marker is selected, deselect during printing
       for(pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next()) {
@@ -733,6 +738,7 @@ void Schematic::print(QPrinter*, QPainter *Painter, bool printAll, bool fitToPag
 	}
       }
     }
+  }
 
   Painting *pp;
   QListIterator<Painting *> ip(Paintings);
@@ -951,7 +957,7 @@ void Schematic::sizeOfAll(int& xmin, int& ymin, int& xmax, int& ymax)
 
   if(Components.empty())
     if(Wires.empty())
-      if(Diagrams->isEmpty())
+      if(Diagrams.empty())
         if(Paintings.empty()) {
           xmin = xmax = 0;
           ymin = ymax = 0;
@@ -1004,7 +1010,10 @@ void Schematic::sizeOfAll(int& xmin, int& ymin, int& xmax, int& ymax)
   }
 
   // find boundings of all diagrams
-  for(pd = Diagrams->first(); pd != 0; pd = Diagrams->next()) {
+//  for(pd = Diagrams->first(); pd != 0; pd = Diagrams->next()) {
+  QListIterator<Diagram *> id(Diagrams);
+  while (id.hasNext()) {
+    pd = id.next();
     pd->Bounding(x1, y1, x2, y2);
     if(x1 < xmin) xmin = x1;
     if(x2 > xmax) xmax = x2;
@@ -1273,8 +1282,12 @@ bool Schematic::mirrorYComponents()
 void Schematic::reloadGraphs()
 {
   QFileInfo Info(DocName);
-  for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next())
+  Diagram *pd;
+  QListIterator<Diagram *> id(Diagrams);
+  while (id.hasNext()) {
+    pd = id.next();
     pd->loadGraphData(Info.dirPath()+QDir::separator()+DataSet);
+  }
 }
 
 // ---------------------------------------------------
@@ -1850,7 +1863,11 @@ bool Schematic::elementsOnGrid()
   }
 
   // test all diagrams
-  for(Diagram *pd = Diagrams->last(); pd != 0; pd = Diagrams->prev()) {
+  Diagram *pd;
+  QListIterator<Diagram *> id(Diagrams);
+  id.toBack();
+  while (id.hasPrevious()) {
+    pd = id.previous();
     if(pd->isSelected) {
       setOnGrid(pd->cx, pd->cy);
       pd->isSelected = false;
@@ -1861,13 +1878,13 @@ bool Schematic::elementsOnGrid()
       // test markers of diagram
       for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
         if(pm->isSelected) {
-	  x = pm->x1 + pd->cx;
-	  y = pm->y1 + pd->cy;
-	  setOnGrid(x, y);
-	  pm->x1 = x - pd->cx;
-	  pm->y1 = y - pd->cy;
-	  pm->isSelected = false;
-	  count = true;
+	      x = pm->x1 + pd->cx;
+          y = pm->y1 + pd->cy;
+          setOnGrid(x, y);
+          pm->x1 = x - pd->cx;
+          pm->y1 = y - pd->cy;
+          pm->isSelected = false;
+          count = true;
         }
   }
 
