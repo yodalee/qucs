@@ -96,8 +96,9 @@ QString vFile::netlist()
   QString s = Model+":"+Name;
 
   // output all node names
-  for(Port *p1 = Ports.first(); p1 != 0; p1 = Ports.next())
-    s += " "+p1->Connection->Name;   // node names
+  QListIterator<Port *> ip(Ports);
+  while (ip.hasNext())
+    s += " "+ip.next()->Connection->Name;   // node names
 
   // output file properties
   Property *p2 = Props[0];

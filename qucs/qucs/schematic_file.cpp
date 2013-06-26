@@ -472,7 +472,10 @@ void Schematic::simpleInsertComponent(Component *c)
   Node *pn;
   int x, y;
   // connect every node of component
-  for(Port *pp = c->Ports.first(); pp != 0; pp = c->Ports.next()) {
+  Port *pp;
+  QListIterator<Port *> ip(c->Ports);
+  while (ip.hasNext()) {
+    pp = ip.next();
     x = pp->x+c->cx;
     y = pp->y+c->cy;
 
@@ -1091,7 +1094,7 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
 
     // handle ground symbol
     if(pc->Model == "GND") {
-      pc->Ports.getFirst()->Connection->Name = "gnd";
+      pc->Ports.first()->Connection->Name = "gnd";
       continue;
     }
 
@@ -1104,7 +1107,10 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
 	if (!it.data().PortTypes.isEmpty()) {
 	  i = 0;
 	  // apply in/out signal types of subcircuit
-	  for(Port *pp = pc->Ports.first(); pp; pp = pc->Ports.next(), i++) {
+      Port *pp;
+      QListIterator<Port *> ip(pc->Ports);
+      while (ip.hasNext()) {
+        pp = ip.next();
 	    pp->Type = it.data().PortTypes[i];
 	    pp->Connection->DType = pp->Type;
 	  }
@@ -1130,10 +1136,15 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
       if (r) {
 	      i = 0;
 	      // save in/out signal types of subcircuit
-	      for(Port *pp = pc->Ports.first(); pp; pp = pc->Ports.next(), i++) {
+          Port *pp;
+//	      for(Port *pp = pc->Ports.first(); pp; pp = pc->Ports.next(), i++) {
+          QListIterator<Port *> ip(pc->Ports);
+          while (ip.hasNext()) {
+            pp = ip.next();
           //if(i>=d->PortTypes.count())break;
 	        pp->Type = d->PortTypes[i];
 	        pp->Connection->DType = pp->Type;
+            i++;
 	      }
 	      sub.PortTypes = d->PortTypes;
 	      FileList.replace(f, sub);
@@ -1377,12 +1388,12 @@ int NumPorts)
         it_name++;
         it_type++;
       }
-      (*it_name) = pc->Ports.getFirst()->Connection->Name;
+      (*it_name) = pc->Ports.first()->Connection->Name;
       DigMap::Iterator it = Signals.find(*it_name);
       if(it!=Signals.end())
         (*it_type) = it.data().Type;
       // propagate type to port symbol
-      pc->Ports.getFirst()->Connection->DType = *it_type;
+      pc->Ports.first()->Connection->DType = *it_type;
 
       if(!isAnalog) {
         if (isVerilog) {

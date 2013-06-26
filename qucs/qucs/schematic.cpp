@@ -1770,19 +1770,21 @@ bool Schematic::elementsOnGrid()
   Component *pc;
   QListIterator<Component *> ic(Components);
   ic.toBack();
-//  for(Component *pc = Components->last(); pc != 0; pc = Components->prev())
   while (ic.hasPrevious()) {
     pc = ic.previous();
     if(pc->isSelected) {
 
       // rescue non-selected node labels
-      for(pp = pc->Ports.first(); pp != 0; pp = pc->Ports.next())
+      QListIterator<Port *> ip(pc->Ports);
+      while (ip.hasNext()) {
+        pp = ip.next();
         if(pp->Connection->Label)
           if(pp->Connection->Connections.count() < 2) {
             LabelCache.append(pp->Connection->Label);
             pp->Connection->Label->pOwner = 0;
             pp->Connection->Label = 0;
           }
+      }
 
       x = pc->cx;
       y = pc->cy;

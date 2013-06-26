@@ -1433,7 +1433,9 @@ int Schematic::copySelectedElements(QList<Element *> p)
       count++; // selected component count
 
       // delete all port connections
-      for(pp = pc->Ports.first(); pp!=0; pp = pc->Ports.next()) {
+      QListIterator<Port *> ip(pc->Ports);
+      while (ip.hasNext()) {
+        pp = ip.next();
         pp->Connection->Connections.removeOne((Element*)pc);
         pp->Connection->State = 4;
       }
@@ -2181,8 +2183,12 @@ void Schematic::insertComponentNodes(Component *c, bool noOptimize)
 {
   Port *pp = 0;
   // connect every node of the component to corresponding schematic node
-  for(pp = c->Ports.first(); pp != 0; pp = c->Ports.next())
+//  for(pp = c->Ports.first(); pp != 0; pp = c->Ports.next())
+  QListIterator<Port *> ip(c->Ports);
+  while (ip.hasNext()) {
+    pp = ip.next();
     pp->Connection = insertNode(pp->x+c->cx, pp->y+c->cy, c);
+  }
 
   if(noOptimize)  return;
 
@@ -2192,11 +2198,18 @@ void Schematic::insertComponentNodes(Component *c, bool noOptimize)
   QList<Element *> pL;
   // if component over wire then delete this wire
   
-#warning why omit??
-  c->Ports.first();  // omit the first element
+  
+//  QListIterator<Port *>
+  ip.toFront();
+#warning why omit first???
+//  c->Ports.first();  // omit the first element
+  pp = ip.next();
   
   // loop thru remaining component ports
-  for(pp = c->Ports.next(); pp != 0; pp = c->Ports.next()) {
+//  for(pp = c->Ports.next(); pp != 0; pp = c->Ports.next()) {
+  while (ip.hasNext()) {
+    pp = ip.next();
+          
 
 #warning solve this!
 //    if (pp->Connection->Connections.count()) //resistor should return 1 here
@@ -2235,7 +2248,7 @@ void Schematic::insertRawComponent(Component *c, bool noOptimize)
   // a ground symbol erases an existing label on the wire line
   if(c->Model == "GND") {
     c->Model = "x";    // prevent that this ground is found as label
-    Element *pe = getWireLabel(c->Ports.getFirst()->Connection);
+    Element *pe = getWireLabel(c->Ports.first()->Connection);
     if(pe) if((pe->Type & isComponent) == 0) {
       delete ((Conductor*)pe)->Label;
       ((Conductor*)pe)->Label = 0;
@@ -2255,12 +2268,15 @@ void Schematic::recreateComponent(Component *Comp)
     // Save the labels whose node is not connected to somewhere else.
     // Otherwise the label would be deleted.
     pl = plMem = (WireLabel**)malloc(PortCount * sizeof(WireLabel*));
-    for(pp = Comp->Ports.first(); pp != 0; pp = Comp->Ports.next())
+    QListIterator<Port *> ip(Comp->Ports);
+    while (ip.hasNext()) {
+      pp = ip.next();
       if(pp->Connection->Connections.count() < 2) {
         *(pl++) = pp->Connection->Label;
         pp->Connection->Label = 0;
       }
       else  *(pl++) = 0;
+    }
   }
 
 
@@ -2283,7 +2299,9 @@ void Schematic::recreateComponent(Component *Comp)
   if(PortCount > 0) {
     // restore node labels
     pl = plMem;
-    for(pp = Comp->Ports.first(); pp != 0; pp = Comp->Ports.next()) {
+    QListIterator<Port *> ip(Comp->Ports);
+    while (ip.hasNext()) {
+      pp = ip.next();
       if(*pl != 0) {
         (*pl)->cx = pp->Connection->cx;
         (*pl)->cy = pp->Connection->cy;
@@ -2316,7 +2334,7 @@ void Schematic::insertComponent(Component *c)
     // a ground symbol erases an existing label on the wire line
     if(c->Model == "GND") {
       c->Model = "x";    // prevent that this ground is found as label
-      Element *pe = getWireLabel(c->Ports.getFirst()->Connection);
+      Element *pe = getWireLabel(c->Ports.first()->Connection);
       if(pe) 
         if((pe->Type & isComponent) == 0) {
           delete ((Conductor*)pe)->Label;
@@ -2373,7 +2391,7 @@ void Schematic::activateCompsWithinRect(int x1, int y1, int x2, int y2)
         pc->isActive = a;    // change "active status"
         if(a == COMP_IS_ACTIVE)  // only for active (not shorten)
           if(pc->Model == "GND")  // if existing, delete label on wire line
-            oneLabel(pc->Ports.getFirst()->Connection);
+            oneLabel(pc->Ports.first()->Connection);
       }
       changed = true;
     }
@@ -2403,7 +2421,7 @@ bool Schematic::activateSpecifiedComponent(int x, int y)
         pc->isActive = a;    // change "active status"
         if(a == COMP_IS_ACTIVE)  // only for active (not shorten)
           if(pc->Model == "GND")  // if existing, delete label on wire line
-            oneLabel(pc->Ports.getFirst()->Connection);
+            oneLabel(pc->Ports.first()->Connection);
       }
       setChanged(true, true);
       return true;
@@ -2433,7 +2451,7 @@ bool Schematic::activateSelectedComponents()
         pc->isActive = a;    // change "active status"
         if(a == COMP_IS_ACTIVE)  // only for active (not shorten)
           if(pc->Model == "GND")  // if existing, delete label on wire line
-            oneLabel(pc->Ports.getFirst()->Connection);
+            oneLabel(pc->Ports.first()->Connection);
       }
       sel = true;
     }
@@ -2451,7 +2469,9 @@ void Schematic::setCompPorts(Component *pc)
   WireLabel *pl;
   Q3PtrList<WireLabel> LabelCache;
 
-  for(pp = pc->Ports.first(); pp!=0; pp = pc->Ports.next()) {
+  QListIterator<Port *> ip(pc->Ports);
+  while (ip.hasNext()) {
+    pp = ip.next();
     pp->Connection->Connections.removeOne((Element*)pc);// delete connections
     switch(pp->Connection->Connections.count()) {
       case 0:
@@ -2471,8 +2491,12 @@ void Schematic::setCompPorts(Component *pc)
 
   // Re-connect component node to schematic node. This must be done completely
   // after the first loop in order to avoid problems with node labels.
-  for(pp = pc->Ports.first(); pp!=0; pp = pc->Ports.next())
+//  for(pp = pc->Ports.first(); pp!=0; pp = pc->Ports.next())
+  QListIterator<Port *> ip2(pc->Ports);
+  while (ip2.hasNext()) {
+    pp = ip2.next();
     pp->Connection = insertNode(pp->x+pc->cx, pp->y+pc->cy, pc);
+  }
 
   for(pl = LabelCache.first(); pl != 0; pl = LabelCache.next())
     insertNodeLabel(pl);
@@ -2546,7 +2570,9 @@ void Schematic::deleteComp(Component *c)
   Port *pn;
 
   // delete all port connections
-  for(pn = c->Ports.first(); pn!=0; pn = c->Ports.next())
+  QListIterator<Port *> ip(c->Ports);
+  while (ip.hasNext()) {
+    pn = ip.next();
     switch(pn->Connection->Connections.count()) {
       case 1  : if(pn->Connection->Label) delete pn->Connection->Label;
                 Nodes.removeOne(pn->Connection);  // delete open nodes
@@ -2558,6 +2584,7 @@ void Schematic::deleteComp(Component *c)
       default : pn->Connection->Connections.removeOne(c);// remove connection
                 break;
     }
+  }
 
   Components.removeOne(c);   // delete component
 }
@@ -2584,7 +2611,9 @@ int Schematic::copyComponents(int& x1, int& y1, int& x2, int& y2,
       ElementCache.append(pc);
 
       Port *pp;   // rescue non-selected node labels
-      for(pp = pc->Ports.first(); pp != 0; pp = pc->Ports.next())
+      QListIterator<Port *> ip(pc->Ports);
+      while (ip.hasNext()) {
+        pp = ip.next();
         if(pp->Connection->Label)
           if(pp->Connection->Connections.count() < 2) {
             ElementCache.append(pp->Connection->Label);
@@ -2596,6 +2625,7 @@ int Schematic::copyComponents(int& x1, int& y1, int& x2, int& y2,
 
             pp->Connection->Label = 0;
           }
+      }
 
       deleteComp(pc);  //FIXME does not look right
 //      pc = Components->current();
@@ -2625,7 +2655,9 @@ void Schematic::copyComponents2(int& x1, int& y1, int& x2, int& y2,
       ElementCache.append(pc);
 
       Port *pp;   // rescue non-selected node labels
-      for(pp = pc->Ports.first(); pp != 0; pp = pc->Ports.next())
+      QListIterator<Port *> ip(pc->Ports);
+      while (ip.hasNext()) {
+        pp = ip.next();
         if(pp->Connection->Label)
           if(pp->Connection->Connections.count() < 2) {
             ElementCache.append(pp->Connection->Label);
@@ -2633,6 +2665,7 @@ void Schematic::copyComponents2(int& x1, int& y1, int& x2, int& y2,
             // Don't set pp->Connection->Label->pOwner=0,
             // so text position stays unchanged.
           }
+       }
 
       deleteComp(pc); //FIXME doesn't look right
 //      pc = Components->current();

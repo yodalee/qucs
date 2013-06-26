@@ -192,7 +192,7 @@ int LibComp::loadSymbol()
     pc->Lines.setAutoDelete(false);
     pc->Rects.setAutoDelete(false);
     pc->Ellips.setAutoDelete(false);
-    pc->Ports.setAutoDelete(false);
+    //pc->Ports.setAutoDelete(false);
     //pc->Texts.setAutoDelete(false);
     //pc->Props.setAutoDelete(false);
     delete pc;
@@ -285,8 +285,9 @@ QString LibComp::netlist()
   QString s = "Sub:"+Name;   // output as subcircuit
 
   // output all node names
-  for(Port *p1 = Ports.first(); p1 != 0; p1 = Ports.next())
-    s += " "+p1->Connection->Name;   // node names
+  QListIterator<Port *> ip(Ports);
+  while (ip.hasNext())
+    s += " "+ip.next()->Connection->Name;   // node names
 
   // output property
   s += " Type=\""+createType()+"\"";   // type for subcircuit
@@ -304,10 +305,14 @@ QString LibComp::verilogCode(int)
   QString s = "  Sub_" + createType() + " " + Name + " (";
 
   // output all node names
-  Port *pp = Ports.first();
-  if(pp)  s += pp->Connection->Name;
-  for(pp = Ports.next(); pp != 0; pp = Ports.next())
+  Port *pp;
+  QListIterator<Port *> ip(Ports);
+  if(ip.hasNext())  
+      s += ip.next()->Connection->Name;
+  while (ip.hasNext()) {
+    pp = ip.next();
     s += ", "+pp->Connection->Name;   // node names
+  }
 
   s += ");\n";
   return s;
@@ -319,11 +324,15 @@ QString LibComp::vhdlCode(int)
   QString s = "  " + Name + ": entity Sub_" + createType() + " port map (";
 
   // output all node names
-  Port *pp = Ports.first();
-  if(pp)  s += pp->Connection->Name;
-  for(pp = Ports.next(); pp != 0; pp = Ports.next())
+  Port *pp;
+  QListIterator<Port *> ip(Ports);
+  if(ip.hasNext())  
+      s += ip.next()->Connection->Name;
+  while (ip.hasNext()) {
+    pp = ip.next();
     s += ", "+pp->Connection->Name;   // node names
-
+  }
+  
   s += ");\n";
   return s;
 }

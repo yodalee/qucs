@@ -96,14 +96,18 @@ QString BJT::netlist()
   QString s = "BJT:"+Name;
 
   // output all node names
-  for(Port *p1 = Ports.first(); p1 != 0; p1 = Ports.next())
-    s += " "+p1->Connection->Name;   // node names
+  QListIterator<Port *> iport(Ports);
+  while (iport.hasNext()) 
+    s += " "+iport.next()->Connection->Name;   // node names
   s += " "+Ports.at(1)->Connection->Name;  // connect substrate to collector
 
   // output all properties
-  //for(Property *p2 = Props.first(); p2 != 0; p2 = Props.next())
-  for (int i=0; i <= Props.count(); i++)
-    s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
+  Property *p2;
+  QListIterator<Property *> ip(Props);
+  while (ip.hasNext()) {
+    p2 = ip.next();
+    s += " "+p2->Name+"=\""+p2->Value+"\"";
+  }
 
   return s + '\n';
 }

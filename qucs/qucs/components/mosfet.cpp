@@ -127,16 +127,17 @@ QString MOSFET::netlist()
   QString s = "MOSFET:"+Name;
 
   // output all node names
-  for(Port *p1 = Ports.first(); p1 != 0; p1 = Ports.next())
-    s += " "+p1->Connection->Name;   // node names
+  QListIterator<Port *> iport(Ports);
+  while (iport.hasNext())
+    s += " "+iport.next()->Connection->Name;   // node names
   s += " "+Ports.at(2)->Connection->Name;  // connect substrate to source
 
   // output all properties
   Property *p2;
-  QListIterator<Property *> ip(Props);
+  QListIterator<Property *> iprop(Props);
   //for(Property *p2 = Props.first(); p2 != 0; p2 = Props.next())
-  while (ip.hasNext()) {
-    p2 = ip.next();
+  while (iprop.hasNext()) {
+    p2 = iprop.next();
     s += " "+p2->Name+"=\""+p2->Value+"\"";
   }
 

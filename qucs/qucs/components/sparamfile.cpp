@@ -114,8 +114,9 @@ QString SParamFile::netlist()
   QString s = Model+":"+Name;
 
   // output all node names
-  for(Port *p1 = Ports.first(); p1 != 0; p1 = Ports.next())
-    s += " "+p1->Connection->Name;   // node names
+  QListIterator<Port *> iport(Ports);
+  while (iport.hasNext()) 
+    s += " "+iport.next()->Connection->Name;   // node names
 
   // output all properties
   Property *p2 = Props[0];

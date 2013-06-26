@@ -67,8 +67,8 @@ QString Switch::netlist()
   QString s = Model+":"+Name;
 
   // output all node names
-  s += " "+Ports.first()->Connection->Name;
-  s += " "+Ports.next()->Connection->Name;
+  s += " "+Ports[0]->Connection->Name;
+  s += " "+Ports[1]->Connection->Name;
 
   // output all properties
   Property *p2 = Props[0];

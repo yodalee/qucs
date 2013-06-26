@@ -276,8 +276,9 @@ QString EKV26MOS::netlist()
   QString s = Model+":"+Name;
 
   // output all node names
-  for(Port *p1 = Ports.first(); p1 != 0; p1 = Ports.next())
-    s += " "+p1->Connection->Name;   // node names
+  QListIterator<Port *> iport(Ports);
+  while (iport.hasNext()) 
+    s += " "+iport.next()->Connection->Name;   // node names
 
   // output type npn/pnp property
   Property *p2 = Props[0];

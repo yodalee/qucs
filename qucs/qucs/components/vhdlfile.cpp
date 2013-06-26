@@ -69,8 +69,9 @@ Element* VHDL_File::info(QString& Name, char* &BitmapFile, bool getNewOne)
 QString VHDL_File::vhdlCode(int)
 {
   QString s;
-  Port *pp = Ports.first();
-  if(pp) {
+  Port *pp;
+  QListIterator<Port *> ip(Ports);
+  if(ip.hasNext()) {
     s = "  " + Name + ": entity " + EntityName;
 
     // output all generic properties
@@ -85,9 +86,12 @@ QString VHDL_File::vhdlCode(int)
 
     // output all node names
     s += " port map (";
-    if(pp)  s += pp->Connection->Name;
-    for(pp = Ports.next(); pp != 0; pp = Ports.next())
+    pp = ip.next();
+    s += pp->Connection->Name;
+    while (ip.hasNext()) {
+        pp = ip.next();
       s += ", "+pp->Connection->Name;   // node names
+    }
     s += ");\n";
   }
   return s;
