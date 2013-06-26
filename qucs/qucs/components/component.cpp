@@ -58,7 +58,7 @@ Component::Component()
   Arcs.setAutoDelete(true);
   //Lines.setAutoDelete(true);
   Rects.setAutoDelete(true);
-  Ellips.setAutoDelete(true);
+  //Ellips.setAutoDelete(true);
   //Ports.setAutoDelete(true);
   //Texts.setAutoDelete(true);
   //Props.setAutoDelete(true);
@@ -257,7 +257,9 @@ void Component::paint(ViewPainter *p)
     }
 
     // paint all ellipses
-    for(pa = Ellips.first(); pa != 0; pa = Ellips.next()) {
+    QListIterator<Area *> ia2(Ellips);
+    while (ia2.hasNext()) {
+      pa = ia2.next();
       p->Painter->setPen(pa->Pen);
       p->Painter->setBrush(pa->Brush);
       p->drawEllipse(cx+pa->x, cy+pa->y, pa->w, pa->h);
@@ -388,8 +390,12 @@ void Component::paintScheme(Schematic *p)
   for(pa = Rects.first(); pa != 0; pa = Rects.next()) // paint all rectangles
     p->PostPaintEvent(_Rect,cx+pa->x, cy+pa->y, pa->w, pa->h);
 
-  for(pa = Ellips.first(); pa != 0; pa = Ellips.next()) // paint all ellipses
+  // paint all ellipses
+  QListIterator<Area *> ia2(Ellips);
+  while (ia2.hasNext()) {
+    pa = ia2.next();
     p->PostPaintEvent(_Ellipse,cx+pa->x, cy+pa->y, pa->w, pa->h);
+  }
 }
 
 // -------------------------------------------------------
@@ -461,7 +467,9 @@ void Component::rotate()
   }
 
   // rotate all ellipses
-  for(pa = Ellips.first(); pa != 0; pa = Ellips.next()) {
+  QListIterator<Area *> ia2(Ellips);
+  while (ia2.hasNext()) {
+    pa = ia2.next();
     tmp = -pa->x;
     pa->x = pa->y;
     pa->y = tmp - pa->w;
@@ -557,8 +565,11 @@ void Component::mirrorX()
     pa->y = -pa->y - pa->h;
 
   // mirror all ellipses
-  for(pa = Ellips.first(); pa != 0; pa = Ellips.next())
+  QListIterator<Area *> ia2(Ellips);
+  while (ia2.hasNext()) {
+    pa = ia2.next();
     pa->y = -pa->y - pa->h;
+  }
 
   QFont f = QucsSettings.font;
   // mirror all text
@@ -625,8 +636,11 @@ void Component::mirrorY()
     pa->x = -pa->x - pa->w;
 
   // mirror all ellipses
-  for(pa = Ellips.first(); pa != 0; pa = Ellips.next())
+  QListIterator<Area *> ia2(Ellips);
+  while (ia2.hasNext()) {
+    pa = ia2.next();
     pa->x = -pa->x - pa->w;
+  }
 
   int tmp;
   QFont f = QucsSettings.font;
