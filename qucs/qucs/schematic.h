@@ -112,23 +112,21 @@ public:
 
   // The pointers points to the current lists, either to the schematic
   // elements "Doc..." or to the symbol elements "SymbolPaints".
-//  Q3PtrList<Wire>      *Wires, DocWires;
-  //Q3PtrList<Node>      *Nodes, DocNodes;
-//  Q3PtrList<Diagram>   *Diagrams, DocDiags;
-//  Q3PtrList<Painting>  *Paintings, DocPaints;
-  //Q3PtrList<Component> *Components, DocComps;
   
-  QList<Wire *>      Wires, DocWires;
-  QList<Node *>      Nodes, DocNodes;
-  QList<Diagram *>   Diagrams, DocDiags;
-  QList<Painting *>  Paintings, DocPaints;
-  
+  // It used to be a pointer and a list
   // why we have these?
   // DocComps is only appended on insertSimpleComponent, 
   // it happend during loadComponent (either rebuild or loadDocument)
   
   // Components is the one that holds the schematic.
   // it gets the content of DocComps on becomeCurrent
+//  Q3PtrList<Wire>      *Wires, DocWires;
+ 
+  QList<Wire *>      Wires, DocWires;
+  QList<Node *>      Nodes, DocNodes;
+  QList<Diagram *>   Diagrams, DocDiags;
+  QList<Painting *>  Paintings, DocPaints;
+  
   
   //saving should be from Componens (or its po)
   QList<Component *> Components, DocComps;
@@ -237,18 +235,18 @@ public:
   int      placeNodeLabel(WireLabel*);
   Element* getWireLabel(Node*);
   void     insertNodeLabel(WireLabel*);
-  void     copyLabels(int&, int&, int&, int&, Q3PtrList<Element>*);
+  void     copyLabels(int&, int&, int&, int&, QList<Element *>);
 
   Painting* selectedPainting(float, float);
-  void      copyPaintings(int&, int&, int&, int&, Q3PtrList<Element>*);
+  void      copyPaintings(int&, int&, int&, int&, QList<Element *>);
 
 private:
   void insertComponentNodes(Component*, bool);
-  int  copyWires(int&, int&, int&, int&, Q3PtrList<Element>*);
-  int  copyComponents(int&, int&, int&, int&, Q3PtrList<Element>*);
-  void copyComponents2(int&, int&, int&, int&, Q3PtrList<Element>*);
-  bool copyComps2WiresPaints(int&, int&, int&, int&, Q3PtrList<Element>*);
-  int  copyElements(int&, int&, int&, int&, Q3PtrList<Element>*);
+  int  copyWires(int&, int&, int&, int&, QList<Element *>);
+  int  copyComponents(int&, int&, int&, int&, QList<Element *>);
+  void copyComponents2(int&, int&, int&, int&, QList<Element *>);
+  bool copyComps2WiresPaints(int&, int&, int&, int&, QList<Element *>);
+  int  copyElements(int&, int&, int&, int&, QList<Element *>);
 
 
 /* ********************************************************************

@@ -1052,11 +1052,11 @@ bool Schematic::rotateElements()
 
   int x1=INT_MAX, y1=INT_MAX;
   int x2=INT_MIN, y2=INT_MIN;
-  Q3PtrList<Element> ElementCache;
-  copyLabels(x1, y1, x2, y2, &ElementCache);   // must be first of all !
-  copyComponents(x1, y1, x2, y2, &ElementCache);
-  copyWires(x1, y1, x2, y2, &ElementCache);
-  copyPaintings(x1, y1, x2, y2, &ElementCache);
+  QList<Element *> ElementCache;
+  copyLabels(x1, y1, x2, y2, ElementCache);   // must be first of all !
+  copyComponents(x1, y1, x2, y2, ElementCache);
+  copyWires(x1, y1, x2, y2, ElementCache);
+  copyPaintings(x1, y1, x2, y2, ElementCache);
   if(y1 == INT_MAX) return false;   // no element selected
 
   //Wires->setAutoDelete(true);
@@ -1072,7 +1072,10 @@ bool Schematic::rotateElements()
   Component *pc;
   WireLabel *pl;
   // re-insert elements
-  for(Element *pe = ElementCache.first(); pe != 0; pe = ElementCache.next())
+  Element *pe;
+  QListIterator<Element *> ie(ElementCache);
+  while (ie.hasNext()) {
+    pe = ie.next();
     switch(pe->Type) {
       case isComponent:
       case isAnalogComponent:
@@ -1132,6 +1135,7 @@ bool Schematic::rotateElements()
         break;
       default: ;
     }
+  }
 
   ElementCache.clear();
 
@@ -1148,8 +1152,8 @@ bool Schematic::mirrorXComponents()
   //Components->setAutoDelete(false);
 
   int x1, y1, x2, y2;
-  Q3PtrList<Element> ElementCache;
-  if(!copyComps2WiresPaints(x1, y1, x2, y2, &ElementCache))
+  QList<Element *> ElementCache;
+  if(!copyComps2WiresPaints(x1, y1, x2, y2, ElementCache))
     return false;
   //Wires->setAutoDelete(true);
   //Components->setAutoDelete(true);
@@ -1164,7 +1168,10 @@ bool Schematic::mirrorXComponents()
   Component *pc;
   WireLabel *pl;
   // re-insert elements
-  for(Element *pe = ElementCache.first(); pe != 0; pe = ElementCache.next())
+  Element *pe;
+  QListIterator<Element *> ie(ElementCache);
+  while (ie.hasNext()) {
+    pe = ie.next();
     switch(pe->Type) {
       case isComponent:
       case isAnalogComponent:
@@ -1203,6 +1210,7 @@ bool Schematic::mirrorXComponents()
 	break;
       default: ;
     }
+  }
 
   ElementCache.clear();
   setChanged(true, true);
@@ -1217,8 +1225,8 @@ bool Schematic::mirrorYComponents()
   //Components->setAutoDelete(false);
 
   int x1, y1, x2, y2;
-  Q3PtrList<Element> ElementCache;
-  if(!copyComps2WiresPaints(x1, y1, x2, y2, &ElementCache))
+  QList<Element *> ElementCache;
+  if(!copyComps2WiresPaints(x1, y1, x2, y2, ElementCache))
     return false;
 //  Wires->setAutoDelete(true);
   //Components->setAutoDelete(true);
@@ -1232,7 +1240,10 @@ bool Schematic::mirrorYComponents()
   Component *pc;
   WireLabel *pl;
   // re-insert elements
-  for(Element *pe = ElementCache.first(); pe != 0; pe = ElementCache.next())
+  Element *pe;
+  QListIterator<Element *> ie(ElementCache);
+  while (ie.hasNext()) {
+    pe = ie.next();
     switch(pe->Type) {
       case isComponent:
       case isAnalogComponent:
@@ -1271,6 +1282,7 @@ bool Schematic::mirrorYComponents()
         break;
       default: ;
     }
+  }
 
   ElementCache.clear();
   setChanged(true, true);

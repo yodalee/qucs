@@ -799,7 +799,7 @@ void Schematic::deleteWire(Wire *w)
 
 // ---------------------------------------------------
 int Schematic::copyWires(int& x1, int& y1, int& x2, int& y2,
-			Q3PtrList<Element> *ElementCache)
+			QList<Element *> ElementCache)
 {
   int count = 0;
   Node *pn;
@@ -815,13 +815,13 @@ int Schematic::copyWires(int& x1, int& y1, int& x2, int& y2,
       if(pw->y2 > y2) y2 = pw->y2;
 
       count++;
-      ElementCache->append(pw);
+      ElementCache.append(pw);
 
       // rescue non-selected node labels
       pn = pw->Port1;
       if(pn->Label)
         if(pn->Connections.count() < 2) {
-          ElementCache->append(pn->Label);
+          ElementCache.append(pn->Label);
 
           // Don't set pn->Label->pOwner=0 , so text position stays unchanged.
           // But remember its wire.
@@ -831,7 +831,7 @@ int Schematic::copyWires(int& x1, int& y1, int& x2, int& y2,
       pn = pw->Port2;
       if(pn->Label)
         if(pn->Connections.count() < 2) {
-          ElementCache->append(pn->Label);
+          ElementCache.append(pn->Label);
 
           // Don't set pn->Label->pOwner=0 , so text position stays unchanged.
           // But remember its wire.
@@ -1587,7 +1587,7 @@ int Schematic::copySelectedElements(QList<Element *> p)
 
 // ---------------------------------------------------
 bool Schematic::copyComps2WiresPaints(int& x1, int& y1, int& x2, int& y2,
-			Q3PtrList<Element> *ElementCache)
+			QList<Element *> ElementCache)
 {
   x1=INT_MAX;
   y1=INT_MAX;
@@ -1605,7 +1605,7 @@ bool Schematic::copyComps2WiresPaints(int& x1, int& y1, int& x2, int& y2,
 // ---------------------------------------------------
 // Used in "aligning()", "distributeHorizontal()", "distributeVertical()".
 int Schematic::copyElements(int& x1, int& y1, int& x2, int& y2,
-			Q3PtrList<Element> *ElementCache)
+			QList<Element *> ElementCache)
 {
   int bx1, by1, bx2, by2;
   //Wires->setAutoDelete(false);
@@ -1634,7 +1634,7 @@ int Schematic::copyElements(int& x1, int& y1, int& x2, int& y2,
       if(bx2 > x2) x2 = bx2;
       if(by1 < y1) y1 = by1;
       if(by2 > y2) y2 = by2;
-      ElementCache->append(pd);
+      ElementCache.append(pd);
       number++;
     }
   }
@@ -1651,7 +1651,7 @@ int Schematic::copyElements(int& x1, int& y1, int& x2, int& y2,
       if(bx2 > x2) x2 = bx2;
       if(by1 < y1) y1 = by1;
       if(by2 > y2) y2 = by2;
-      ElementCache->append(pp);
+      ElementCache.append(pp);
       number++;
     }
   }
@@ -1776,8 +1776,8 @@ bool Schematic::aligning(int Mode)
 {
   int x1, y1, x2, y2;
   int bx1, by1, bx2, by2, *bx=0, *by=0, *ax=0, *ay=0;
-  Q3PtrList<Element> ElementCache;
-  int count = copyElements(x1, y1, x2, y2, &ElementCache);
+  QList<Element *> ElementCache;
+  int count = copyElements(x1, y1, x2, y2, ElementCache);
   if(count < 1) return false;
 
 
@@ -1828,7 +1828,12 @@ bool Schematic::aligning(int Mode)
   Component *pc;
   // re-insert elements
   // Go backwards in order to insert node labels before its component.
-  for(Element *pe = ElementCache.last(); pe != 0; pe = ElementCache.prev())
+//  for( = ElementCache.last(); pe != 0; pe = ElementCache.prev())
+  Element *pe;
+  QListIterator<Element *> ie(ElementCache);
+  ie.toBack();
+  while (ie.hasPrevious()) {
+    pe = ie.previous();
     switch(pe->Type) {
       case isComponent:
       case isAnalogComponent:
@@ -1885,6 +1890,7 @@ bool Schematic::aligning(int Mode)
 
       default: ;
     }
+  }
 
   ElementCache.clear();
   if(count < 2) return false;
@@ -1896,46 +1902,65 @@ bool Schematic::aligning(int Mode)
 // ---------------------------------------------------
 bool Schematic::distributeHorizontal()
 {
+  qDebug() << "Schematic::distributeHorizontal  -- BROKEN";
   int x1, y1, x2, y2;
   int bx1, by1, bx2, by2;
-  Q3PtrList<Element> ElementCache;
-  int count = copyElements(x1, y1, x2, y2, &ElementCache);
+  QList<Element *> ElementCache;
+  int count = copyElements(x1, y1, x2, y2, ElementCache);
   if(count < 1) return false;
 
   Element *pe;
   WireLabel *pl;
   // Node labels are not counted for, so put them to the end.
+  QMutableListIterator<Element *> ie(ElementCache);
+  while (ie.hasPrevious()) {
+    pe = ie.previous();
+    if(pe->Type == isNodeLabel) {
+      ie.remove();
+      ElementCache.append(pe);
+//      ElementCache.removeRef(pe);
+    }
+  }
 /*  for(pe = ElementCache.last(); pe != 0; pe = ElementCache.prev())
     if(pe->Type == isNodeLabel) {
       ElementCache.append(pe);
       ElementCache.removeRef(pe);
-    }*/
+    } it was commented out?! was it working?*/
 
   // using bubble sort to get elements x ordered
+  QMutableListIterator<Element *> ies(ElementCache);
   if(count > 1)
     for(int i = count-1; i>0; i--) {
-      pe = ElementCache.first();
+      ies.toFront();
+      pe = ies.next();
       for(int j=0; j<i; j++) {
         pe->getCenter(bx1, by1);
-        pe=ElementCache.next();
+        pe = ies.next();
         pe->getCenter(bx2, by2);
         if(bx1 > bx2) {  // change two elements ?
-          ElementCache.replace(j+1, ElementCache.prev());
-          ElementCache.replace(j, pe);
-          pe = ElementCache.next();
+          // current gets previous, step back one position
+          ies.setValue(ies.previous());
+          // new current gets temp 
+          ies.setValue(pe);
+          // step forward to initial position
+          ies.next(); 
+//          pe = ElementCache.next(); //Need another step?
         }
       }
     }
 
-  ElementCache.getLast()->getCenter(x2, y2);
-  ElementCache.getFirst()->getCenter(x1, y1);
+  ElementCache.last()->getCenter(x2, y2);
+  ElementCache.first()->getCenter(x1, y1);
   Wire *pw;
   int x = x2;
   int dx=0;
   if(count > 1) dx = (x2-x1)/(count-1);
   // re-insert elements and put them at right position
   // Go backwards in order to insert node labels before its component.
-  for(pe = ElementCache.last(); pe != 0; pe = ElementCache.prev()) {
+  QListIterator<Element *> ie2(ElementCache);
+  ie2.toBack();
+  while (ie2.hasPrevious()) {
+    pe = ie2.previous();
     switch(pe->Type) {
       case isComponent:
       case isAnalogComponent:
@@ -1998,36 +2023,44 @@ bool Schematic::distributeVertical()
 {
   int x1, y1, x2, y2;
   int bx1, by1, bx2, by2;
-  Q3PtrList<Element> ElementCache;
-  int count = copyElements(x1, y1, x2, y2, &ElementCache);
+  QList<Element *> ElementCache;
+  int count = copyElements(x1, y1, x2, y2, ElementCache);
   if(count < 1) return false;
 
-  // using bubble sort to get elements x ordered
   Element *pe;
+  // using bubble sort to get elements x ordered
+  QMutableListIterator<Element *> ies(ElementCache);
   if(count > 1)
     for(int i = count-1; i>0; i--) {
-      pe = ElementCache.first();
+      ies.toFront();
+      pe = ies.next();
       for(int j=0; j<i; j++) {
         pe->getCenter(bx1, by1);
-        pe=ElementCache.next();
+        pe = ies.next();
         pe->getCenter(bx2, by2);
-        if(by1 > by2) {  // change two elements ?
-          ElementCache.replace(j+1, ElementCache.prev());
-          ElementCache.replace(j, pe);
-          pe = ElementCache.next();
+        if(bx1 > bx2) {  // change two elements ?
+          // current gets previous, step back one position
+          ies.setValue(ies.previous());
+          // new current gets temp 
+          ies.setValue(pe);
+          // step forward to initial position
+          ies.next(); 
+//          pe = ElementCache.next(); //Need another step?
         }
       }
     }
-
-  ElementCache.getLast()->getCenter(x2, y2);
-  ElementCache.getFirst()->getCenter(x1, y1);
+  ElementCache.last()->getCenter(x2, y2);
+  ElementCache.first()->getCenter(x1, y1);
   Wire *pw;
   int y  = y2;
   int dy=0;
   if(count > 1) dy = (y2-y1)/(count-1);
   // re-insert elements and put them at right position
   // Go backwards in order to insert node labels before its component.
-  for(pe = ElementCache.last(); pe != 0; pe = ElementCache.prev()) {
+  QListIterator<Element *> ie2(ElementCache);
+  ie2.toBack();
+  while (ie2.hasPrevious()) {
+    pe = ie2.previous();
     switch(pe->Type) {
       case isComponent:
       case isAnalogComponent:
@@ -2531,7 +2564,7 @@ void Schematic::deleteComp(Component *c)
 
 // ---------------------------------------------------
 int Schematic::copyComponents(int& x1, int& y1, int& x2, int& y2,
-			Q3PtrList<Element> *ElementCache)
+			QList<Element *> ElementCache)
 {
   Component *pc;
   int bx1, by1, bx2, by2, count=0;
@@ -2548,13 +2581,13 @@ int Schematic::copyComponents(int& x1, int& y1, int& x2, int& y2,
       if(by2 > y2) y2 = by2;
 
       count++;
-      ElementCache->append(pc);
+      ElementCache.append(pc);
 
       Port *pp;   // rescue non-selected node labels
       for(pp = pc->Ports.first(); pp != 0; pp = pc->Ports.next())
         if(pp->Connection->Label)
           if(pp->Connection->Connections.count() < 2) {
-            ElementCache->append(pp->Connection->Label);
+            ElementCache.append(pp->Connection->Label);
 
             // Don't set pp->Connection->Label->pOwner=0,
             // so text position stays unchanged, but
@@ -2566,7 +2599,7 @@ int Schematic::copyComponents(int& x1, int& y1, int& x2, int& y2,
 
       deleteComp(pc);  //FIXME does not look right
 //      pc = Components->current();
-      continue;
+//      continue;
     }
 //    pc = Components->next();
   }
@@ -2575,13 +2608,13 @@ int Schematic::copyComponents(int& x1, int& y1, int& x2, int& y2,
 
 // ---------------------------------------------------
 void Schematic::copyComponents2(int& x1, int& y1, int& x2, int& y2,
-			Q3PtrList<Element> *ElementCache)
+			QList<Element *> ElementCache)
 {
   Component *pc;
   // find bounds of all selected components
-//  for(pc = Components->first(); pc != 0; ) {
   QListIterator<Component *> ic(Components);
   while (ic.hasNext()) {
+    pc = ic.next();
     if(pc->isSelected) {
       // is better for unsymmetrical components
       if(pc->cx < x1)  x1 = pc->cx;
@@ -2589,13 +2622,13 @@ void Schematic::copyComponents2(int& x1, int& y1, int& x2, int& y2,
       if(pc->cy < y1)  y1 = pc->cy;
       if(pc->cy > y2)  y2 = pc->cy;
 
-      ElementCache->append(pc);
+      ElementCache.append(pc);
 
       Port *pp;   // rescue non-selected node labels
       for(pp = pc->Ports.first(); pp != 0; pp = pc->Ports.next())
         if(pp->Connection->Label)
           if(pp->Connection->Connections.count() < 2) {
-            ElementCache->append(pp->Connection->Label);
+            ElementCache.append(pp->Connection->Label);
             pp->Connection->Label = 0;
             // Don't set pp->Connection->Label->pOwner=0,
             // so text position stays unchanged.
@@ -2603,7 +2636,7 @@ void Schematic::copyComponents2(int& x1, int& y1, int& x2, int& y2,
 
       deleteComp(pc); //FIXME doesn't look right
 //      pc = Components->current();
-      continue;
+//      continue;
     }
 //    pc = Components->next();
   }
@@ -2798,7 +2831,7 @@ void Schematic::insertNodeLabel(WireLabel *pl)
 
 // ---------------------------------------------------
 void Schematic::copyLabels(int& x1, int& y1, int& x2, int& y2,
-			Q3PtrList<Element> *ElementCache)
+			QList<Element *> ElementCache)
 {
   WireLabel *pl;
   // find bounds of all selected wires
@@ -2812,7 +2845,7 @@ void Schematic::copyLabels(int& x1, int& y1, int& x2, int& y2,
       if(pl->y1-pl->y2 < y1) y1 = pl->y1-pl->y2;
       if(pl->x1+pl->x2 > x2) x2 = pl->x1+pl->x2;
       if(pl->y1 > y2) y2 = pl->y1;
-      ElementCache->append(pl);
+      ElementCache.append(pl);
     }
   }
   
@@ -2826,7 +2859,7 @@ void Schematic::copyLabels(int& x1, int& y1, int& x2, int& y2,
       if(pl->y1-pl->y2 < y1) y1 = pl->y1-pl->y2;
       if(pl->x1+pl->x2 > x2) x2 = pl->x1+pl->x2;
       if(pl->y1 > y2) y2 = pl->y1;
-      ElementCache->append(pl);
+      ElementCache.append(pl);
       pl->pOwner->Label = 0;   // erase connection
       pl->pOwner = 0;
     }
@@ -2857,7 +2890,7 @@ Painting* Schematic::selectedPainting(float fX, float fY)
 
 // ---------------------------------------------------
 void Schematic::copyPaintings(int& x1, int& y1, int& x2, int& y2,
-			Q3PtrList<Element> *ElementCache)
+			QList<Element *> ElementCache)
 {
   Painting *pp;
   int bx1, by1, bx2, by2;
@@ -2865,6 +2898,7 @@ void Schematic::copyPaintings(int& x1, int& y1, int& x2, int& y2,
 #warning mutable?
   QListIterator<Painting *> ip(Paintings);
   while(ip.hasNext()) {
+    pp = ip.next();
     if(pp->isSelected) {
       pp->Bounding(bx1, by1, bx2, by2);
       if(bx1 < x1) x1 = bx1;
@@ -2872,7 +2906,7 @@ void Schematic::copyPaintings(int& x1, int& y1, int& x2, int& y2,
       if(by1 < y1) y1 = by1;
       if(by2 > y2) y2 = by2;
 
-      ElementCache->append(pp);
+      ElementCache.append(pp);
       Paintings.takeAt(Paintings.indexOf(pp));
 //      pp = Paintings->current();
     }
