@@ -66,8 +66,7 @@ public:
   Q3PtrList<struct Arc>      Arcs;
   Q3PtrList<Area>     Rects, Ellips;
   Q3PtrList<Port>     Ports;
-  Q3PtrList<Text>     Texts;
-  //rmQ3PtrList<Property> Props;
+  QList<Text *>     Texts;
   QList<Property *> Props;
 
   #define COMP_IS_OPEN    0

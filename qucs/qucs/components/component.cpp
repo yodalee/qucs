@@ -60,7 +60,7 @@ Component::Component()
   Rects.setAutoDelete(true);
   Ellips.setAutoDelete(true);
   Ports.setAutoDelete(true);
-  Texts.setAutoDelete(true);
+  //Texts.setAutoDelete(true);
   //Props.setAutoDelete(true);
 }
 
@@ -200,7 +200,7 @@ void Component::paint(ViewPainter *p)
   QFont f = p->Painter->font();   // save current font
   QFont newFont = f;
   if(Model.at(0) == '.') {   // is simulation component (dc, ac, ...)
-    newFont.setPointSizeFloat(p->Scale * Texts.getFirst()->Size);
+    newFont.setPointSizeFloat(p->Scale * Texts.first()->Size);
     newFont.setWeight(QFont::DemiBold);
     p->Painter->setFont(newFont);
     p->map(cx, cy, x, y);
@@ -208,7 +208,9 @@ void Component::paint(ViewPainter *p)
     p->Painter->setPen(QPen(Qt::darkBlue,2));
     a = b = 0;
     QRect r, t;
-    for(pt = Texts.first(); pt != 0; pt = Texts.next()) {
+    QListIterator<Text *> it(Texts);
+    while (it.hasNext()) {
+      pt = it.next();
       t.setRect(x, y+b, 0, 0);
       p->Painter->drawText(t, Qt::AlignLeft|Qt::TextDontClip, pt->s, -1, &r);
       b += r.height();
@@ -262,7 +264,9 @@ void Component::paint(ViewPainter *p)
     newFont.setWeight(QFont::Light);
     QMatrix wm = p->Painter->worldMatrix();
     // write all text
-    for(pt = Texts.first(); pt != 0; pt = Texts.next()) {
+    QListIterator<Text *> it(Texts);
+    while (it.hasNext()) {
+      pt = it.next();
       p->Painter->setWorldMatrix(
           QMatrix(pt->mCos, -pt->mSin, pt->mSin, pt->mCos,
                    p->DX + float(cx+pt->x) * p->Scale,
@@ -336,7 +340,9 @@ void Component::paintScheme(Schematic *p)
 
     a = b = 0;
     QSize r;
-    for(pt = Texts.first(); pt != 0; pt = Texts.next()) {
+    QListIterator<Text *> it(Texts);
+    while (it.hasNext()) {
+      pt = it.next();
       r = metrics.size(0, pt->s);
       b += r.height();
       if(a < r.width())  a = r.width();
@@ -379,14 +385,15 @@ void Component::paintScheme(Schematic *p)
 // For output on a printer device.
 void Component::print(ViewPainter *p, float FontScale)
 {
-  Text *pt;
-  for(pt = Texts.first(); pt != 0; pt = Texts.next())
-    pt->Size *= FontScale;
+  QListIterator<Text *> it(Texts);
+  while (it.hasNext())
+    it.next()->Size *= FontScale;
 
   paint(p);
 
-  for(pt = Texts.first(); pt != 0; pt = Texts.next())
-    pt->Size /= FontScale;
+  it.toFront();
+  while (it.hasNext())
+    it.next()->Size /= FontScale;
 }
 
 // -------------------------------------------------------
@@ -448,7 +455,10 @@ void Component::rotate()
 
   // rotate all text
   float ftmp;
-  for(Text *pt = Texts.first(); pt != 0; pt = Texts.next()) {
+  Text *pt;
+  QListIterator<Text *> it(Texts);
+  while (it.hasNext()) {
+    pt = it.next();
     tmp = -pt->x;
     pt->x = pt->y;
     pt->y = tmp;
@@ -528,7 +538,10 @@ void Component::mirrorX()
 
   QFont f = QucsSettings.font;
   // mirror all text
-  for(Text *pt = Texts.first(); pt != 0; pt = Texts.next()) {
+  Text *pt;
+  QListIterator<Text *> it(Texts);
+  while (it.hasNext()) {
+    pt = it.next();
     f.setPointSizeFloat(pt->Size);
     QFontMetrics  smallMetrics(f);
     QSize s = smallMetrics.size(0, pt->s);   // use size for more lines
@@ -587,7 +600,10 @@ void Component::mirrorY()
   int tmp;
   QFont f = QucsSettings.font;
   // mirror all text
-  for(Text *pt = Texts.first(); pt != 0; pt = Texts.next()) {
+  Text *pt;
+  QListIterator<Text *> it(Texts);
+  while (it.hasNext()) {
+    pt = it.next();
     f.setPointSizeFloat(pt->Size);
     QFontMetrics  smallMetrics(f);
     QSize s = smallMetrics.size(0, pt->s);   // use size for more lines
@@ -1121,10 +1137,10 @@ int Component::analyseLine(const QString& Row, int numProps)
     Font.setPointSizeFloat(float(i3));
     QFontMetrics  metrics(Font);
     QSize r = metrics.size(0, s);    // get size of text
-    i3 = i1 + int(float(r.width())  * Texts.current()->mCos)
-            + int(float(r.height()) * Texts.current()->mSin);
-    i4 = i2 + int(float(r.width())  * -Texts.current()->mSin)
-            + int(float(r.height()) * Texts.current()->mCos);
+    i3 = i1 + int(float(r.width())  * Texts.last()->mCos)
+            + int(float(r.height()) * Texts.last()->mSin);
+    i4 = i2 + int(float(r.width())  * -Texts.last()->mSin)
+            + int(float(r.height()) * Texts.last()->mCos);
 
     if(i1 < x1)  x1 = i1;  // keep track of component boundings
     if(i2 < y1)  y1 = i2;
