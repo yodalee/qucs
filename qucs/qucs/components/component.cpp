@@ -17,13 +17,13 @@
 #include <QtGui>
 #include <stdlib.h>
 
-#include <qdir.h>
-#include <qpen.h>
-#include <qpoint.h>
-#include <qstring.h>
-#include <qpainter.h>
+#include <QDir>
+#include <QPen>
+#include <QPoint>
+#include <QString>
+#include <QPainter>
 #include <qtabwidget.h>
-#include <qmessagebox.h>
+#include <QMessageBox>
 #include <qdom.h>
 #include <q3dict.h>
 
@@ -54,8 +54,8 @@ Component::Component()
   cy = 0;
   tx = 0;
   ty = 0;
-
-  Arcs.setAutoDelete(true);
+#warning will it leak?
+  //Arcs.setAutoDelete(true);
   //Lines.setAutoDelete(true);
   //Rects.setAutoDelete(true);
   //Ellips.setAutoDelete(true);
@@ -243,7 +243,10 @@ void Component::paint(ViewPainter *p)
     }
 
     // paint all arcs
-    for(Arc *p3 = Arcs.first(); p3 != 0; p3 = Arcs.next()) {
+    Arc *p3;
+    QListIterator<Arc *> iarc(Arcs);
+    while (iarc.hasNext()) {
+      p3 = iarc.next();
       p->Painter->setPen(p3->style);
       p->drawArc(cx+p3->x, cy+p3->y, p3->w, p3->h, p3->angle, p3->arclen);
     }
@@ -385,8 +388,13 @@ void Component::paintScheme(Schematic *p)
     if(p2->avail) p->PostPaintEvent(_Ellipse,cx+p2->x-4, cy+p2->y-4, 8, 8);
   }
 
-  for(Arc *p3 = Arcs.first(); p3 != 0; p3 = Arcs.next())   // paint all arcs
+  // paint all arcs
+  Arc *p3;
+  QListIterator<Arc *> iarc(Arcs);
+  while (iarc.hasNext()) {
+    p3 = iarc.next();
     p->PostPaintEvent(_Arc,cx+p3->x, cy+p3->y, p3->w, p3->h, p3->angle, p3->arclen);
+  }
 
   // paint all rectangles
   Area *pa;
@@ -450,7 +458,10 @@ void Component::rotate()
   }
 
   // rotate all arcs
-  for(Arc *p3 = Arcs.first(); p3 != 0; p3 = Arcs.next()) {
+  Arc *p3;
+  QListIterator<Arc *> iarc(Arcs);
+  while (iarc.hasNext()) {
+    p3 = iarc.next();
     tmp = -p3->x;
     p3->x = p3->y;
     p3->y = tmp - p3->w;
@@ -559,7 +570,10 @@ void Component::mirrorX()
   }
 
   // mirror all arcs
-  for(Arc *p3 = Arcs.first(); p3 != 0; p3 = Arcs.next()) {
+  Arc *p3;
+  QListIterator<Arc *> iarc(Arcs);
+  while (iarc.hasNext()) {
+    p3 = iarc.next();
     p3->y = -p3->y - p3->h;
     if(p3->angle > 16*180) p3->angle -= 16*360;
     p3->angle  = -p3->angle;    // mirror
@@ -635,7 +649,10 @@ void Component::mirrorY()
   }
 
   // mirror all arcs
-  for(Arc *p3 = Arcs.first(); p3 != 0; p3 = Arcs.next()) {
+  Arc *p3;
+  QListIterator<Arc *> iarc(Arcs);
+  while (iarc.hasNext()) {
+    p3 = iarc.next();
     p3->x = -p3->x - p3->w;
     p3->angle = 16*180 - p3->angle - p3->arclen;  // mirror
     if(p3->angle < 0) p3->angle += 16*360;   // angle has to be > 0

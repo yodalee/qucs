@@ -18,10 +18,10 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include <q3ptrlist.h>
-#include <qpen.h>
-#include <qpoint.h>
-#include <qwidget.h>
+#include <QList>
+#include <QPen>
+#include <QPoint>
+#include <QWidget>
 
 #include "element.h"
 
@@ -63,7 +63,7 @@ public:
   virtual QString getSubcircuitFile() { return ""; }
 
   QList<Line *>     Lines;
-  Q3PtrList<struct Arc>      Arcs;
+  QList<Arc *>      Arcs;
   QList<Area *>     Rects;
   QList<Area *>     Ellips;
   QList<Port *>     Ports;

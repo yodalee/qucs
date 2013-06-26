@@ -187,8 +187,8 @@ int LibComp::loadSymbol()
     if(pc == 0)  return -20;
 
     copyComponent(pc);
-
-    pc->Arcs.setAutoDelete(false);
+#warning will it leak?
+    //pc->Arcs.setAutoDelete(false);
     //pc->Lines.setAutoDelete(false);
     //pc->Rects.setAutoDelete(false);
     //pc->Ellips.setAutoDelete(false);
