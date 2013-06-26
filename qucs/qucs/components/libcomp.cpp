@@ -190,7 +190,7 @@ int LibComp::loadSymbol()
 
     pc->Arcs.setAutoDelete(false);
     //pc->Lines.setAutoDelete(false);
-    pc->Rects.setAutoDelete(false);
+    //pc->Rects.setAutoDelete(false);
     //pc->Ellips.setAutoDelete(false);
     //pc->Ports.setAutoDelete(false);
     //pc->Texts.setAutoDelete(false);

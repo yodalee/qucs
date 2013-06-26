@@ -64,7 +64,7 @@ public:
 
   QList<Line *>     Lines;
   Q3PtrList<struct Arc>      Arcs;
-  Q3PtrList<Area>     Rects;
+  QList<Area *>     Rects;
   QList<Area *>     Ellips;
   QList<Port *>     Ports;
   QList<Text *>     Texts;

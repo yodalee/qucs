@@ -57,7 +57,7 @@ Component::Component()
 
   Arcs.setAutoDelete(true);
   //Lines.setAutoDelete(true);
-  Rects.setAutoDelete(true);
+  //Rects.setAutoDelete(true);
   //Ellips.setAutoDelete(true);
   //Ports.setAutoDelete(true);
   //Texts.setAutoDelete(true);
@@ -250,7 +250,9 @@ void Component::paint(ViewPainter *p)
 
     // paint all rectangles
     Area *pa;
-    for(pa = Rects.first(); pa != 0; pa = Rects.next()) {
+    QListIterator<Area *> ia(Rects);
+    while (ia.hasNext()) {
+      pa = ia.next();
       p->Painter->setPen(pa->Pen);
       p->Painter->setBrush(pa->Brush);
       p->drawRect(cx+pa->x, cy+pa->y, pa->w, pa->h);
@@ -386,9 +388,13 @@ void Component::paintScheme(Schematic *p)
   for(Arc *p3 = Arcs.first(); p3 != 0; p3 = Arcs.next())   // paint all arcs
     p->PostPaintEvent(_Arc,cx+p3->x, cy+p3->y, p3->w, p3->h, p3->angle, p3->arclen);
 
+  // paint all rectangles
   Area *pa;
-  for(pa = Rects.first(); pa != 0; pa = Rects.next()) // paint all rectangles
+  QListIterator<Area *> ia(Rects);
+  while (ia.hasNext()) {
+    pa = ia.next();
     p->PostPaintEvent(_Rect,cx+pa->x, cy+pa->y, pa->w, pa->h);
+  }
 
   // paint all ellipses
   QListIterator<Area *> ia2(Ellips);
@@ -455,9 +461,11 @@ void Component::rotate()
     if(p3->angle >= 16*360) p3->angle -= 16*360;;
   }
 
-  Area *pa;
   // rotate all rectangles
-  for(pa = Rects.first(); pa != 0; pa = Rects.next()) {
+  Area *pa;
+  QListIterator<Area *> ia(Rects);
+  while (ia.hasNext()) {
+    pa = ia.next();
     tmp = -pa->x;
     pa->x = pa->y;
     pa->y = tmp - pa->w;
@@ -559,10 +567,13 @@ void Component::mirrorX()
     if(p3->angle < 0) p3->angle += 16*360;  // angle has to be > 0
   }
 
-  Area *pa;
   // mirror all rectangles
-  for(pa = Rects.first(); pa != 0; pa = Rects.next())
+  Area *pa;
+  QListIterator<Area *> ia(Rects);
+  while (ia.hasNext()) {
+    pa = ia.next();
     pa->y = -pa->y - pa->h;
+  }
 
   // mirror all ellipses
   QListIterator<Area *> ia2(Ellips);
@@ -630,10 +641,13 @@ void Component::mirrorY()
     if(p3->angle < 0) p3->angle += 16*360;   // angle has to be > 0
   }
 
-  Area *pa;
   // mirror all rectangles
-  for(pa = Rects.first(); pa != 0; pa = Rects.next())
+  Area *pa;
+  QListIterator<Area *> ia(Rects);
+  while (ia.hasNext()) {
+    pa = ia.next();
     pa->x = -pa->x - pa->w;
+  }
 
   // mirror all ellipses
   QListIterator<Area *> ia2(Ellips);
