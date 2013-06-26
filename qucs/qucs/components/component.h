@@ -62,7 +62,7 @@ public:
 
   virtual QString getSubcircuitFile() { return ""; }
 
-  Q3PtrList<Line>     Lines;
+  QList<Line *>     Lines;
   Q3PtrList<struct Arc>      Arcs;
   Q3PtrList<Area>     Rects, Ellips;
   QList<Port *>     Ports;
