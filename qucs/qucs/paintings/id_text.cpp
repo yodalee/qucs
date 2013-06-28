@@ -28,7 +28,8 @@ ID_Text::ID_Text(int cx_, int cy_)
   x2 = y2 = 20;
 
   Prefix = "SUB";
-  Parameter.setAutoDelete(true);
+#warning will it leak?
+  //Parameter.setAutoDelete(true);
 }
 
 ID_Text::~ID_Text()
@@ -52,12 +53,14 @@ void ID_Text::paint(ViewPainter *p)
   y2 += p->LineSpacing;
 
   SubParameter *pp;
-  for(pp = Parameter.first(); pp != 0; pp = Parameter.next())
+  for(int i=0; i<Parameter.size(); i++) {
+    pp = Parameter.at(i);
     if(pp->display) {
       p->Painter->drawText(x, y+y2, 0, 0, Qt::TextDontClip, pp->Name, -1, &r);
       if(x2 < r.width())  x2 = r.width();
       y2 += p->LineSpacing;
     }
+  }
 
   if(isSelected) {
     p->Painter->setPen(QPen(Qt::darkGray,3));
@@ -130,7 +133,8 @@ QString ID_Text::save()
   s += Prefix;
 
   SubParameter *pp;
-  for(pp = Parameter.first(); pp != 0; pp = Parameter.next()) {
+  for(int i=0; i<Parameter.size(); i++) {
+    pp = Parameter.at(i);
     if(pp->display)  s += " \"1=";
     else  s += " \"0=";
     s += pp->Name + "=" + pp->Description + "=" + pp->Type + "\"";

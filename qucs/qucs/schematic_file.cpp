@@ -1458,7 +1458,8 @@ int NumPorts)
       if(pi->Name == ".ID ") {
         SubParameter *pp;
         ID_Text *pid = (ID_Text*)pi;
-        for(pp = pid->Parameter.first(); pp != 0; pp = pid->Parameter.next()) {
+        for(int i=0; i<pid->Parameter.size(); i++) {
+          pp = pid->Parameter.at(i);
           s = pp->Name; // keep 'Name' unchanged
           (*tstream) << " " << s.replace("=", "=\"") << '"';
         }
@@ -1508,11 +1509,11 @@ int NumPorts)
           SubParameter *pp;
           ID_Text *pid = (ID_Text*)pi;
           if(pid->Parameter.first()) {
-            for(pp = pid->Parameter.first(); pp != 0;) {
+            for(int i=0; i<pid->Parameter.size(); i++) {
+              pp = pid->Parameter.at(i);
               s = pp->Name.section('=', 0,0);
               QString v = Verilog_Param(pp->Name.section('=', 1,1));
               (*tstream) << " parameter " << s << " = " << v << ";\n";
-              pp = pid->Parameter.next();
             }
             (*tstream) << "\n";
           }
@@ -1559,12 +1560,17 @@ int NumPorts)
           ID_Text *pid = (ID_Text*)pi;
           if(pid->Parameter.first()) {
             (*tstream) << " generic (";
-            for(pp = pid->Parameter.first(); pp != 0;) {
+            QListIterator<SubParameter *> isp(pid->Parameter);
+            while (isp.hasNext()) {
+              pp = isp.next();
               s = pp->Name;
               QString t = pp->Type.isEmpty() ? "real" : pp->Type;
               (*tstream) << s.replace("=", " : "+t+" := ");
-              pp = pid->Parameter.next();
-              if(pp) (*tstream) << ";\n ";
+#warning test me
+              if(isp.hasNext()) {
+                  isp.next();
+                  (*tstream) << ";\n ";
+              }
             }
             (*tstream) << ");\n";
           }

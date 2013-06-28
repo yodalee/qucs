@@ -18,9 +18,8 @@
 #ifndef ID_DIALOG_H
 #define ID_DIALOG_H
 
-#include <qdialog.h>
-#include <qregexp.h>
-//Added by qt3to4:
+#include <QDialog>
+#include <QRegExp>
 #include <Q3VBoxLayout>
 
 

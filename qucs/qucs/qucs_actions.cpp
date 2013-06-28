@@ -20,9 +20,7 @@
 #include <limits.h>
 
 #include <q3process.h>
-
-//Added by qt3to4:
-#include <Q3PtrList>
+#include <QList>
 
 #include "main.h"
 #include "qucs.h"

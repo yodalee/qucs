@@ -29,7 +29,6 @@
 #include <qvalidator.h>
 #include <qpushbutton.h>
 #include <qmessagebox.h>
-//Added by qt3to4:
 #include <Q3VBoxLayout>
 
 
@@ -65,10 +64,12 @@ ID_Dialog::ID_Dialog(ID_Text *idText_)
   ParamList->setSorting(-1);   // no sorting
 
   SubParameter *pp;
-  for(pp = idText->Parameter.last(); pp!=0; pp = idText->Parameter.prev())
+  for(int i=0; i<idText->Parameter.size(); i++) {
+    pp = idText->Parameter.at(i);
     new Q3ListViewItem(ParamList,
       pp->display ? tr("yes") : tr("no"), pp->Name.section('=', 0,0),
       pp->Name.section('=', 1,1), pp->Description, pp->Type);
+  }
 
   connect(ParamList, SIGNAL(selectionChanged(Q3ListViewItem*)),
                      SLOT(slotEditParameter(Q3ListViewItem*)));
@@ -268,11 +269,13 @@ void ID_Dialog::slotOk()
 
   QString s;
   Q3ListViewItem *item;
-  SubParameter *pp = idText->Parameter.first();
+  SubParameter *pp;
+  QMutableListIterator<SubParameter *> isp(idText->Parameter);
   for(item = ParamList->firstChild(); item != 0; item = item->itemBelow()) {
     s = item->text(1) + "=" + item->text(2);
 
-    if(pp) {
+    if(isp.hasNext()) {
+      pp = isp.next();
       if(pp->display != (item->text(0) == tr("yes"))) {
         pp->display = (item->text(0) == tr("yes"));
         changed = true;
@@ -296,16 +299,14 @@ void ID_Dialog::slotOk()
 	 item->text(4)));
       changed = true;
     }
-
-    pp = idText->Parameter.next();
   }
 
   // if more properties than in ListView -> delete the rest
-  if(pp) {
-    pp = idText->Parameter.prev();
-    idText->Parameter.last();
-    while(pp != idText->Parameter.current())
-      idText->Parameter.remove();
+  if(isp.hasNext()) {
+    while(isp.hasNext()) {
+      isp.next();
+      isp.remove();
+    }
     changed = true;
   }
 
