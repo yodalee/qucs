@@ -119,8 +119,11 @@ SweepDialog::~SweepDialog()
 {
   delete pGraph;
 
-  for(double *p = ValueList.first(); p!=0; p = ValueList.next())
+  double *p; 
+  for(int i=0; i<ValueList.size(); i++) {
+    p = ValueList.at(i);
     delete p;
+  }
 }
 
 // ---------------------------------------------------------------
@@ -128,20 +131,26 @@ void SweepDialog::slotNewValue(int)
 {
   DataX *pD = pGraph->cPointsX.first();
   int Factor = 1, Index = 0;
-  for(mySpinBox *pb = BoxList.first(); pb!=0; pb = BoxList.next()) {
+  mySpinBox *pb;
+  for(int i=0; i<BoxList.size(); i++) {
+      pb = BoxList.at(i);
     Index  += pb->value() * Factor;
     Factor *= pD->count;
   }
   Index *= 2;  // because of complex values
 
-  double *p = ValueList.first();
-  for(Node *pn = NodeList.first(); pn!=0; pn = NodeList.next()) {
+  double *p;
+  QListIterator<double *> id(ValueList);
+  p = id.next();
+  Node *pn;
+  for(int i=0; i<NodeList.size(); i++) {
+    pn = NodeList.at(i);
     pn->Name = num2str(*(p+Index));
     if(pn->x1 & 0x10)
       pn->Name += "A";
     else
       pn->Name += "V";
-    p = ValueList.next();
+    p = id.next();
   }
 
   Doc->viewport()->update();
