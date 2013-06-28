@@ -19,15 +19,15 @@
 # include <config.h>
 #endif
 #include <QtGui>
-#include <qmessagebox.h>
-#include <qdir.h>
-#include <qstringlist.h>
-#include <qregexp.h>
+#include <QMessageBox>
+#include <QDir>
+#include <QStringList>
+#include <QRegExp>
 #include <q3process.h>
 #include <q3textedit.h>
 #include <QTextEdit>
-#include <q3ptrlist.h>
-//Added by qt3to4:
+#include <QList>
+
 #include <Q3TextStream>
 #include <Q3ValueList>
 
@@ -1022,16 +1022,20 @@ void Schematic::propagateNode(QStringList& Collect,
 			      int& countInit, Node *pn)
 {
   bool setName=false;
-  Q3PtrList<Node> Cons;
+  QList<Node *> Cons;
   Node *p2;
   Wire *pw;
   Element *pe;
 
   Cons.append(pn);
-  for(p2 = Cons.first(); p2 != 0; p2 = Cons.next())
+//  for(p2 = Cons.first(); p2 != 0; p2 = Cons.next())
+  QMutableListIterator<Node *> in(Cons);
+//  for(int j=0; j<Cons.size(); j++) {
+  while (in.hasNext()) {
+    p2 = in.next();
 //    for(pe = p2->Connections.first(); pe != 0; pe = p2->Connections.next()) {
-    for(int i=0; i <= p2->Connections.count(); i++) {
-        pe = p2->Connections[i];
+    for(int i=0; i <= p2->Connections.size(); i++) {
+        pe = p2->Connections.at(i);
       if(pe->Type == isWire) {
         pw = (Wire*)pe;
         if(p2 != pw->Port1) {
@@ -1051,13 +1055,15 @@ void Schematic::propagateNode(QStringList& Collect,
           }
         }
         if(setName) {
-          Cons.findRef(p2);   // back to current Connection
+//          Cons.findRef(p2);   // back to current Connection
+          in.findPrevious(p2);
           if (isAnalog) 
             createNodeSet(Collect, countInit, pw, pn);
           setName = false;
         }
       }
     }
+  }
   Cons.clear();
 }
 
