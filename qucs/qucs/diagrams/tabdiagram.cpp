@@ -46,7 +46,10 @@ TabDiagram::~TabDiagram()
 void TabDiagram::paint(ViewPainter *p)
 {
   // paint all lines
-  for(Line *pl = Lines.first(); pl != 0; pl = Lines.next()) {
+  Line *pl;
+  QListIterator<Line *> il(Lines);
+  while (il.hasNext()) {
+    pl = il.next();
     p->Painter->setPen(pl->style);
     p->drawLine(cx+pl->x1, cy-pl->y1, cx+pl->x2, cy-pl->y2);
   }
@@ -224,7 +227,7 @@ if(g) if(!g->cPointsX.isEmpty()) {
     x += colWidth+15;
     Lines.append(new Line(x-8, y2, x-8, 0, QPen(Qt::black,0)));
   }
-  Lines.current()->style = QPen(Qt::black,2);
+  Lines.last()->style = QPen(Qt::black,2);
 
 }  // of "if no data in graphs"
 

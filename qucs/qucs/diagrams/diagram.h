@@ -94,7 +94,7 @@ public:
 
   Q3PtrList<Graph>  Graphs;
   Q3PtrList<struct Arc>    Arcs;
-  Q3PtrList<Line>   Lines;
+  QList<Line *>   Lines;
   QList<Text *>   Texts;
 
   int x3, y3;

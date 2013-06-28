@@ -95,9 +95,10 @@ Diagram::Diagram(int _cx, int _cy)
   Type = isDiagram;
   isSelected = false;
   GridPen = QPen(Qt::lightGray,0);
+#warning will it leak?
   Graphs.setAutoDelete(true);
   Arcs.setAutoDelete(true);
-  Lines.setAutoDelete(true);
+  //Lines.setAutoDelete(true);
   //Texts.setAutoDelete(true);
 }
 
@@ -110,7 +111,10 @@ Diagram::~Diagram()
 void Diagram::paint(ViewPainter *p)
 {
   // paint all lines
-  for(Line *pl = Lines.first(); pl != 0; pl = Lines.next()) {
+  Line *pl;
+  QListIterator<Line *> il(Lines);
+  while (il.hasNext()) {
+    pl = il.next();
     p->Painter->setPen(pl->style);
     p->drawLine(cx+pl->x1, cy-pl->y1, cx+pl->x2, cy-pl->y2);
   }
