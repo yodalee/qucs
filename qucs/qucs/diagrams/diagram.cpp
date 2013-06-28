@@ -154,10 +154,13 @@ void Diagram::paint(ViewPainter *p)
   p->Painter->setWorldXForm(false);
 
   // draw markers last, so they are at the top of painting layers
+  Marker *pm;
   for(int i=0; i<Graphs.size(); i++) {
     pg = Graphs.at(i);
-    for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
+    for(int j=0; j<pg->Markers.size(); j++ ){
+      pm = pg->Markers.at(j);
       pm->paint(p, cx, cy);
+    }
   }
 
 
@@ -860,10 +863,13 @@ void Diagram::updateGraphData()
 
   // Setting markers must be done last, because in 3D diagram "Mem"
   // is released in "createAxisLabels()".
+  Marker *pm;
   for(int i=0; i<Graphs.size(); i++) {
     pg = Graphs.at(i);
-    for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
+    for(int j=0; j<pg->Markers.size(); j++ ){
+      pm = pg->Markers.at(j);
       pm->createText();
+    }
   }
 }
 

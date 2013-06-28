@@ -1609,10 +1609,12 @@ void MouseActions::MReleaseResizeDiagram(Schematic *Doc, QMouseEvent *Event)
   Diagram *pd = (Diagram*)focusElement;
   pd->updateGraphData();
   Graph *pg;
+  Marker *pm;
   QListIterator<Graph *> ig(pd->Graphs);
   while (ig.hasNext()) {
     pg = ig.next();
-    for(Marker *pm = pg->Markers.first(); pm!=0; pm = pg->Markers.next()) {
+    for(int j=0; j<pg->Markers.count(); j++) {
+      pm = pg->Markers.at(j);
       pm->x1 += MAx3;      // correct changes due to move of diagram corner
       pm->y1 += MAy3;
     }

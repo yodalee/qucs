@@ -719,7 +719,8 @@ void Schematic::print(QPrinter*, QPainter *Painter, bool printAll, bool fitToPag
             
         if(pg->isSelected)  pg->Type |= 1;  // remember selection
         pg->isSelected = false; 
-        for(pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next()) {
+        for(int j=0; j<pg->Markers.count(); j++) {
+          pm = pg->Markers.at(j);
           if(pm->isSelected)  pm->Type |= 1;  // remember selection
           pm->isSelected = false;
         }
@@ -735,7 +736,8 @@ void Schematic::print(QPrinter*, QPainter *Painter, bool printAll, bool fitToPag
         pg = pd->Graphs.at(i);
         if(pg->Type & 1)  pg->isSelected = true;
         pg->Type &= -2;
-        for(pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next()) {
+        for(int j=0; j<pg->Markers.count(); j++) {
+          pm = pg->Markers.at(j);
           if(pm->Type & 1)  pm->isSelected = true;
           pm->Type &= -2;
         }
@@ -1024,10 +1026,12 @@ void Schematic::sizeOfAll(int& xmin, int& ymin, int& xmax, int& ymax)
     if(y2 > ymax) ymax = y2;
 
     Graph *pg;
+    Marker *pm;
     for(int i=0; i<pd->Graphs.size(); i++) {
       pg = pd->Graphs.at(i);
       // test all markers of diagram
-      for(Marker *pm = pg->Markers.first(); pm!=0; pm = pg->Markers.next()) {
+      for(int j=0; j<pg->Markers.count(); j++) {
+        pm = pg->Markers.at(j);
         pm->Bounding(x1, y1, x2, y2);
         if(x1 < xmin) xmin = x1;
         if(x2 > xmax) xmax = x2;
@@ -1895,10 +1899,12 @@ bool Schematic::elementsOnGrid()
     }
 
     Graph *pg;
+    Marker *pm;
     for(int i=0; i<pd->Graphs.size(); i++) {
       pg = pd->Graphs.at(i);
       // test markers of diagram
-      for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
+      for(int j=0; j<pg->Markers.count(); j++) {
+        pm = pg->Markers.at(j);
         if(pm->isSelected) {
 	      x = pm->x1 + pd->cx;
           y = pm->y1 + pd->cy;
@@ -1908,6 +1914,7 @@ bool Schematic::elementsOnGrid()
           pm->isSelected = false;
           count = true;
         }
+      }
     }
   }
 

@@ -1017,6 +1017,7 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
   Corr = 5.0 / Scale;  // size of line select and area for resizing
   // test all diagrams
   Diagram *pd;
+  Marker *pm;
   QListIterator<Diagram *> id(Diagrams);
   id.toBack();
   while (id.hasPrevious()) {
@@ -1024,7 +1025,8 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
     for(int i=0; i<pd->Graphs.size(); i++) { 
       pg = pd->Graphs.at(i);
       // test markers of graphs
-      for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
+      for(int j=0; j<pg->Markers.size(); j++ ){
+        pm = pg->Markers.at(j);
         if(pm->getSelected(x-pd->cx, y-pd->cy)) {
           if(flag) { pm->isSelected ^= flag; return pm; }
           if(pe_sel) {
@@ -1034,6 +1036,7 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
           if(pe_1st == 0) pe_1st = pm; // give access to elements beneath
           if(pm->isSelected) pe_sel = pm;
         }
+      }
     }
 
     // resize area clicked ?
@@ -1155,12 +1158,15 @@ void Schematic::deselectElements(Element *e)
     for(int i=0; i<pd->Graphs.size(); i++) { 
       pg = pd->Graphs.at(i);
       if(e != pg) pg->isSelected = false;
-    }
-
+    
       // test markers of graph
-      for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
+      Marker *pm;
+      for(int i=0; i<pg->Markers.size(); i++) {
+        pm = pg->Markers.at(i);
         if(e != pm) pm->isSelected = false;
+      }
     }
+  }
   
 
   // test all paintings
@@ -1248,6 +1254,7 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
   // test all diagrams *******************************************
   Diagram *pd;
   Graph *pg;
+  Marker *pm;
   QListIterator<Diagram *> id(Diagrams);
   while (id.hasNext()) {
     pd = id.next();
@@ -1257,12 +1264,13 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
       if(pg->isSelected &= flag) z++;
 
       // test markers of graph
-      for(Marker *pm = pg->Markers.first(); pm!=0; pm = pg->Markers.next()) {
-	pm->Bounding(cx1, cy1, cx2, cy2);
-	if(cx1 >= x1) if(cx2 <= x2) if(cy1 >= y1) if(cy2 <= y2) {
-	    pm->isSelected = true;  z++;
-	    continue;
-          }
+      for(int j=0; j<pg->Markers.size(); j++) {
+        pm = pg->Markers.at(j);
+        pm->Bounding(cx1, cy1, cx2, cy2);
+        if(cx1 >= x1) if(cx2 <= x2) if(cy1 >= y1) if(cy2 <= y2) {
+          pm->isSelected = true;  z++;
+          continue;
+        }
         if(pm->isSelected &= flag) z++;
       }
     }
@@ -1299,13 +1307,16 @@ void Schematic::selectMarkers()
 //  for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next())
   Diagram *pd;
   Graph *pg;
+  Marker *pm;
   QListIterator<Diagram *> id(Diagrams);
   while (id.hasNext()) {
     pd = id.next();
     for(int i=0; i<pd->Graphs.size(); i++) {
       pg = pd->Graphs.at(i);
-      for(Marker *pm = pg->Markers.first(); pm!=0; pm = pg->Markers.next())
-         pm->isSelected = true;
+      for(int j=0; j<pg->Markers.size(); j++) {
+        pm = pg->Markers.at(j);
+        pm->isSelected = true;
+      }
     }
   }
 }
@@ -1593,10 +1604,10 @@ int Schematic::copySelectedElements(QList<Element *> p)
           if(pm->isSelected) {
             count++;
             p.append(pm);
-            pg->Markers.take();
-            pm = pg->Markers.current();
+//            pg->Markers.take();
+//            pm = pg->Markers.current();
           }
-          else pm = pg->Markers.next();
+//          else pm = pg->Markers.next();
       }
 
 //      pd = Diagrams->next();
@@ -1750,11 +1761,11 @@ bool Schematic::deleteElements()
         // all markers of diagram
         for(Marker *pm = pg->Markers.first(); pm != 0; )
           if(pm->isSelected) {
-            pg->Markers.remove();
-            pm = pg->Markers.current();
+//            pg->Markers.remove();
+//            pm = pg->Markers.current();
             sel = true;
           }
-          else  pm = pg->Markers.next();
+//          else  pm = pg->Markers.next();
 
         if(pg->isSelected) {
 //          pd->Graphs.remove();

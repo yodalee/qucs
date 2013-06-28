@@ -20,6 +20,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include <QListIterator>
+
 
 Graph::Graph(const QString& _Line)
 {
@@ -36,8 +38,8 @@ Graph::Graph(const QString& _Line)
 
   ScrPoints = 0;
   cPointsY = 0;
-
-  Markers.setAutoDelete(true);
+#warning will it leak?
+  //Markers.setAutoDelete(true);
   cPointsX.setAutoDelete(true);
 }
 
@@ -95,8 +97,9 @@ QString Graph::save()
 	      " "+QString::number(numMode)+" "+QString::number(Style)+
 	      " "+QString::number(yAxisNo)+">";
 
-  for(Marker *pm=Markers.first(); pm != 0; pm=Markers.next())
-    s += "\n\t  "+pm->save();
+  QListIterator<Marker *> im(Markers);
+  while (im.hasNext()) 
+    s += "\n\t  "+im.next()->save();
 
   return s;
 }
@@ -239,8 +242,9 @@ Graph* Graph::sameNewOne()
   pg->numMode   = numMode;
   pg->yAxisNo   = yAxisNo;
 
-  for(Marker *pm = Markers.first(); pm != 0; pm = Markers.next())
-    pg->Markers.append(pm->sameNewOne(pg));
+  QListIterator<Marker *> im(Markers);
+  while (im.hasNext()) 
+    pg->Markers.append(im.next()->sameNewOne(pg));
 
   return pg;
 }
