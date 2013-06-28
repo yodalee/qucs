@@ -93,7 +93,7 @@ public:
   QPen    GridPen;
 
   Q3PtrList<Graph>  Graphs;
-  Q3PtrList<struct Arc>    Arcs;
+  QList<Arc *>    Arcs;
   QList<Line *>   Lines;
   QList<Text *>   Texts;
 

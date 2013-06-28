@@ -97,7 +97,7 @@ Diagram::Diagram(int _cx, int _cy)
   GridPen = QPen(Qt::lightGray,0);
 #warning will it leak?
   Graphs.setAutoDelete(true);
-  Arcs.setAutoDelete(true);
+  //Arcs.setAutoDelete(true);
   //Lines.setAutoDelete(true);
   //Texts.setAutoDelete(true);
 }
@@ -120,7 +120,10 @@ void Diagram::paint(ViewPainter *p)
   }
 
   // paint all arcs (1 pixel larger to compensate for strange circle method)
-  for(struct Arc *pa = Arcs.first(); pa != 0; pa = Arcs.next()) {
+  Arc *pa;
+  QListIterator<Arc *> ia(Arcs);
+  while (ia.hasNext()) {
+    pa = ia.next();
     p->Painter->setPen(pa->style);
     p->drawArc(cx+pa->x, cy-pa->y, pa->w, pa->h, pa->angle, pa->arclen);
   }
