@@ -16,10 +16,9 @@
  ***************************************************************************/
 #include <QtGui>
 #include <q3dict.h>
-#include <qstring.h>
-#include <qstringlist.h>
-//Added by qt3to4:
-#include <Q3PtrList>
+#include <QString>
+#include <QStringList>
+#include <QList>
 
 #include "element.h"
 #include "components/component.h"
@@ -30,7 +29,7 @@
 
 // Global category and component lists.
 Q3Dict<Module> Module::Modules;
-Q3PtrList<Category> Category::Categories;
+QList<Category *> Category::Categories;
 
 // Constructor creates instance of module object.
 Module::Module () {
@@ -89,8 +88,9 @@ Component * Module::getComponent (QString Model) {
 void Module::intoCategory (Module * m) {
 
   // look through existing categories
-  Category * cat = Category::Categories.first ();
-  for (; cat; cat = Category::Categories.next ()) {
+  Category * cat;
+  for (int i=0; i<Category::Categories.size(); i++) {
+    cat = Category::Categories.at(i);
     if (cat->Name == m->category) {
       cat->Content.append (m);
       break;
@@ -376,7 +376,8 @@ void Module::registerModules (void) {
 // This function has to be called once at application end.  It removes
 // all categories and registered modules from memory.
 void Module::unregisterModules (void) {
-  Category::Categories.setAutoDelete (true);
+#warning will it leak?
+  //Category::Categories.setAutoDelete (true);
   Category::Categories.clear ();
   Modules.clear ();
 }
@@ -395,15 +396,17 @@ Category::Category (const QString name) {
 
 // Destructor removes instance of module object from memory.
 Category::~Category () {
-  Content.setAutoDelete (true);
+#warning will it leak?
+  //Content.setAutoDelete (true);
   Content.clear ();
 }
 
 // Returns the available category names in a list of strings.
 QStringList Category::getCategories (void) {
   QStringList res;
-  Category * cat = Categories.first ();
-  for (; cat; cat = Categories.next ()) {
+  Category * cat;
+  for (int i=0; i<Categories.size(); i++) {
+    cat = Categories.at(i);
     res.append (cat->Name);
   }
   return res;
@@ -412,10 +415,11 @@ QStringList Category::getCategories (void) {
 // The function returns the registered modules in the given category
 // as a pointer list.  The pointer list is empty if there is no such
 // category available.
-Q3PtrList<Module> Category::getModules (QString category) {
-  Q3PtrList<Module> res;
-  Category * cat = Categories.first ();
-  for (; cat; cat = Categories.next ()) {
+QList<Module*> Category::getModules (QString category) {
+  QList<Module *> res;
+  Category * cat;
+  for (int i=0; i<Categories.size(); i++) {
+    cat = Categories.at(i);
     if (category == cat->Name)
       res = cat->Content;
   }
@@ -426,8 +430,9 @@ Q3PtrList<Module> Category::getModules (QString category) {
 // category name.  The function returns zero if there is no such
 // category.
 int Category::getModulesNr (QString category) {
-  Category * cat = Categories.first ();
-  for (int i = 0; cat; cat = Categories.next (), i++) {
+    Category * cat;
+  for (int i=0; i<Categories.size(); i++) {
+    cat = Categories.at(i);
     if (category == cat->Name)
       return i;
   }

@@ -394,7 +394,7 @@ void QucsApp::slotSetCompView (int index)
 {
   editText->setHidden (true); // disable text edit of component property
 
-  Q3PtrList<Module> Comps;
+  QList<Module *> Comps;
   CompComps->clear ();   // clear the IconView
   if (CompChoose->count () <= 0) return;
   QString item = CompChoose->text (index);
@@ -406,7 +406,8 @@ void QucsApp::slotSetCompView (int index)
   char * File;
   QString Name;
   Module * Mod;
-  for (Mod = Comps.first(); Mod; Mod = Comps.next ()) {
+  for (int i=0; i<Comps.size(); i++) {
+    Mod = Comps.at(i);
     if (Mod->info) {
       *(Mod->info) (Name, File, false);
       QListWidgetItem *item = new QListWidgetItem(QPixmap(QucsSettings.BitmapDir + QString (File) + ".png"), Name);
@@ -450,7 +451,7 @@ void QucsApp::slotSelectComponent(QListWidgetItem *item)
 
   pInfoFunc Infos = 0;
   int i = CompComps->row(item);
-  Q3PtrList<Module> Comps;
+  QList<Module *> Comps;
   if((CompChoose->currentItem()+1) >= CompChoose->count())
     // the only one in "symbol-painting" mode
     Comps = Category::getModules (QObject::tr("paintings"));

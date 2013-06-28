@@ -1,6 +1,3 @@
-//Added by qt3to4:
-#include <Q3PtrList>
-#include <Q3Dict>
 /***************************************************************************
                                module.h
                               ----------
@@ -20,6 +17,9 @@
 
 #ifndef MODULE_H
 #define MODULE_H
+
+#include <QList>
+#include <Q3Dict>
 
 // function typedefs for circuits and analyses
 typedef Element * (* pInfoFunc) (QString&, char * &, bool);
@@ -55,16 +55,16 @@ class Category
   ~Category ();
 
  public:
-  static Q3PtrList<Category> Categories;
+  static QList<Category *> Categories;
 
  public:
   static QStringList getCategories (void);
-  static Q3PtrList<Module> getModules (QString);
+  static QList<Module *> getModules(QString);
   static int getModulesNr (QString);
 
  public:
   QString Name;
-  Q3PtrList<Module> Content;
+  QList<Module *> Content;
 };
 
 #endif /* __MODULE_H__ */
