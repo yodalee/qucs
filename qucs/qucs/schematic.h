@@ -23,7 +23,7 @@
 #include "paintings/painting.h"
 #include "components/component.h"
 #include "qucsdoc.h"
-//Added by qt3to4:
+
 #include <Q3TextStream>
 #include <QDragMoveEvent>
 #include <QDropEvent>
@@ -35,10 +35,10 @@
 #include "node.h"
 
 #include <q3scrollview.h>
-#include <qpainter.h>
-#include <q3ptrlist.h>
-#include <qfile.h>
-#include <qstringlist.h>
+#include <QPainter>
+#include <QList>
+#include <QFile>
+#include <QStringList>
 
 class Q3TextEdit;
 class QTextEdit;
@@ -151,8 +151,8 @@ public:
   int tmpViewX1, tmpViewY1, tmpViewX2, tmpViewY2;
   int tmpUsedX1, tmpUsedY1, tmpUsedX2, tmpUsedY2;
 
-  Q3PtrList<QString> UndoStack;
-  Q3PtrList<QString> UndoSymbol;    // undo stack for circuit symbol
+  QList<QString *> UndoStack;
+  QList<QString *> UndoSymbol;    // undo stack for circuit symbol
 
 protected:
   bool sizeOfFrame(int&, int&);
