@@ -16,9 +16,9 @@
  ***************************************************************************/
 #include <QtGui>
 #include "qucs.h"
-//Added by qt3to4:
+
 #include <Q3TextStream>
-#include <Q3PtrList>
+#include <QList>
 #include <QMouseEvent>
 #include "main.h"
 #include "node.h"
@@ -35,14 +35,14 @@
 #include "diagrams/timingdiagram.h"
 #include "dialogs/labeldialog.h"
 
-#include <qinputdialog.h>
-#include <qclipboard.h>
-#include <qapplication.h>
-#include <qmessagebox.h>
+#include <QInputDialog>
+#include <QClipboard>
+#include <QApplication>
+#include <QMessageBox>
 #include <q3popupmenu.h>
-#include <qevent.h>
-#include <qaction.h>
-#include <qtabwidget.h>
+#include <QEvent>
+#include <QAction>
+#include <QTabWidget>
 
 #include <limits.h>
 #include <stdlib.h>
