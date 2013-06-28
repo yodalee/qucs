@@ -26,8 +26,8 @@
 
 #include <q3process.h>
 #include <q3syntaxhighlighter.h>
-//Added by qt3to4:
-#include <Q3PtrList>
+
+#include <QList>
 #include <Q3TextEdit>
 
 #include "main.h"
@@ -125,7 +125,8 @@ QucsApp::QucsApp()
   viewBrowseDock->setOn(true);
   slotViewOctaveDock(false);
   initCursorMenu();
-  HierarchyHistory.setAutoDelete(true);
+#warning will it leak?
+  //HierarchyHistory.setAutoDelete(true);
   Module::registerModules ();
 
   // default settings of the printer
@@ -1508,7 +1509,7 @@ void QucsApp::slotChangeView(QWidget *w)
   view->drawn = false;
 
   if(!HierarchyHistory.isEmpty())
-    if(*(HierarchyHistory.getLast()) != "*") {
+    if(*(HierarchyHistory.last()) != "*") {
       HierarchyHistory.clear();   // no subcircuit history anymore
       popH->setEnabled(false);
     }
@@ -1851,11 +1852,11 @@ void QucsApp::slotIntoHierarchy()
 
   QString s = QucsWorkDir.filePath(pc->Props.first()->Value);
   if(!gotoPage(s)) {
-    HierarchyHistory.remove();
+    HierarchyHistory.removeLast(); //?remove();
     return;
   }
 
-  *(HierarchyHistory.getLast()) = Doc->DocName; // remember for the way back
+  *(HierarchyHistory.last()) = Doc->DocName; // remember for the way back
   popH->setEnabled(true);
 }
 
@@ -1867,15 +1868,15 @@ void QucsApp::slotPopHierarchy()
 
   if(HierarchyHistory.count() == 0) return;
 
-  QString Doc = *(HierarchyHistory.getLast());
+  QString Doc = *(HierarchyHistory.last());
   *(HierarchyHistory.last()) = "*";  // sign not to clear HierarchyHistory
 
   if(!gotoPage(Doc)) {
-    *(HierarchyHistory.getLast()) = Doc;
+    *(HierarchyHistory.last()) = Doc;
     return;
   }
 
-  HierarchyHistory.remove();
+  HierarchyHistory.removeLast(); //??
   if(HierarchyHistory.count() == 0)
     popH->setEnabled(false);
 }

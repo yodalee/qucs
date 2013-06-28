@@ -21,11 +21,11 @@
 #include <QtGui>
 //#include <q3mainwindow.h>
 #include <QMainWindow>
-#include <qstring.h>
-#include <qdir.h>
-//Added by qt3to4:
+#include <QString>
+#include <QDir>
+
 #include <QLabel>
-#include <Q3PtrList>
+#include <QList>
 //#include <Q3PopupMenu>
 #include <QMouseEvent>
 #include <QCloseEvent>
@@ -204,7 +204,7 @@ private:
   QComboBox     *CompChoose;
 
 // ********** Properties ************************************************
-  Q3PtrList<QString> HierarchyHistory; // keeps track of "go into subcircuit"
+  QList<QString *> HierarchyHistory; // keeps track of "go into subcircuit"
   QString  QucsFileFilter;
 
 // ********** Methods ***************************************************
