@@ -52,8 +52,12 @@ void TimingDiagram::paint(ViewPainter *p)
 
   p->Painter->setPen(Qt::black);
   // write whole text
-  for(Text *pt = Texts.first(); pt != 0; pt = Texts.next())
+  Text *pt;
+  QListIterator<Text *> it(Texts);
+  while (it.hasNext()) {
+    pt = it.next();
     p->drawText(pt->s, cx+pt->x, cy-pt->y);
+  }
 
 
   if(y1 > 0) {  // paint scroll bar ?

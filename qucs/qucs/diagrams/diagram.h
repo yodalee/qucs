@@ -95,7 +95,7 @@ public:
   Q3PtrList<Graph>  Graphs;
   Q3PtrList<struct Arc>    Arcs;
   Q3PtrList<Line>   Lines;
-  Q3PtrList<Text>   Texts;
+  QList<Text *>   Texts;
 
   int x3, y3;
   Axis  xAxis, yAxis, zAxis;   // axes (x, y left, y right)

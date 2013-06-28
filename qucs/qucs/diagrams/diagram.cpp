@@ -98,7 +98,7 @@ Diagram::Diagram(int _cx, int _cy)
   Graphs.setAutoDelete(true);
   Arcs.setAutoDelete(true);
   Lines.setAutoDelete(true);
-  Texts.setAutoDelete(true);
+  //Texts.setAutoDelete(true);
 }
 
 Diagram::~Diagram()
@@ -129,7 +129,10 @@ void Diagram::paint(ViewPainter *p)
 
   // write whole text (axis label inclusively)
   QMatrix wm = p->Painter->worldMatrix();
-  for(Text *pt = Texts.first(); pt != 0; pt = Texts.next()) {
+  Text *pt;
+  QListIterator<Text *> it(Texts);
+  while (it.hasNext()) {
+    pt = it.next();
     p->Painter->setWorldMatrix(
         QMatrix(pt->mCos, -pt->mSin, pt->mSin, pt->mCos,
                  p->DX + float(cx+pt->x) * p->Scale,
@@ -1665,7 +1668,8 @@ void Diagram::createPolarDiagram(Axis *Axis, int Mode)
   Arcs.append(new struct Arc(0, y2, x2, y2, tmp, 16*360-phi, QPen(Qt::black,0)));
 
   QFontMetrics  metrics(((Schematic*)QucsMain->DocumentTab->currentPage())->font());   // get size of text
-  QSize r = metrics.size(0, Texts.current()->s);  // width of text
+#warning check fontsize
+  QSize r = metrics.size(0, Texts.last()->s);  // width of text
   len = x2+r.width()-4;   // more space at the right
   if(len > x3)  x3 = len;
 }
