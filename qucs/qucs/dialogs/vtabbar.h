@@ -22,9 +22,8 @@
 
 #include "vtabglobal.h"
 #include "vtabbutton.h"
-#include <qwidget.h>
-#include <q3ptrlist.h>
-//Added by qt3to4:
+#include <QWidget>
+#include <QList>
 #include <Q3VBoxLayout>
 
 class Q3VBoxLayout;
@@ -69,7 +68,7 @@ private:
  bool m_tabsOff;
  VTabPosition m_position;
  Q3VBoxLayout* m_layout;
- Q3PtrList<VTab> m_tabs;
+ QList<VTab *> m_tabs;
 
 };
 

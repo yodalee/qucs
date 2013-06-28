@@ -20,9 +20,9 @@
 #include "vtabbutton.h"
 #include "vtabbar.h"
 
-#include <qlayout.h>
-#include <qtooltip.h>
-//Added by qt3to4:
+#include <QLayout>
+#include <QToolTip>
+
 #include <Q3VBoxLayout>
 
 VTabBar::VTabBar(VTabPosition p,QWidget* parent, const char* name): QWidget(parent, name)
@@ -32,7 +32,8 @@ VTabBar::VTabBar(VTabPosition p,QWidget* parent, const char* name): QWidget(pare
   m_layout->addStretch(800); //HACK to avoid spaces b/w buttons
   m_index = 0;
   m_tabsOff = true;
-  m_tabs.setAutoDelete( false );
+#warning will it leak?
+  //m_tabs.setAutoDelete( false );
   setSizePolicy( QSizePolicy::Fixed,QSizePolicy::MinimumExpanding);
 }
 
@@ -53,9 +54,10 @@ VTab* VTabBar::addTab(const QString& caption,int id)
 
 VTab* VTabBar::findTab(int _id)
 {
-  VTab * c = m_tabs.first();
-  for ( ; c; c = m_tabs.next() )
+  VTab * c;
+  for (int i=0; i<m_tabs.size(); i++)
     {
+      c = m_tabs.at(i);
       if(c->id() == _id)
 	return c;
     }
@@ -76,9 +78,10 @@ void VTabBar::setTabToolTip(int id,const QString &tip)
 
 void VTabBar::removeTab(VTab *tab)
 {
-  VTab * c = m_tabs.first();
-  for ( ; c; c = m_tabs.next() )
+  VTab * c;
+  for (int i=0; i<m_tabs.size(); i++)
     {
+      c = m_tabs.at(i);
       if(c == tab)
 	{
 	  m_tabs.remove(c);
@@ -90,10 +93,11 @@ void VTabBar::removeTab(VTab *tab)
 using namespace std;
 void VTabBar::removeTab(int _id)
 {
-  VTab * c = m_tabs.first();
-  for ( ; c; c = m_tabs.next() )
+  VTab * c;
+  for (int i=0; i<m_tabs.size(); i++)
     {
-		cout<<c->id()<<endl;
+      c = m_tabs.at(i);
+      cout<<c->id()<<endl;
       if(c->id() == _id)
 	{
 	  m_tabs.remove(c);
@@ -116,8 +120,9 @@ void VTabBar::setTabState(int p_id,bool state)
 {
   VTab *c,*current;
   c = current = 0l;
-  for ( c = m_tabs.first(); c; c = m_tabs.next() )
+  for (int i=0; i<m_tabs.size(); i++)
     {
+      c = m_tabs.at(i);
       c->blockSignals(true);
       if(c->id() == p_id && state == true)
 	{
@@ -148,9 +153,10 @@ bool VTabBar::isAllTabsOff()
 
 void VTabBar::switchOffAllTabs()
 {
-  VTab *c = m_tabs.first();
-  for ( ; c; c = m_tabs.next() )
+  VTab * c;
+  for (int i=0; i<m_tabs.size(); i++)
     {
+      c = m_tabs.at(i);
       c->blockSignals(true);
       c->setOn(false);
       c->blockSignals(false);
@@ -164,10 +170,10 @@ void VTabBar::setPosition(VTabPosition p_pos)
   if(m_position == p_pos)
     return;
   m_position = p_pos;
-  VTab * c = m_tabs.first();
-  while(c)
+  VTab * c;
+  for (int i=0; i<m_tabs.size(); i++)
     {
+      c = m_tabs.at(i);
       c->setPosition(m_position);
-      c = m_tabs.next();
     }
 }
