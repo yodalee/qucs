@@ -24,8 +24,8 @@
 #include "diagrams/diagram.h"
 #include "paintings/painting.h"
 #include "components/component.h"
-//Added by qt3to4:
-#include <Q3PtrList>
+
+#include <QList>
 
 
 
@@ -2497,7 +2497,7 @@ void Schematic::setCompPorts(Component *pc)
 {
   Port *pp;
   WireLabel *pl;
-  Q3PtrList<WireLabel> LabelCache;
+  QList<WireLabel *> LabelCache;
 
   QListIterator<Port *> ip(pc->Ports);
   while (ip.hasNext()) {
@@ -2528,8 +2528,10 @@ void Schematic::setCompPorts(Component *pc)
     pp->Connection = insertNode(pp->x+pc->cx, pp->y+pc->cy, pc);
   }
 
-  for(pl = LabelCache.first(); pl != 0; pl = LabelCache.next())
+  for(int i=0; i<LabelCache.size(); i++ ) {
+    pl = LabelCache.at(i);  
     insertNodeLabel(pl);
+  }
 }
 
 // ---------------------------------------------------
@@ -2722,7 +2724,7 @@ void Schematic::oneLabel(Node *n1)
   Element *pe;
   WireLabel *pl = 0;
   bool named=false;   // wire line already named ?
-  Q3PtrList<Node> Cons;
+  QList<Node *> Cons;
 
 //  for(pn = Nodes->first(); pn!=0; pn = Nodes->next())
   QListIterator<Node *> in(Nodes);
@@ -2734,15 +2736,16 @@ void Schematic::oneLabel(Node *n1)
 
   Cons.append(n1);
   n1->y1 = 1;  // mark Node as already checked
-  for(pn = Cons.first(); pn!=0; pn = Cons.next()) {
+  for(int i=0; i<Cons.size(); i++ ) {
+    pn = Cons.at(i);  
     if(pn->Label) {
       if(named) {
         delete pn->Label;
         pn->Label = 0;    // erase double names
       }
       else {
-	named = true;
-	pl = pn->Label;
+	    named = true;
+	    pl = pn->Label;
       }
     }
 
@@ -2769,7 +2772,7 @@ void Schematic::oneLabel(Node *n1)
       if(pNode->y1) continue;
       pNode->y1 = 1;  // mark Node as already checked
       Cons.append(pNode);
-      Cons.findRef(pn);
+      //Cons.findRef(pn); //set back index to pn??
 
       if(pw->Label) {
         if(named) {
