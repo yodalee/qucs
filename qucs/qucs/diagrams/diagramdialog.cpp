@@ -108,7 +108,7 @@ DiagramDialog::DiagramDialog(Diagram *d, const QString& _DataSet,
                     : QDialog(parent, 0, TRUE, Qt::WDestructiveClose)
 {
   Diag = d;
-  Graphs.setAutoDelete(true);
+  //Graphs.setAutoDelete(true);
   copyDiagramGraphs();   // make a copy of all graphs
   defaultDataSet = _DataSet;
   setCaption(tr("Edit Diagram Properties"));
@@ -587,7 +587,9 @@ DiagramDialog::DiagramDialog(Diagram *d, const QString& _DataSet,
   // ...........................................................
   // put all graphs into the ListBox
   Row = 0;
-  for(Graph *pg = Diag->Graphs.first(); pg != 0; pg = Diag->Graphs.next()) {
+  Graph *pg;
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     GraphList->insertItem(pg->Var);
     if(pg == currentGraph) {
       GraphList->setCurrentItem(Row);   // select current graph
@@ -773,7 +775,7 @@ void DiagramDialog::slotDeleteGraph()
   if(i < 0) return;   // return, if no item selected
 
   GraphList->removeItem(i);
-  Graphs.remove(i);
+  Graphs.removeAt(i);
 
   GraphInput->setText("");  // erase input line and back to default values
   if(Diag->Name != "Tab") {
@@ -988,11 +990,13 @@ void DiagramDialog::slotApply()
   }   // of "if(Diag->Name != "Tab")"
 
   Diag->Graphs.clear();   // delete the graphs
-  Graphs.setAutoDelete(false);
-  for(Graph *pg = Graphs.first(); pg != 0; pg = Graphs.next())
+
+  Graph *pg;
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     Diag->Graphs.append(pg);  // transfer the new graphs to diagram
+  }
   Graphs.clear();
-  Graphs.setAutoDelete(true);
 
   Diag->loadGraphData(defaultDataSet);
   ((Schematic*)parent())->viewport()->repaint();
@@ -1120,8 +1124,11 @@ void DiagramDialog::slotSetGraphStyle(int style)
 // Makes a copy of all graphs in the diagram.
 void DiagramDialog::copyDiagramGraphs()
 {
-  for(Graph *pg = Diag->Graphs.first(); pg != 0; pg = Diag->Graphs.next())
+  Graph *pg;
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     Graphs.append(pg->sameNewOne());
+  }
 }
 
 // --------------------------------------------------------------------------

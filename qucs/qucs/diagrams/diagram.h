@@ -23,10 +23,10 @@
 #include "element.h"
 #include "viewpainter.h"
 
-#include <qfile.h>
-//Added by qt3to4:
+#include <QFile>
+
 #include <Q3TextStream>
-#include <Q3PtrList>
+#include <QList>
 
 #define MIN_SCROLLBAR_SIZE 8
 
@@ -92,7 +92,7 @@ public:
   QString Name; // identity of diagram type (e.g. Polar), used for saving etc.
   QPen    GridPen;
 
-  Q3PtrList<Graph>  Graphs;
+  QList<Graph *>  Graphs;
   QList<Arc *>    Arcs;
   QList<Line *>   Lines;
   QList<Text *>   Texts;

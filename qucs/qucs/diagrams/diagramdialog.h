@@ -120,7 +120,7 @@ private:
   QSlider     *SliderRotX, *SliderRotY, *SliderRotZ;
   Cross3D     *DiagCross;
   bool changed, transfer, toTake;
-  Q3PtrList<Graph>  Graphs;
+  QList<Graph *>  Graphs;
 };
 
 #endif

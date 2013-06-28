@@ -156,8 +156,9 @@ int TabDiagram::calcDiagram()
     xAxis.limit_min = 0.0;
 
   Graph *firstGraph;
-  Graph *g = Graphs.first();
-  if(g == 0) {  // no variables specified in diagram ?
+  Graph *g;
+  QListIterator<Graph *> ig(Graphs);
+  if(!ig.hasNext()) {  // no variables specified in diagram ?
     Str = QObject::tr("no variables");
     colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
     if(colWidth >= 0)
@@ -173,69 +174,74 @@ int TabDiagram::calcDiagram()
   int counting, invisibleCount=0;
   int startWriting, lastCount = 1;
 
-  while(g->cPointsX.isEmpty()) {  // any graph with data ?
-    g = Graphs.next();
-    if(g == 0) break;
-  }
-if(g) if(!g->cPointsX.isEmpty()) {
-  // ................................................
-  counting = g->cPointsX.getFirst()->count * g->countY;  // number of values
-  NumAll = counting;
-
-  invisibleCount = counting - y/tHeight;
-  if(invisibleCount <= 0)  xAxis.limit_min = 0.0;// height bigger than needed
-  else {
-    NumLeft = invisibleCount - int(xAxis.limit_min + 0.5);
-    if(invisibleCount < int(xAxis.limit_min + 0.5))
-      xAxis.limit_min = double(invisibleCount); // adjust limit of scroll bar
-  }
-
-  for(DataX *pD = g->cPointsX.last(); pD!=0; pD = g->cPointsX.prev()) {
-    colWidth = 0;
-    Str = pD->Var;
-    colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
-    if(colWidth < 0)  goto funcEnd;
-    startWriting = int(xAxis.limit_min + 0.5);  // when to reach visible area
-
-    Texts.append(new Text(x-4, y2-2, Str)); // independent variable
-    if(pD->count != 0) {
-      y = y2-tHeight-5;
-      counting /= pD->count;   // how many rows to be skipped
-      for(int z1=0; z1<lastCount; z1++) {
-        px = pD->Points;
-        for(int z=pD->count; z>0; z--) {
-	  if(startWriting <= 0) { // reached visible area ?
-	    y += tHeight*startWriting;
-	    startWriting = 0;
-	    if(y < tHeight) break;  // no room for more rows ?
-	    Str = StringNum(*px, 'g', g->Precision);
-	    colWidth = checkColumnWidth(Str, metrics, colWidth, x, y);
-	    if(colWidth < 0)  goto funcEnd;
-
-            Texts.append(new Text( x, y, Str));
-            y -= tHeight*counting;
-	  }
-	  else startWriting -= counting;
-	  px++;
-        }
-	if(pD == g->cPointsX.getFirst())   // only paint one time
-	  if(y >= tHeight) if(y < y2-tHeight-5)
-            Lines.append(new Line(0, y+1, x2, y+1, QPen(Qt::black,0)));
-      }
-      lastCount *= pD->count;
+  bool hasData = false;
+  while(ig.hasNext()) {  // any graph with data ?
+    g = ig.next();
+    if(!g->cPointsX.isEmpty()) {
+        hasData = true;
+        break;
     }
-    x += colWidth+15;
-    Lines.append(new Line(x-8, y2, x-8, 0, QPen(Qt::black,0)));
   }
-  Lines.last()->style = QPen(Qt::black,2);
+  if(hasData) {
+    // ................................................
+    counting = g->cPointsX.getFirst()->count * g->countY;  // number of values
+    NumAll = counting;
 
-}  // of "if no data in graphs"
+    invisibleCount = counting - y/tHeight;
+    if(invisibleCount <= 0)  xAxis.limit_min = 0.0;// height bigger than needed
+    else {
+      NumLeft = invisibleCount - int(xAxis.limit_min + 0.5);
+      if(invisibleCount < int(xAxis.limit_min + 0.5))
+        xAxis.limit_min = double(invisibleCount); // adjust limit of scroll bar
+    }
+
+    for(DataX *pD = g->cPointsX.last(); pD!=0; pD = g->cPointsX.prev()) {
+      colWidth = 0;
+      Str = pD->Var;
+      colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
+      if(colWidth < 0)  goto funcEnd;
+      startWriting = int(xAxis.limit_min + 0.5);  // when to reach visible area
+
+      Texts.append(new Text(x-4, y2-2, Str)); // independent variable
+      if(pD->count != 0) {
+        y = y2-tHeight-5;
+        counting /= pD->count;   // how many rows to be skipped
+        for(int z1=0; z1<lastCount; z1++) {
+          px = pD->Points;
+          for(int z=pD->count; z>0; z--) {
+  	  if(startWriting <= 0) { // reached visible area ?
+  	    y += tHeight*startWriting;
+  	    startWriting = 0;
+  	    if(y < tHeight) break;  // no room for more rows ?
+  	    Str = StringNum(*px, 'g', g->Precision);
+  	    colWidth = checkColumnWidth(Str, metrics, colWidth, x, y);
+  	    if(colWidth < 0)  goto funcEnd;
+
+              Texts.append(new Text( x, y, Str));
+              y -= tHeight*counting;
+  	  }
+  	  else startWriting -= counting;
+  	  px++;
+          }
+  	if(pD == g->cPointsX.getFirst())   // only paint one time
+  	  if(y >= tHeight) if(y < y2-tHeight-5)
+              Lines.append(new Line(0, y+1, x2, y+1, QPen(Qt::black,0)));
+        }
+        lastCount *= pD->count;
+      }
+      x += colWidth+15;
+      Lines.append(new Line(x-8, y2, x-8, 0, QPen(Qt::black,0)));
+    }
+    Lines.last()->style = QPen(Qt::black,2);
+
+  }  // of "if no data in graphs"
 
 
   firstGraph = g;
   // ................................................
   // all dependent variables
-  for(g = Graphs.first(); g!=0; g = Graphs.next()) {
+  for(int i=0; i<Graphs.size(); i++ ) {
+    g = Graphs.at(i);
     y = y2-tHeight-5;
     colWidth = 0;
 
@@ -312,7 +318,7 @@ if(g) if(!g->cPointsX.isEmpty()) {
       Texts.append(new Text(x, y, Str));
     }
     x += colWidth+15;
-    if(g != Graphs.getLast())   // do not paint last line
+    if(g != Graphs.last())   // do not paint last line
       Lines.append(new Line(x-8, y2, x-8, 0, QPen(Qt::black,0)));
   }
 
@@ -320,7 +326,7 @@ funcEnd:
   if(invisibleCount > 0) {  // could all numbers be written ?
     x1 = 18;   // extend the select area to the left
 
-    zAxis.limit_max = double(NumAll);  // number of data (rows) 
+    zAxis.limit_max = double(NumAll);  // number of data (rows)
 
     // calculate data for painting scroll bar
     y = int(xAxis.limit_min + 0.5);

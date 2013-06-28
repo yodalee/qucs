@@ -1608,11 +1608,15 @@ void MouseActions::MReleaseResizeDiagram(Schematic *Doc, QMouseEvent *Event)
 
   Diagram *pd = (Diagram*)focusElement;
   pd->updateGraphData();
-  for(Graph *pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next())
+  Graph *pg;
+  QListIterator<Graph *> ig(pd->Graphs);
+  while (ig.hasNext()) {
+    pg = ig.next();
     for(Marker *pm = pg->Markers.first(); pm!=0; pm = pg->Markers.next()) {
       pm->x1 += MAx3;      // correct changes due to move of diagram corner
       pm->y1 += MAy3;
     }
+  }
 
   int x1, x2, y1, y2;
   pd->Bounding(x1, x2, y1, y2);
@@ -1950,7 +1954,7 @@ void MouseActions::editElement(Schematic *Doc, QMouseEvent *Event)
      id.toBack();
      while (id.hasPrevious()) {
        dia = id.previous();
-       if(dia->Graphs.findRef(pg) >= 0) {
+       if(dia->Graphs.indexOf(pg) >= 0) {
          foundDiag = true;
 	     break;
        }

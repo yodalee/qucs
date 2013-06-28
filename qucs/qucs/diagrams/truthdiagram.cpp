@@ -72,8 +72,9 @@ int TruthDiagram::calcDiagram()
     xAxis.limit_min = 0.0;
 
   Graph *firstGraph;
-  Graph *g = Graphs.first();
-  if(g == 0) {  // no variables specified in diagram ?
+  Graph *g;
+  QListIterator<Graph *> ig(Graphs);
+  if(!ig.hasNext()) {  // no variables specified in diagram ?
     Str = QObject::tr("no variables");
     colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
     if(colWidth >= 0)
@@ -89,62 +90,68 @@ int TruthDiagram::calcDiagram()
   int counting, invisibleCount=0;
   int startWriting, z;
 
-  while(g->cPointsX.isEmpty()) {  // any graph with data ?
-    g = Graphs.next();
-    if(g == 0) break;
-  }
-if(g) if(!g->cPointsX.isEmpty()) {
-  // ................................................
-  NumAll = g->cPointsX.getFirst()->count * g->countY;  // number of values
 
-  invisibleCount = NumAll - y/tHeight;
-  if(invisibleCount <= 0)  xAxis.limit_min = 0.0;// height bigger than needed
-  else {
-    if(invisibleCount < int(xAxis.limit_min + 0.5))
-      xAxis.limit_min = double(invisibleCount); // adjust limit of scroll bar
-    NumLeft = invisibleCount - int(xAxis.limit_min + 0.5);
-  }
-
-
-  colWidth = 0;
-  Texts.append(new Text(x-4, y2-2, Str)); // independent variable
-  if(NumAll != 0) {
-    z = metrics.width("1");
-    colWidth = metrics.width("0");
-    if(z > colWidth)  colWidth = z;
-    colWidth += 2;
-    counting = int(log(double(NumAll)) / log(2.0) + 0.9999); // number of bits
-
-    if((x+colWidth*counting) >= x2) {    // enough space for text ?
-      checkColumnWidth("0", metrics, 0, x2, y);
-      goto funcEnd;
-    }
-
-    y = y2-tHeight-5;
-    startWriting = x;
-    for(z=int(xAxis.limit_min + 0.5); z<NumAll; z++) {
-      if(y < tHeight) break;  // no room for more rows ?
-      startWriting = x;
-      for(int zi=counting-1; zi>=0; zi--) {
-        if(z & (1 << zi))  Str = "1";
-        else  Str = "0";
-        Texts.append(new Text( startWriting, y, Str));
-        startWriting += colWidth;
+  bool hasData = false;
+  while (ig.hasNext()) { // any graph with data ?
+      g = ig.next();
+      if (!g->cPointsX.isEmpty()) {
+          hasData = true;
+          break;
       }
-      y -= tHeight;
-    }
-    x = startWriting + 15;
   }
-  Lines.append(new Line(x-8, y2, x-8, 0, QPen(Qt::black,2)));
+  if(hasData) {
+    // ................................................
+    NumAll = g->cPointsX.getFirst()->count * g->countY;  // number of values
 
-}  // of "if no data in graphs"
+    invisibleCount = NumAll - y/tHeight;
+    if(invisibleCount <= 0)  xAxis.limit_min = 0.0;// height bigger than needed
+    else {
+      if(invisibleCount < int(xAxis.limit_min + 0.5))
+        xAxis.limit_min = double(invisibleCount); // adjust limit of scroll bar
+      NumLeft = invisibleCount - int(xAxis.limit_min + 0.5);
+    }
+
+
+    colWidth = 0;
+    Texts.append(new Text(x-4, y2-2, Str)); // independent variable
+    if(NumAll != 0) {
+      z = metrics.width("1");
+      colWidth = metrics.width("0");
+      if(z > colWidth)  colWidth = z;
+      colWidth += 2;
+      counting = int(log(double(NumAll)) / log(2.0) + 0.9999); // number of bits
+
+      if((x+colWidth*counting) >= x2) {    // enough space for text ?
+        checkColumnWidth("0", metrics, 0, x2, y);
+        goto funcEnd;
+      }
+
+      y = y2-tHeight-5;
+      startWriting = x;
+      for(z=int(xAxis.limit_min + 0.5); z<NumAll; z++) {
+        if(y < tHeight) break;  // no room for more rows ?
+        startWriting = x;
+        for(int zi=counting-1; zi>=0; zi--) {
+          if(z & (1 << zi))  Str = "1";
+          else  Str = "0";
+          Texts.append(new Text( startWriting, y, Str));
+          startWriting += colWidth;
+        }
+        y -= tHeight;
+      }
+      x = startWriting + 15;
+    }
+    Lines.append(new Line(x-8, y2, x-8, 0, QPen(Qt::black,2)));
+
+  }  // of "if no data in graphs"
 
 
   int zi, digitWidth;
   firstGraph = g;
   // ................................................
   // all dependent variables
-  for(g = Graphs.first(); g!=0; g = Graphs.next()) {
+  for(int i=0; Graphs.size(); i++) {
+    g = Graphs.at(i);
     y = y2-tHeight-5;
 
     Str = g->Var;
@@ -221,7 +228,7 @@ if(g) if(!g->cPointsX.isEmpty()) {
       Texts.append(new Text(x, y, Str));
     }
     x += colWidth+15;
-    if(g != Graphs.getLast())   // do not paint last line
+    if(g != Graphs.last())   // do not paint last line
       Lines.append(new Line(x-8, y2, x-8, 0, QPen(Qt::black,0)));
   }
 
@@ -229,7 +236,7 @@ funcEnd:
   if(invisibleCount > 0) {  // could all numbers be written ?
     x1 = 18;   // extend the select area to the left
 
-    zAxis.limit_max = double(NumAll);  // number of data (rows) 
+    zAxis.limit_max = double(NumAll);  // number of data (rows)
 
     // calculate data for painting scroll bar
     y = int(xAxis.limit_min + 0.5);

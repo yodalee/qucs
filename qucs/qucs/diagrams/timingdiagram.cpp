@@ -134,7 +134,7 @@ int TimingDiagram::calcDiagram()
   int NumAll=0;   // how many values per row
   int NumLeft=0;  // how many values could not be written
   int invisibleCount = 0;  // how many values are invisible
-  
+
   if(y2 < (tHeight + 8))
     y2 = tHeight + 8;
   y = y2 - tHeight - 6;
@@ -150,8 +150,9 @@ int TimingDiagram::calcDiagram()
     xAxis.limit_min = 0.0;
 
   Graph *firstGraph;
-  Graph *g = Graphs.first();
-  if(g == 0) {  // no variables specified in diagram ?
+  Graph *g;
+  QListIterator<Graph *> ig(Graphs);
+  if(!ig.hasNext()) {  // no variables specified in diagram ?
     Str = QObject::tr("no variables");
     colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
     if(colWidth >= 0)
@@ -159,25 +160,30 @@ int TimingDiagram::calcDiagram()
     return 0;
   }
 
-
-  double *px;
-  while(g->cPointsX.isEmpty()) {  // any graph with data ?
-    g = Graphs.next();
-    if(g == 0) break;
+  bool hasData = false;
+  while (ig.hasNext()) { // any graph with data ?
+      g = ig.next();
+      if (!g->cPointsX.isEmpty()) {
+          hasData = true;
+          break;
+      }
   }
-  if(g == 0) {
+
+  if(!hasData) {
     Str = QObject::tr("no data");
     colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
     if(colWidth < 0)  return 0;
     Texts.append(new Text(x, y2-2, Str));
     return 0;
   }
-  firstGraph = g;
 
+  firstGraph = g;
 
   // First check the maximum bit number of all vectors.
   colWidth = 0;
-  for(g = Graphs.first(); g!=0; g = Graphs.next())
+  ig.toFront();
+  while (ig.hasNext()) {
+    g = ig.next();
     if(g->cPointsY) {
       if(g->Var.right(2) == ".X") {
         z = strlen((char*)g->cPointsY);
@@ -190,74 +196,78 @@ int TimingDiagram::calcDiagram()
           colWidth = z;
       }
     }
+  }
   int TimeStepWidth = colWidth * metrics.width("X") + 8;
   if(TimeStepWidth < 40)
     TimeStepWidth = 40;
 
 
+  double *px;
   colWidth = 0;
-if(!firstGraph->cPointsX.isEmpty()) {
-  // ................................................
-  if(firstGraph->cPointsX.count() > 1) {
-    Str = QObject::tr("wrong dependency");
+  if(!firstGraph->cPointsX.isEmpty()) {
+    // ................................................
+    if(firstGraph->cPointsX.count() > 1) {
+      Str = QObject::tr("wrong dependency");
+      colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
+      if(colWidth >= 0)
+        Texts.append(new Text(x, y2-2, Str)); // independent variable
+      return 0;
+    }
+
+
+    // first, write name of independent variable
+    DataX *pD = firstGraph->cPointsX.getFirst();
+    NumAll = pD->count;
+    Str = pD->Var;
     colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
-    if(colWidth >= 0)
-      Texts.append(new Text(x, y2-2, Str)); // independent variable
-    return 0;
-  }
-
-
-  // first, write name of independent variable
-  DataX *pD = firstGraph->cPointsX.getFirst();
-  NumAll = pD->count;
-  Str = pD->Var;
-  colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
-  if(colWidth < 0)  return 1;
-  Texts.append(new Text(x, y2-2, Str));
-  
-
-  y -= 5;
-  // write all dependent variable names to get width of first column
-  for(g = Graphs.first(); g!=0; g = Graphs.next()) {
-    if(y < tHeight)  break;
-    Str = g->Var;
-    colWidth = checkColumnWidth(Str, metrics, colWidth, x, y);
     if(colWidth < 0)  return 1;
-    Texts.append(new Text(x, y, Str));  // dependent variable
-    y -= tHeight + 2;
-  }
-  x += colWidth + 13;
-  xAxis.numGraphs = x -6;
-  Lines.append(new Line(x-6, y2, x-6, 0, QPen(Qt::black,0)));
-  xStart = x;
+    Texts.append(new Text(x, y2-2, Str));
 
 
-  invisibleCount = NumAll - (x2-xAxis.numGraphs)/TimeStepWidth;
-  if(invisibleCount <= 0)  xAxis.limit_min = 0.0;  // longer than needed
-  else {
-    NumLeft = invisibleCount - int(xAxis.limit_min + 0.5);
-    if(invisibleCount < int(xAxis.limit_min + 0.5))
-      xAxis.limit_min = double(invisibleCount); // adjust limit of scroll bar
-  }
+    y -= 5;
+    // write all dependent variable names to get width of first column
+    ig.toFront();
+    while (ig.hasNext()) {
+      g = ig.next();
+      if(y < tHeight)  break;
+      Str = g->Var;
+      colWidth = checkColumnWidth(Str, metrics, colWidth, x, y);
+      if(colWidth < 0)  return 1;
+      Texts.append(new Text(x, y, Str));  // dependent variable
+      y -= tHeight + 2;
+    }
+    x += colWidth + 13;
+    xAxis.numGraphs = x -6;
+    Lines.append(new Line(x-6, y2, x-6, 0, QPen(Qt::black,0)));
+    xStart = x;
 
 
-  // write independent variable values (usually time)
-  y = y2-tHeight-4;
-  px = pD->Points;
-  z = int(xAxis.limit_min + 0.5);
-  px += z;
-  z = pD->count - z;
-  for( ; z>0; z--) {
-    Str = num2str(*(px++));
-    colWidth = metrics.width(Str);  // width of text
-    if(x+colWidth+2 >= x2)  break;
+    invisibleCount = NumAll - (x2-xAxis.numGraphs)/TimeStepWidth;
+    if(invisibleCount <= 0)  xAxis.limit_min = 0.0;  // longer than needed
+    else {
+      NumLeft = invisibleCount - int(xAxis.limit_min + 0.5);
+      if(invisibleCount < int(xAxis.limit_min + 0.5))
+        xAxis.limit_min = double(invisibleCount); // adjust limit of scroll bar
+    }
 
-    Texts.append(new Text( x, y2-2, Str));
-    Lines.append(new Line(x+5, y, x+5, y-3, QPen(Qt::black,0)));
-    x += TimeStepWidth;
-  }
 
-}  // of "if no data in graphs"
+    // write independent variable values (usually time)
+    y = y2-tHeight-4;
+    px = pD->Points;
+    z = int(xAxis.limit_min + 0.5);
+    px += z;
+    z = pD->count - z;
+    for( ; z>0; z--) {
+      Str = num2str(*(px++));
+      colWidth = metrics.width(Str);  // width of text
+      if(x+colWidth+2 >= x2)  break;
+
+      Texts.append(new Text( x, y2-2, Str));
+      Lines.append(new Line(x+5, y, x+5, y-3, QPen(Qt::black,0)));
+      x += TimeStepWidth;
+    }
+
+  }  // of "if no data in graphs"
 
 
   tHeight += 2;
@@ -266,7 +276,9 @@ if(!firstGraph->cPointsX.isEmpty()) {
   QPen Pen;
   int  yLast, yNow;
   y = y2-tHeight-9;
-  for(g = Graphs.first(); g!=0; g = Graphs.next()) {
+  ig.toFront();
+  while (ig.hasNext()) {
+    g = ig.next();
     if(y < tHeight) {
       // mark lack of space with a small arrow
       Lines.append(new Line(4, 6, 4, -7, QPen(Qt::red,2)));
@@ -365,7 +377,7 @@ if(!firstGraph->cPointsX.isEmpty()) {
             break;
           default:
             yNow = 1 + ((tHeight - 6) >> 1);
-        } 
+        }
 
         if(yLast != yNow)
           Lines.append(new Line(x, y-yLast, x, y-yNow, Pen));
@@ -427,7 +439,7 @@ funcEnd:
     if(NumLeft < 0) NumLeft = 0;
     y  = NumAll - NumLeft - z;
 
-    // number of data (times) 
+    // number of data (times)
     zAxis.limit_max = double(firstGraph->cPointsX.getFirst()->count);
 
     // position of scroll bar in pixel

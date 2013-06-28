@@ -714,13 +714,15 @@ void Schematic::print(QPrinter*, QPainter *Painter, bool printAll, bool fitToPag
     pd = id.next();
     if(pd->isSelected || printAll) {
       // if graph or marker is selected, deselect during printing
-      for(pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next()) {
-	if(pg->isSelected)  pg->Type |= 1;  // remember selection
-	pg->isSelected = false;
-	for(pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next()) {
-	  if(pm->isSelected)  pm->Type |= 1;  // remember selection
-	  pm->isSelected = false;
-	}
+      for(int i=0; pd->Graphs.size(); i++) {
+        pg = pd->Graphs.at(i);
+            
+        if(pg->isSelected)  pg->Type |= 1;  // remember selection
+        pg->isSelected = false; 
+        for(pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next()) {
+          if(pm->isSelected)  pm->Type |= 1;  // remember selection
+          pm->isSelected = false;
+        }
       }
 
       selected = pd->isSelected;
@@ -729,13 +731,14 @@ void Schematic::print(QPrinter*, QPainter *Painter, bool printAll, bool fitToPag
       pd->isSelected = selected;
 
       // revert selection of graphs and markers
-      for(pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next()) {
-	if(pg->Type & 1)  pg->isSelected = true;
-	pg->Type &= -2;
-	for(pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next()) {
-	  if(pm->Type & 1)  pm->isSelected = true;
-	  pm->Type &= -2;
-	}
+      for(int i=0; pd->Graphs.size(); i++) {
+        pg = pd->Graphs.at(i);
+        if(pg->Type & 1)  pg->isSelected = true;
+        pg->Type &= -2;
+        for(pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next()) {
+          if(pm->Type & 1)  pm->isSelected = true;
+          pm->Type &= -2;
+        }
       }
     }
   }
@@ -1020,7 +1023,9 @@ void Schematic::sizeOfAll(int& xmin, int& ymin, int& xmax, int& ymax)
     if(y1 < ymin) ymin = y1;
     if(y2 > ymax) ymax = y2;
 
-    for(Graph *pg = pd->Graphs.first(); pg!=0; pg = pd->Graphs.next())
+    Graph *pg;
+    for(int i=0; i<pd->Graphs.size(); i++) {
+      pg = pd->Graphs.at(i);
       // test all markers of diagram
       for(Marker *pm = pg->Markers.first(); pm!=0; pm = pg->Markers.next()) {
         pm->Bounding(x1, y1, x2, y2);
@@ -1029,6 +1034,7 @@ void Schematic::sizeOfAll(int& xmin, int& ymin, int& xmax, int& ymax)
         if(y1 < ymin) ymin = y1;
         if(y2 > ymax) ymax = y2;
       }
+    }
   }
 
   // find boundings of all Paintings
@@ -1888,7 +1894,9 @@ bool Schematic::elementsOnGrid()
       count = true;
     }
 
-    for(Graph *pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next())
+    Graph *pg;
+    for(int i=0; i<pd->Graphs.size(); i++) {
+      pg = pd->Graphs.at(i);
       // test markers of diagram
       for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
         if(pm->isSelected) {
@@ -1900,6 +1908,7 @@ bool Schematic::elementsOnGrid()
           pm->isSelected = false;
           count = true;
         }
+    }
   }
 
   // test all paintings

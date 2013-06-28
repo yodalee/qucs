@@ -363,9 +363,11 @@ void Rect3DDiagram::removeHiddenLines(char *zBuffer, tBound *Bounds)
   tPoint3D *p;
   int i, j, z, dx, dy, Size=0;
   // pre-calculate buffer size to avoid reallocations in the first step
-  for(g = Graphs.first(); g!=0; g = Graphs.next())
+  for(int i=0; i<Graphs.size(); i++) {
+    g = Graphs.at(i);
     if(g->cPointsY)
       Size += g->cPointsX.getFirst()->count * g->countY;
+  }
 
   // "Mem" should be the last malloc to simplify realloc
   tPointZ *zMem = (tPointZ*)malloc( (Size+2)*sizeof(tPointZ) );
@@ -375,7 +377,8 @@ void Rect3DDiagram::removeHiddenLines(char *zBuffer, tBound *Bounds)
   tPointZ *zp = zMem, *zp_tmp;
 
   // ...............................................................
-  for(g = Graphs.first(); g!=0; g = Graphs.next()) {
+  for(int i=0; i<Graphs.size(); i++) {
+    g = Graphs.at(i);
 
     pz = g->cPointsY;
     if(!pz) continue;
@@ -497,7 +500,8 @@ void Rect3DDiagram::removeHiddenLines(char *zBuffer, tBound *Bounds)
   tPoint3D *MemEnd = Mem + 2*Size - 5;   // limit of buffer
 
   zp = zMem;
-  for(g = Graphs.first(); g!=0; g = Graphs.next()) {
+  for(int i=0; i<Graphs.size(); i++) {
+    g = Graphs.at(i);
     if(!g->cPointsY) continue;
     dx = g->cPointsX.first()->count;
     if(g->countY > 1)  dy = g->cPointsX.next()->count;
@@ -746,7 +750,8 @@ void Rect3DDiagram::createAxis(Axis *Axis, bool Right,
   y = y1_ - int(double(valid)*cos_phi);
   if(Axis->Label.isEmpty()) {
     // write all labels ----------------------------------------
-    for(pg = Graphs.first(); pg != 0; pg = Graphs.next()) {
+    for(int i=0; i<Graphs.size(); i++) {
+      pg = Graphs.at(i);
       if(Axis != &zAxis) {
         if(!pg->cPointsY)  continue;
         if(valid < 0) {

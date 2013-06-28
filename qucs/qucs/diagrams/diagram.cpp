@@ -28,10 +28,10 @@
 #include <locale.h>
 
 #include <q3textstream.h>
-#include <qmessagebox.h>
-#include <qregexp.h>
-#include <qdatetime.h>
-//Added by qt3to4:
+#include <QMessageBox>
+#include <QRegExp>
+#include <QDateTime>
+
 #include <Q3CString>
 
 #include "diagram.h"
@@ -96,7 +96,7 @@ Diagram::Diagram(int _cx, int _cy)
   isSelected = false;
   GridPen = QPen(Qt::lightGray,0);
 #warning will it leak?
-  Graphs.setAutoDelete(true);
+  //Graphs.setAutoDelete(true);
   //Arcs.setAutoDelete(true);
   //Lines.setAutoDelete(true);
   //Texts.setAutoDelete(true);
@@ -128,10 +128,12 @@ void Diagram::paint(ViewPainter *p)
     p->drawArc(cx+pa->x, cy-pa->y, pa->w, pa->h, pa->angle, pa->arclen);
   }
 
-  Graph *pg;
   // draw all graphs
-  for(pg = Graphs.first(); pg != 0; pg = Graphs.next())
+  Graph *pg;
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     pg->paint(p, cx, cy);
+  }
 
 
   // write whole text (axis label inclusively)
@@ -152,9 +154,11 @@ void Diagram::paint(ViewPainter *p)
   p->Painter->setWorldXForm(false);
 
   // draw markers last, so they are at the top of painting layers
-  for(pg = Graphs.first(); pg != 0; pg = Graphs.next())
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
       pm->paint(p, cx, cy);
+  }
 
 
   if(isSelected) {
@@ -195,21 +199,22 @@ void Diagram::createAxisLabels()
   y = -y1;
   if(xAxis.Label.isEmpty()) {
     // write all x labels ----------------------------------------
-    for(pg = Graphs.first(); pg != 0; pg = Graphs.next()) {
-	DataX *pD = pg->cPointsX.getFirst();
-	if(!pD) continue;
-	y -= LineSpacing;
-	if(Name[0] != 'C') {   // locus curve ?
-	  w = metrics.width(pD->Var) >> 1;
-	  if(w > wmax)  wmax = w;
-	  Texts.append(new Text(x-w, y, pD->Var, pg->Color, 12.0));
-	}
-	else {
-          w = metrics.width("real("+pg->Var+")") >> 1;
-	  if(w > wmax)  wmax = w;
-          Texts.append(new Text(x-w, y, "real("+pg->Var+")",
+    for(int i=0; i<Graphs.size(); i++) {
+      pg = Graphs.at(i);
+      DataX *pD = pg->cPointsX.getFirst();
+      if(!pD) continue;
+      y -= LineSpacing;
+      if(Name[0] != 'C') {   // locus curve ?
+	    w = metrics.width(pD->Var) >> 1;
+        if(w > wmax)  wmax = w;
+        Texts.append(new Text(x-w, y, pD->Var, pg->Color, 12.0));
+      }
+      else {
+        w = metrics.width("real("+pg->Var+")") >> 1;
+        if(w > wmax)  wmax = w;
+        Texts.append(new Text(x-w, y, "real("+pg->Var+")",
                                 pg->Color, 12.0));
-	}
+      }
     }
   }
   else {
@@ -231,7 +236,8 @@ void Diagram::createAxisLabels()
   y = y2>>1;
   if(yAxis.Label.isEmpty()) {
     // draw left y-label for all graphs ------------------------------
-    for(pg = Graphs.first(); pg != 0; pg = Graphs.next()) {
+    for(int i=0; i<Graphs.size(); i++) {
+      pg = Graphs.at(i);
       if(pg->yAxisNo != 0)  continue;
       if(pg->cPointsY) {
 	if(Name[0] != 'C') {   // location curve ?
@@ -269,7 +275,8 @@ void Diagram::createAxisLabels()
   y = y2>>1;
   if(zAxis.Label.isEmpty()) {
     // draw right y-label for all graphs ------------------------------
-    for(pg = Graphs.first(); pg != 0; pg = Graphs.next()) {
+    for(int i=0; i<Graphs.size(); i++) {
+      pg = Graphs.at(i);
       if(pg->yAxisNo != 1)  continue;
       if(pg->cPointsY) {
 	if(Name[0] != 'C') {   // location curve ?
@@ -761,7 +768,9 @@ void Diagram::loadGraphData(const QString& defaultDataSet)
   yAxis.max = zAxis.max = xAxis.max = -DBL_MAX;
 
   int No=0;
-  for(Graph *pg = Graphs.first(); pg != 0; pg = Graphs.next()) {
+  Graph *pg;
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     if(loadVarData(defaultDataSet, pg) != 1)   // load data, determine max/min values
       No++;
     else
@@ -801,8 +810,11 @@ void Diagram::recalcGraphData()
   yAxis.numGraphs = zAxis.numGraphs = 0;
 
   // get maximum and minimum values
-  for(Graph *pg = Graphs.first(); pg != 0; pg = Graphs.next())
+  Graph *pg;
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     getAxisLimits(pg);
+  }
 
   if(xAxis.min > xAxis.max) {
     xAxis.min = 0.0;
@@ -830,7 +842,8 @@ void Diagram::updateGraphData()
   int valid = calcDiagram();   // do not calculate graph data if invalid
 
   Graph *pg;
-  for(pg = Graphs.first(); pg != 0; pg = Graphs.next()) {
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     if(pg->ScrPoints != 0) {
       free(pg->ScrPoints);
       pg->ScrPoints = 0;
@@ -847,9 +860,11 @@ void Diagram::updateGraphData()
 
   // Setting markers must be done last, because in 3D diagram "Mem"
   // is released in "createAxisLabels()".
-  for(pg = Graphs.first(); pg != 0; pg = Graphs.next())
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
       pm->createText();
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -1260,8 +1275,11 @@ QString Diagram::save()
   // labels can contain spaces -> must be last items in the line
   s += " \""+xAxis.Label+"\" \""+yAxis.Label+"\" \""+zAxis.Label+"\">\n";
 
-  for(Graph *pg=Graphs.first(); pg != 0; pg=Graphs.next())
+  Graph *pg;
+  for(int i=0; i<Graphs.size(); i++) {
+    pg = Graphs.at(i);
     s += pg->save()+"\n";
+  }
 
   s += "  </"+Name+">";
   return s;
@@ -1397,7 +1415,8 @@ bool Diagram::load(const QString& Line, Q3TextStream *stream)
 
       // .......................................................
       // load markers of the diagram
-      pg = Graphs.current();
+#warning check if last == current
+      pg = Graphs.last();
       if(!pg)  return false;
       Marker *pm = new Marker(this, pg);
       if(!pm->load(s)) {
