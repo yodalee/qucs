@@ -101,7 +101,7 @@ int TruthDiagram::calcDiagram()
   }
   if(hasData) {
     // ................................................
-    NumAll = g->cPointsX.getFirst()->count * g->countY;  // number of values
+    NumAll = g->cPointsX.first()->count * g->countY;  // number of values
 
     invisibleCount = NumAll - y/tHeight;
     if(invisibleCount <= 0)  xAxis.limit_min = 0.0;// height bigger than needed
@@ -161,7 +161,7 @@ int TruthDiagram::calcDiagram()
 
 
     startWriting = int(xAxis.limit_min + 0.5);  // when to reach visible area
-    if(g->cPointsX.getFirst()) {
+    if(g->cPointsX.first()) {
 
       if(sameDependencies(g, firstGraph)) {
 

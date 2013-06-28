@@ -71,7 +71,7 @@ SweepDialog::SweepDialog(Schematic *Doc_)
     return;
   }
   if(pGraph->cPointsX.count() <= 1)
-    if(pGraph->cPointsX.getFirst()->count <= 1) {
+    if(pGraph->cPointsX.first()->count <= 1) {
       reject();
       return;
     }
@@ -89,7 +89,9 @@ SweepDialog::SweepDialog(Schematic *Doc_)
   DataX *pD;
   mySpinBox *Box;
   
-  for(pD = pGraph->cPointsX.first(); pD!=0; pD = pGraph->cPointsX.next()) {
+  QListIterator<DataX *> id(pGraph->cPointsX);
+  while (id.hasNext()) {
+    pD = id.next();
     all->addWidget(new QLabel(pD->Var, this), i,0);
   //cout<<"count: "<<pD->count-1<<", points: "<<*pD->Points<<endl;
     //works only for linear:

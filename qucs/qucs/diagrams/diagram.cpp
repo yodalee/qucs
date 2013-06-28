@@ -204,7 +204,7 @@ void Diagram::createAxisLabels()
     // write all x labels ----------------------------------------
     for(int i=0; i<Graphs.size(); i++) {
       pg = Graphs.at(i);
-      DataX *pD = pg->cPointsX.getFirst();
+      DataX *pD = pg->cPointsX.first();
       if(!pD) continue;
       y -= LineSpacing;
       if(Name[0] != 'C') {   // locus curve ?
@@ -508,7 +508,7 @@ void Diagram::calcData(Graph *g)
 
   int i, z, tmp, Counter=2;
   float dx, dy, xtmp, ytmp;
-  int Size = ((2*(g->cPointsX.getFirst()->count) + 1) * g->countY) + 10;
+  int Size = ((2*(g->cPointsX.first()->count) + 1) * g->countY) + 10;
   
   if(xAxis.autoScale)  if(yAxis.autoScale)  if(zAxis.autoScale)
     Counter = -50000;
@@ -530,10 +530,10 @@ void Diagram::calcData(Graph *g)
   switch(g->Style) {
     case GRAPHSTYLE_SOLID: // ***** solid line ****************************
       for(i=g->countY; i>0; i--) {  // every branch of curves
-	px = g->cPointsX.getFirst()->Points;
+	px = g->cPointsX.first()->Points;
 	calcCoordinate(px, pz, py, p, p+1, pa);
 	p += 2;
-	for(z=g->cPointsX.getFirst()->count-1; z>0; z--) {  // every point
+	for(z=g->cPointsX.first()->count-1; z>0; z--) {  // every point
 	  FIT_MEMORY_SIZE;  // need to enlarge memory block ?
 	  calcCoordinate(px, pz, py, p, p+1, pa);
 	  p += 2;
@@ -570,8 +570,8 @@ for(int zz=0; zz<z; zz+=2)
 
     default:  // symbol (e.g. star) at each point **********************
       for(i=g->countY; i>0; i--) {  // every branch of curves
-        px = g->cPointsX.getFirst()->Points;
-        for(z=g->cPointsX.getFirst()->count; z>0; z--) {  // every point
+        px = g->cPointsX.first()->Points;
+        for(z=g->cPointsX.first()->count; z>0; z--) {  // every point
           calcCoordinate(px, pz, py, p, p+1, pa);
           if(insideDiagram(*p, *(p+1)))    // within diagram ?
             p += 2;
@@ -590,12 +590,12 @@ for(int zz=0; zz<60; zz+=2)
   for(i=g->countY; i>0; i--) {  // every branch of curves
     Flag = 1;
     dist = -Stroke;
-    px = g->cPointsX.getFirst()->Points;
+    px = g->cPointsX.first()->Points;
     calcCoordinate(px, pz, py, &xtmp, &ytmp, pa);
     *(p++) = xtmp;
     *(p++) = ytmp;
     Counter = 1;
-    for(z=g->cPointsX.getFirst()->count-1; z>0; z--) {
+    for(z=g->cPointsX.first()->count-1; z>0; z--) {
       dx = xtmp;
       dy = ytmp;
       calcCoordinate(px, pz, py, &xtmp, &ytmp, pa);
@@ -715,7 +715,7 @@ void Diagram::getAxisLimits(Graph *pg)
   }
 
   if(Name == "Rect3D") {
-    DataX *pDy = pg->cPointsX.next();
+    DataX *pDy = pg->cPointsX.at(1);
     if(pDy) {
       p = pDy->Points;
       for(z=pDy->count; z>0; z--) { // check y coordinates (2. dimension)
@@ -978,7 +978,7 @@ int Diagram::loadVarData(const QString& fileName, Graph *g)
 
     p = new double[counting];  // memory of new independent variable
     g->countY = 1;
-    g->cPointsX.current()->Points = p;
+    g->cPointsX.last()->Points = p;
     for(int z=1; z<=counting; z++)  *(p++) = double(z);
     if(xAxis.min > 1.0)  xAxis.min = 1.0;
     if(xAxis.max < double(counting))  xAxis.max = double(counting);
@@ -990,9 +990,11 @@ int Diagram::loadVarData(const QString& fileName, Graph *g)
     if(Name == "Rect3D")  bLast = g->cPointsX.at(1);  // y axis for Rect3D
 
     double min_tmp = xAxis.min, max_tmp = xAxis.max;
-    for(DataX *pD = g->cPointsX.last(); pD!=0; pD = g->cPointsX.prev()) {
+    DataX *pD;
+    for(int i=0; i<g->cPointsX.size(); i++) {
+      pD = g->cPointsX.at(i);
       pa = &xAxis;
-      if(pD == g->cPointsX.getFirst()) {
+      if(pD == g->cPointsX.first()) {
         xAxis.min = min_tmp;    // only count first independent variable
         xAxis.max = max_tmp;
       }
@@ -1148,7 +1150,9 @@ int Diagram::loadIndepVarData(const QString& Variable,
   if(!ok)  return -1;
 
   double *p = new double[n];     // memory for new independent variable
-  DataX *pD = pg->cPointsX.current();
+#warning what is the current??
+  qDebug() << "at loadIndepVarData, is DataX current??";
+  DataX *pD = pg->cPointsX.last();
   pD->Points = p;
   pD->count  = n;
 
@@ -1190,8 +1194,8 @@ bool Diagram::sameDependencies(Graph *g1, Graph *g2)
   DataX *g2Data = g2->cPointsX.first();
   while(g1Data && g2Data) {
     if(g1Data->Var != g2Data->Var)  return false;
-    g1Data = g1->cPointsX.next();
-    g2Data = g2->cPointsX.next();
+    g1Data = g1->cPointsX.at(1);
+    g2Data = g2->cPointsX.at(1);
   }
 
   if(g1Data)  return false;  // Is there more data ?

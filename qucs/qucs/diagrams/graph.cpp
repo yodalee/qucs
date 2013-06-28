@@ -40,7 +40,7 @@ Graph::Graph(const QString& _Line)
   cPointsY = 0;
 #warning will it leak?
   //Markers.setAutoDelete(true);
-  cPointsX.setAutoDelete(true);
+  //cPointsX.setAutoDelete(true);
 }
 
 Graph::~Graph()
@@ -157,7 +157,7 @@ int Graph::getSelected(int x, int y)
   int dx, dx2, x1;
   int dy, dy2, y1;
 
-  int countX = cPointsX.getFirst()->count;
+  int countX = cPointsX.first()->count;
   if(*pp <= STROKEEND) {
     if(*pp <= BRANCHEND) z++;
     pp++;

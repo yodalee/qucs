@@ -25,12 +25,11 @@
 #define M_PI 3.1415926535897932384626433832795029
 #endif
 
-#include <qdialog.h>
-#include <qregexp.h>
-//Added by qt3to4:
+#include <QDialog>
+#include <QRegExp>
 #include <Q3VBoxLayout>
 #include <QLabel>
-#include <Q3PtrList>
+
 
 class Cross3D;
 class QLabel;

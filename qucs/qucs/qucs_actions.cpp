@@ -1194,17 +1194,20 @@ void QucsApp::slotExportGraphAsCsv()
   DataX *pD;
   Graph *g = (Graph*)view->focusElement;
   // First output the names of independent and dependent variables.
-  for(pD = g->cPointsX.first(); pD!=0; pD = g->cPointsX.next())
+  for(int i=0; i<g->cPointsX.size(); i++) {
+    pD = g->cPointsX.at(i);
     Stream << '\"' << pD->Var << "\";";
+  }
   Stream << "\"r " << g->Var << "\";\"i " << g->Var << "\"\n";
 
 
   int n, m;
   double *py = g->cPointsY;
-  int Count = g->countY * g->cPointsX.getFirst()->count;
+  int Count = g->countY * g->cPointsX.first()->count;
   for(n = 0; n < Count; n++) {
     m = n;
-    for(pD = g->cPointsX.first(); pD!=0; pD = g->cPointsX.next()) {
+    for(int i=1; g->cPointsX.size(); i++) {
+      pD = g->cPointsX.at(i);  
       Stream << *(pD->Points + m%pD->count) << ';';
       m /= pD->count;
     }

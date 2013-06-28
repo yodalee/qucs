@@ -22,10 +22,9 @@
 #include "marker.h"
 #include "element.h"
 
-#include <qcolor.h>
-#include <q3ptrlist.h>
+#include <QColor>
 #include <QList>
-#include <qdatetime.h>
+#include <QDateTime>
 
 
 // meaning of the values in a graph "Points" list
@@ -69,7 +68,7 @@ public:
 
   QDateTime lastLoaded;  // when it was loaded into memory
   int     yAxisNo;       // which y axis is used
-  Q3PtrList<DataX>  cPointsX;
+  QList<DataX *>  cPointsX;
   double *cPointsY;
   float  *ScrPoints; // data in screen coordinates
   int     countY;    // number of curves

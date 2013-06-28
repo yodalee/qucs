@@ -366,7 +366,7 @@ void Rect3DDiagram::removeHiddenLines(char *zBuffer, tBound *Bounds)
   for(int i=0; i<Graphs.size(); i++) {
     g = Graphs.at(i);
     if(g->cPointsY)
-      Size += g->cPointsX.getFirst()->count * g->countY;
+      Size += g->cPointsX.first()->count * g->countY;
   }
 
   // "Mem" should be the last malloc to simplify realloc
@@ -392,10 +392,10 @@ void Rect3DDiagram::removeHiddenLines(char *zBuffer, tBound *Bounds)
     // ..........................................
     // calculate coordinates of all lines
     dx = g->cPointsX.first()->count;
-    if(g->countY > 1)  dy = g->cPointsX.next()->count;
+    if(g->countY > 1)  dy = g->cPointsX.at(1)->count;
     else  dy = 0;
     for(i=g->countY-1; i>=0; i--) {   // y coordinates
-      px = g->cPointsX.getFirst()->Points;
+      px = g->cPointsX.first()->Points;
     
       for(j=dx; j>0; j--) { // x coordinates
         calcCoordinate3D(*(px++), *py, *pz, *(pz+1), pMem++, zp++);
@@ -504,7 +504,7 @@ void Rect3DDiagram::removeHiddenLines(char *zBuffer, tBound *Bounds)
     g = Graphs.at(i);
     if(!g->cPointsY) continue;
     dx = g->cPointsX.first()->count;
-    if(g->countY > 1)  dy = g->cPointsX.next()->count;
+    if(g->countY > 1)  dy = g->cPointsX.at(1)->count;
     else  dy = 1;
 
     // look for hidden lines ...
@@ -943,7 +943,7 @@ void Rect3DDiagram::calcData(Graph *g)
   if(!g->cPointsY) return;
 
   int tmp;
-  int Size = ((2*(g->cPointsX.getFirst()->count) + 1) * g->countY) + 10;
+  int Size = ((2*(g->cPointsX.first()->count) + 1) * g->countY) + 10;
   Size *= 2;  // memory for cross grid lines
 
   double *py;

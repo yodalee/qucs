@@ -184,7 +184,7 @@ int TabDiagram::calcDiagram()
   }
   if(hasData) {
     // ................................................
-    counting = g->cPointsX.getFirst()->count * g->countY;  // number of values
+    counting = g->cPointsX.first()->count * g->countY;  // number of values
     NumAll = counting;
 
     invisibleCount = counting - y/tHeight;
@@ -195,7 +195,11 @@ int TabDiagram::calcDiagram()
         xAxis.limit_min = double(invisibleCount); // adjust limit of scroll bar
     }
 
-    for(DataX *pD = g->cPointsX.last(); pD!=0; pD = g->cPointsX.prev()) {
+    DataX *pD;
+    QListIterator<DataX *> id(g->cPointsX);
+    id.toBack();
+    while (id.hasPrevious()) {
+      pD = id.previous();
       colWidth = 0;
       Str = pD->Var;
       colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
@@ -223,7 +227,7 @@ int TabDiagram::calcDiagram()
   	  else startWriting -= counting;
   	  px++;
           }
-  	if(pD == g->cPointsX.getFirst())   // only paint one time
+  	if(pD == g->cPointsX.first())   // only paint one time
   	  if(y >= tHeight) if(y < y2-tHeight-5)
               Lines.append(new Line(0, y+1, x2, y+1, QPen(Qt::black,0)));
         }
@@ -253,7 +257,7 @@ int TabDiagram::calcDiagram()
 
     startWriting = int(xAxis.limit_min + 0.5); // when to reach visible area
     py = g->cPointsY - 2;
-    if(g->cPointsX.getFirst()) {
+    if(g->cPointsX.first()) {
 
       if (!g->cPointsY) {   // no data points
 	Str = QObject::tr("invalid");
@@ -262,7 +266,7 @@ int TabDiagram::calcDiagram()
 	Texts.append(new Text(x, y, Str));
       }
       else if(sameDependencies(g, firstGraph)) {
-        int z=g->cPointsX.getFirst()->count * g->countY;
+        int z=g->cPointsX.first()->count * g->countY;
         if(z > NumAll)  NumAll = z;
 
         if(g->Var.right(2) != ".X")

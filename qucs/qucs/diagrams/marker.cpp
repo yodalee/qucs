@@ -80,11 +80,15 @@ void Marker::initText(int n)
 
   bool isCross = false;
   int nn, nnn, m, x, y, d, dmin = INT_MAX;
-  DataX *pD = pGraph->cPointsX.first();
+  QListIterator<DataX *> id(pGraph->cPointsX);
+  DataX *pD;
+  pD = id.next();
   px  = pD->Points;
   nnn = pD->count;
-  DataX *pDy = pGraph->cPointsX.next();
-  if(pDy) {   // only for 3D diagram
+#warning check theses markers!! 
+  DataX *pDy;
+  pDy = id.next();
+  if(pDy->count > 0) {   // only for 3D diagram
     nn = pGraph->countY * pD->count;
     py  = pDy->Points;
     if(n >= nn) {    // is on cross grid ?
@@ -92,7 +96,7 @@ void Marker::initText(int n)
       n -= nn;
       n /= nnn;
       px += (n % nnn);
-      if(pGraph->cPointsX.next())   // more than 2 indep variables ?
+      if(id.hasNext())   // more than 2 indep variables ?
         n  = (n % nnn) + (n / nnn) * nnn * pDy->count;
       nnn = pDy->count;
     }
@@ -129,7 +133,10 @@ void Marker::initText(int n)
 
   // gather text of all independent variables
   nn = n;
-  for(pD = pGraph->cPointsX.first(); pD!=0; pD = pGraph->cPointsX.next()) {
+  
+  id.toFront();
+  while (id.hasNext()) {
+    pD = id.next();
     px = pD->Points + (nn % pD->count);
     VarPos[nVarPos++] = *px;
     Text += pD->Var + ": " + QString::number(*px,'g',Precision) + "\n";
@@ -191,7 +198,9 @@ void Marker::createText()
   int n = 0, m = 1, i;
   DataX *pD;
   nVarPos = 0;
-  for(pD = pGraph->cPointsX.first(); pD!=0; pD = pGraph->cPointsX.next()) {
+  QListIterator<DataX *> id(pGraph->cPointsX);
+  while (id.hasNext()) {
+    pD = id.next();
     pp = pD->Points;
     v  = VarPos[nVarPos];
     for(i=pD->count; i>1; i--) {  // find appropiate marker position
@@ -208,10 +217,13 @@ void Marker::createText()
 
   v = 0.0;   // needed for 2D graph in 3D diagram
   double *py=&v, *pz = pGraph->cPointsY + 2*n;
-  pD = pGraph->cPointsX.first();
-  if(pGraph->cPointsX.next()) {
-    py = pGraph->cPointsX.current()->Points;   // only for 3D diagram
-    py += (n / pD->count) % pGraph->cPointsX.current()->count;
+
+  id.toFront();
+  pD = id.next();
+  while (id.hasNext()) {
+    pD = id.next();
+    py = pD->Points;   // only for 3D diagram
+    py += (n / pD->count) % pD->count;
   }
 
   Text += pGraph->Var + ": ";
@@ -293,7 +305,7 @@ bool Marker::moveLeftRight(bool left)
   int n;
   double *px;
 
-  DataX *pD = pGraph->cPointsX.getFirst();
+  DataX *pD = pGraph->cPointsX.first();
   px = pD->Points;
   if(!px) return false;
   for(n=0; n<pD->count; n++) {
@@ -322,13 +334,14 @@ bool Marker::moveUpDown(bool up)
   int n, i=0;
   double *px;
 
-  DataX *pD = pGraph->cPointsX.first();
-  if(!pD) return false;
+  DataX *pD;
+  QListIterator<DataX *> id(pGraph->cPointsX);
+  if(!id.hasNext()) return false;
 
   if(up) {  // move upwards ? **********************
     do {
       i++;
-      pD = pGraph->cPointsX.next();
+      pD = id.next();
       if(!pD) return false;
       px = pD->Points;
       if(!px) return false;
@@ -342,7 +355,7 @@ bool Marker::moveUpDown(bool up)
     px++;  // one position up
     VarPos[i] = *px;
     while(i > 1) {
-      pD = pGraph->cPointsX.prev();
+      pD = id.previous();
       i--;
       VarPos[i] = *(pD->Points);
     }
@@ -350,7 +363,7 @@ bool Marker::moveUpDown(bool up)
   else {  // move downwards **********************
     do {
       i++;
-      pD = pGraph->cPointsX.next();
+      pD = id.next();
       if(!pD) return false;
       px = pD->Points;
       if(!px) return false;
@@ -364,7 +377,7 @@ bool Marker::moveUpDown(bool up)
     px--;  // one position down
     VarPos[i] = *px;
     while(i > 1) {
-      pD = pGraph->cPointsX.prev();
+      pD = id.previous();
       i--;
       VarPos[i] = *(pD->Points + pD->count - 1);
     }

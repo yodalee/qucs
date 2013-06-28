@@ -216,7 +216,7 @@ int TimingDiagram::calcDiagram()
 
 
     // first, write name of independent variable
-    DataX *pD = firstGraph->cPointsX.getFirst();
+    DataX *pD = firstGraph->cPointsX.first();
     NumAll = pD->count;
     Str = pD->Var;
     colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
@@ -318,7 +318,7 @@ int TimingDiagram::calcDiagram()
     if(g->Var.right(2) != ".X") {  // not digital variable ?
       px = g->cPointsY;
       px += 2 * z;
-      z = g->cPointsX.getFirst()->count - z;
+      z = g->cPointsX.first()->count - z;
       yNow = 1 + ((tHeight - 6) >> 1);
       Lines.append(new Line(x, y-yNow, x+2, y-1, Pen));
       Lines.append(new Line(x+2, y-tHeight+5, x, y-yNow, Pen));
@@ -365,7 +365,7 @@ int TimingDiagram::calcDiagram()
           yLast = 1 + ((tHeight - 6) >> 1);
       }
 
-      z = g->cPointsX.getFirst()->count - z;
+      z = g->cPointsX.first()->count - z;
       for( ; z>0; z--) {
 
         switch(*pcx) {
@@ -402,7 +402,7 @@ int TimingDiagram::calcDiagram()
     }
     else {  // It is a bit vector !!!
 
-      z = g->cPointsX.getFirst()->count - z;
+      z = g->cPointsX.first()->count - z;
       yNow = 1 + ((tHeight - 6) >> 1);
       Lines.append(new Line(x, y-yNow, x+2, y-1, Pen));
       Lines.append(new Line(x+2, y-tHeight+5, x, y-yNow, Pen));
@@ -440,7 +440,7 @@ funcEnd:
     y  = NumAll - NumLeft - z;
 
     // number of data (times)
-    zAxis.limit_max = double(firstGraph->cPointsX.getFirst()->count);
+    zAxis.limit_max = double(firstGraph->cPointsX.first()->count);
 
     // position of scroll bar in pixel
     yAxis.numGraphs = x * z / NumAll + xAxis.numGraphs + 19;
