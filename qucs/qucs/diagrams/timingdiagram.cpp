@@ -206,7 +206,7 @@ int TimingDiagram::calcDiagram()
   colWidth = 0;
   if(!firstGraph->cPointsX.isEmpty()) {
     // ................................................
-    if(firstGraph->cPointsX.count() > 1) {
+    if(firstGraph->cPointsX.size() > 1) {
       Str = QObject::tr("wrong dependency");
       colWidth = checkColumnWidth(Str, metrics, colWidth, x, y2);
       if(colWidth >= 0)

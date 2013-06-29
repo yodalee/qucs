@@ -165,7 +165,6 @@ int Component::getTextSelected(int x_, int y_, float Corr)
   Property *pp;
   int propNumber = 0;
   QListIterator<Property *> ip(Props);
-//  for(int i=0; i <= Props.count(); i++) {
   while (ip.hasNext()) {
     pp = ip.next();
     propNumber += 1;  //FIXME?
@@ -431,7 +430,7 @@ void Component::print(ViewPainter *p, float FontScale)
 // Rotates the component 90 counter-clockwise around its center
 void Component::rotate()
 {
-  if(Ports.count() < 1) return;  // do not rotate components without ports
+  if(Ports.size() < 1) return;  // do not rotate components without ports
   int tmp, dx, dy;
 
   // rotate all lines
@@ -527,7 +526,6 @@ void Component::rotate()
   }
   Property *pp;
   QListIterator<Property *> iprop(Props);
-//  for(int i=0; i <= Props.count(); i++) {
   while (iprop.hasNext()) {
     pp = iprop.next();
     if(pp->display) {
@@ -550,7 +548,7 @@ void Component::rotate()
 // Mirrors the component about the x-axis.
 void Component::mirrorX()
 {
-  if(Ports.count() < 1) return;  // do not rotate components without ports
+  if(Ports.size() < 1) return;  // do not rotate components without ports
 
   // mirror all lines
   Line *p1;
@@ -615,7 +613,7 @@ void Component::mirrorX()
   int dy = 0;
   if(showName)
     dy = metrics.lineSpacing();   // for "Name"
-  for(int i=0; i <= Props.count(); i++) 
+  for(int i=0; i <= Props.size(); i++) 
     if(Props[i]->display)  dy += metrics.lineSpacing();
   if((tx > x1) && (tx < x2)) ty = -ty-dy;     // mirror text position
   else ty = y1+ty+y2;
@@ -629,7 +627,7 @@ void Component::mirrorX()
 // Mirrors the component about the y-axis.
 void Component::mirrorY()
 {
-  if(Ports.count() < 1) return;  // do not rotate components without ports
+  if(Ports.size() < 1) return;  // do not rotate components without ports
 
   // mirror all lines
   Line *p1;
@@ -694,7 +692,7 @@ void Component::mirrorY()
   if(showName)
     dx = metrics.width(Name);
   Property *pp;
-  for(int i=0; i <= Props.count(); i++) {
+  for(int i=0; i <= Props.size(); i++) {
     pp = Props[i];
     if(pp->display) {
       // get width of text
@@ -1024,7 +1022,7 @@ bool Component::load(const QString& _s)
       p1->Name = n.section('=',0,0);
       n = n.section('=',1);
       // allocate memory for a new property (e.g. for equations)
-      if(Props.count() < (counts>>1)) {
+      if(Props.size() < (counts>>1)) {
         Props.insert(z >> 1, new Property("y", "1", true));
         //Props.prev(); //FIXME
       }
@@ -1059,7 +1057,7 @@ int Component::analyseLine(const QString& Row, int numProps)
   if((s == "PortSym") || (s == ".PortSym")) {  // backward compatible
     if(!getIntegers(Row, &i1, &i2, &i3))
       return -1;
-    for(i6 = Ports.count(); i6<i3; i6++)  // if ports not in numerical order
+    for(i6 = Ports.size(); i6<i3; i6++)  // if ports not in numerical order
       Ports.append(new Port(0, 0, false));
 
     Ports.at(i3-1)->x = i1;

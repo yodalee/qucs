@@ -287,7 +287,7 @@ void LibraryDialog::slotCreateNext()
     checkedCktName->setText(SelectedNames[0]);
     textDescr->setText(Descriptions[0]);
 
-    if (SelectedNames.count() == 1){
+    if (SelectedNames.size() == 1){
         prevButt->setDisabled(true);
         nextButt->setDisabled(true);
         createButt->setEnabled(true);
@@ -387,7 +387,7 @@ void LibraryDialog::slotPrevDescr()
 // ---------------------------------------------------------------
 void LibraryDialog::slotNextDescr()
 {
-  if ( curDescr < SelectedNames.count()) {
+  if ( curDescr < SelectedNames.size()) {
     prevButt->setDisabled(false);
     checkedCktName->setText(SelectedNames[curDescr]);
     curDescr++;
@@ -395,7 +395,7 @@ void LibraryDialog::slotNextDescr()
     textDescr->setText(Descriptions[curDescr]);
   }
 
-  if (curDescr == SelectedNames.count()-1){
+  if (curDescr == SelectedNames.size()-1){
     nextButt->setDisabled(true);
     createButt->setEnabled(true);
   }
@@ -429,7 +429,7 @@ void LibraryDialog::slotSave()
   QString tmp;
   QTextStream ts(&tmp, QIODevice::WriteOnly);
 
-  for (int i=0; i < SelectedNames.count(); i++) {
+  for (int i=0; i < SelectedNames.size(); i++) {
     ErrText->insert("\n=================\n");
 
     QString description = "";

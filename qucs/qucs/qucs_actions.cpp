@@ -844,7 +844,7 @@ void QucsApp::slotCursorLeft()
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
   int markerCount = Doc->copySelectedElements(movingElements);
 
-  if((movingElements.count() - markerCount) < 1) {
+  if((movingElements.size() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
       Doc->markerLeftRight(true, movingElements);
       movingElements.clear();
@@ -873,7 +873,7 @@ void QucsApp::slotCursorRight()
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
   int markerCount = Doc->copySelectedElements(movingElements);
 
-  if((movingElements.count() - markerCount) < 1) {
+  if((movingElements.size() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
       Doc->markerLeftRight(false, movingElements);
       movingElements.clear();
@@ -920,7 +920,7 @@ void QucsApp::slotCursorUp()
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
   int markerCount = Doc->copySelectedElements(movingElements);
 
-  if((movingElements.count() - markerCount) < 1) {
+  if((movingElements.size() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
       Doc->markerUpDown(true, movingElements);
       movingElements.clear();
@@ -969,7 +969,7 @@ void QucsApp::slotCursorDown()
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
   int markerCount = Doc->copySelectedElements(movingElements);
 
-  if((movingElements.count() - markerCount) < 1) {
+  if((movingElements.size() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
       Doc->markerUpDown(false, movingElements);
       movingElements.clear();

@@ -525,7 +525,7 @@ bool checkVersion(QString& Line)
 {
   QStringList sl = QStringList::split('.',PACKAGE_VERSION);
   QStringList ll = QStringList::split('.',Line);
-  if (ll.count() != 3 || sl.count() != 3)
+  if (ll.size() != 3 || sl.size() != 3)
     return false;
   int sv = (int)sl.at(1).toLongLong()*10000+sl.at(2).toLongLong()*100;
   int lv = (int)ll.at(1).toLongLong()*10000+ll.at(2).toLongLong()*100;

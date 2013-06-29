@@ -1141,7 +1141,7 @@ void MouseActions::MPressMirrorX(Schematic *Doc, QMouseEvent*, float fX, float f
   // no use in mirroring wires or diagrams
   Component *c = Doc->selectedComponent(int(fX), int(fY));
   if(c) {
-    if(c->Ports.count() < 1) return;  // only mirror components with ports
+    if(c->Ports.size() < 1) return;  // only mirror components with ports
     c->mirrorX();
     Doc->setCompPorts(c);
   }
@@ -1162,7 +1162,7 @@ void MouseActions::MPressMirrorY(Schematic *Doc, QMouseEvent*, float fX, float f
   // no use in mirroring wires or diagrams
   Component *c = Doc->selectedComponent(int(fX), int(fY));
   if(c) {
-    if(c->Ports.count() < 1) return;  // only mirror components with ports
+    if(c->Ports.size() < 1) return;  // only mirror components with ports
     c->mirrorY();
     Doc->setCompPorts(c);
   }
@@ -1192,7 +1192,7 @@ void MouseActions::MPressRotate(Schematic *Doc, QMouseEvent*, float fX, float fY
     case isComponent:
     case isAnalogComponent:
     case isDigitalComponent:
-      if(((Component*)e)->Ports.count() < 1)
+      if(((Component*)e)->Ports.size() < 1)
         break;  // do not rotate components without ports
       ((Component*)e)->rotate();
       Doc->setCompPorts((Component*)e);
@@ -1266,7 +1266,7 @@ void MouseActions::MPressElement(Schematic *Doc, QMouseEvent *Event, float, floa
 	break;
 
       case Qt::RightButton :  // right mouse button rotates the component
-	if(Comp->Ports.count() == 0)
+	if(Comp->Ports.size() == 0)
 	  break;  // do not rotate components without ports
 	Comp->paintScheme(Doc); // erase old component scheme
 	Comp->rotate();
@@ -1613,7 +1613,7 @@ void MouseActions::MReleaseResizeDiagram(Schematic *Doc, QMouseEvent *Event)
   QListIterator<Graph *> ig(pd->Graphs);
   while (ig.hasNext()) {
     pg = ig.next();
-    for(int j=0; j<pg->Markers.count(); j++) {
+    for(int j=0; j<pg->Markers.size(); j++) {
       pm = pg->Markers.at(j);
       pm->x1 += MAx3;      // correct changes due to move of diagram corner
       pm->y1 += MAy3;

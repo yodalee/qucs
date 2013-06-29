@@ -66,11 +66,11 @@ SweepDialog::SweepDialog(Schematic *Doc_)
 
   pGraph = setBiasPoints();
   // if simulation has no sweeps, terminate dialog before showing it
-  if(pGraph->cPointsX.count() == 0) {
+  if(pGraph->cPointsX.size() == 0) {
     reject();
     return;
   }
-  if(pGraph->cPointsX.count() <= 1)
+  if(pGraph->cPointsX.size() <= 1)
     if(pGraph->cPointsX.first()->count <= 1) {
       reject();
       return;
@@ -81,7 +81,7 @@ SweepDialog::SweepDialog(Schematic *Doc_)
 
   int i = 0;
   // ...........................................................
-  QGridLayout *all = new QGridLayout(this);//, pGraph->cPointsX.count()+2,2,3,3);
+  QGridLayout *all = new QGridLayout(this);//, pGraph->cPointsX.size()+2,2,3,3);
   all->setMargin(5);
   all->setSpacing(5);
   all->setColStretch(1,5);
@@ -180,7 +180,7 @@ Graph* SweepDialog::setBiasPoints()
     if(pn->Name.isEmpty()) continue;
 
     pn->x1 = 0;
-    if(pn->Connections.count() < 2) {
+    if(pn->Connections.size() < 2) {
       pn->Name = "";  // no text at open nodes
       continue;
     }

@@ -1866,7 +1866,7 @@ void QucsApp::slotPopHierarchy()
 {
   editText->setHidden(true); // disable text edit of component property
 
-  if(HierarchyHistory.count() == 0) return;
+  if(HierarchyHistory.size() == 0) return;
 
   QString Doc = *(HierarchyHistory.last());
   *(HierarchyHistory.last()) = "*";  // sign not to clear HierarchyHistory
@@ -1877,7 +1877,7 @@ void QucsApp::slotPopHierarchy()
   }
 
   HierarchyHistory.removeLast(); //??
-  if(HierarchyHistory.count() == 0)
+  if(HierarchyHistory.size() == 0)
     popH->setEnabled(false);
 }
 

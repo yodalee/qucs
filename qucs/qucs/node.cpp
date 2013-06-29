@@ -38,7 +38,7 @@ Node::~Node()
 // -------------------------------------------------------------
 void Node::paint(ViewPainter *p)
 {
-  switch(Connections.count()) {
+  switch(Connections.size()) {
     case 1:  if(Label) {
                p->fillRect(cx-2, cy-2, 4, 4, Qt::darkBlue); // open but labeled
              }

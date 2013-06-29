@@ -382,7 +382,7 @@ void Rect3DDiagram::removeHiddenLines(char *zBuffer, tBound *Bounds)
 
     pz = g->cPointsY;
     if(!pz) continue;
-    if(g->cPointsX.count() < 1) continue;
+    if(g->cPointsX.size() < 1) continue;
 
     py = &Dummy;
     if(g->countY > 1)  py = g->cPointsX.at(1)->Points;

@@ -282,7 +282,7 @@ QucsSettingsDialog::~QucsSettingsDialog()
 void QucsSettingsDialog::slotAdd()
 {
     QModelIndexList indexes = tableWidget->selectionModel()->selection().indexes();
-    if (indexes.count()){
+    if (indexes.size()){
       tableWidget->item(indexes.at(0).row(),0)->setText(Input_Suffix->text());
       tableWidget->item(indexes.at(0).row(),1)->setText(Input_Program->text());
       tableWidget->selectionModel()->clear();
@@ -317,7 +317,7 @@ void QucsSettingsDialog::slotAdd()
 void QucsSettingsDialog::slotRemove()
 {
     QModelIndexList indexes = tableWidget->selectionModel()->selection().indexes();
-    if (indexes.count()){
+    if (indexes.size()){
       tableWidget->removeRow(indexes.at(0).row());
       tableWidget->selectionModel()->clear();
       Input_Suffix->setText("");

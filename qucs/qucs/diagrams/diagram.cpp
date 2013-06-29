@@ -504,7 +504,7 @@ void Diagram::calcData(Graph *g)
   double *px;
   double *pz = g->cPointsY;
   if(!pz)  return;
-  if(g->cPointsX.count() < 1) return;
+  if(g->cPointsX.size() < 1) return;
 
   int i, z, tmp, Counter=2;
   float dx, dy, xtmp, ytmp;

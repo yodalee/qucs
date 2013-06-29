@@ -293,7 +293,7 @@ QString LibComp::netlist()
   s += " Type=\""+createType()+"\"";   // type for subcircuit
 
   // output user defined parameters
-  for(int i=2; i <= Props.count(); i++)
+  for(int i=2; i <= Props.size(); i++)
     s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
 
   return s + '\n';

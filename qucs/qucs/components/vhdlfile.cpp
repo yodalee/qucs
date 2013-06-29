@@ -79,7 +79,7 @@ QString VHDL_File::vhdlCode(int)
     if (pr) {
       s += " generic map (";
       s += pr->Value;
-      for(int i=2; i <= Props.count(); i++)
+      for(int i=2; i <= Props.size(); i++)
           s += ", " + Props[i]->Value;
       s += ")";
     }
@@ -201,7 +201,7 @@ void VHDL_File::createSymbol()
     }
   }
   // remove remaining properties if necessary
-  y=Props.count()-1;
+  y=Props.size()-1;
   for(i=No; i<y; i++) {
     Props.removeLast();
   }

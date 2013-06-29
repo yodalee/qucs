@@ -99,7 +99,7 @@ QString RFedd::netlist()
   p2 = Props.at(2);
   s += " "+p2->Name+"=\""+p2->Value+"\"";
   
-  for ( int i=3; i <= Props.count(); i++){
+  for ( int i=3; i <= Props.size(); i++){
     p2 = Props.at(i);
     n = p2->Name.mid(1);
     s += " "+p2->Name+"=\""+Name+"."+p+n+"\"";
@@ -125,7 +125,7 @@ void RFedd::createSymbol()
   Props.at(1)->Value = QString::number(No);
 
   // adjust property number and names
-  int NumProps = Props.count() - 3;
+  int NumProps = Props.size() - 3;
   if (NumProps < No * No) {
     for(i = 0; i < NumProps; i++) {
       tmp=QString::number((i)/No+1)+QString::number((i)%No+1);

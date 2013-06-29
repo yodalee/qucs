@@ -111,7 +111,7 @@ void EqnDefined::createSymbol()
   Props.at(1)->Value = QString::number(Num);
 
   // adjust property number
-  int NumProps = (Props.count() - 2) / 2;
+  int NumProps = (Props.size() - 2) / 2;
   if (NumProps < Num) {
     for(i = NumProps; i < Num; i++) {
       Props.append(new Property("I"+QString::number(i+1), "0", false,

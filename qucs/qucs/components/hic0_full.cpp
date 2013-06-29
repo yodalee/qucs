@@ -359,7 +359,7 @@ QString hic0_full::netlist()
     s += " pnp=\"1\"";
 
   // output all remaining properties
-  for(int i=1; i <= Props.count(); i++)
+  for(int i=1; i <= Props.size(); i++)
       s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
 
   return s + '\n';

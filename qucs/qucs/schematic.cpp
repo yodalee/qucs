@@ -161,7 +161,7 @@ bool Schematic::createSubcircuitSymbol()
   unsigned int countPort = adjustPortNumbers();
 
   // If a symbol does not yet exist, create one.
-  if(SymbolPaints.count() != countPort)
+  if(SymbolPaints.size() != countPort)
     return false;
 
   int h = 30*((countPort-1)/2) + 10;
@@ -300,7 +300,7 @@ void Schematic::setChanged(bool c, bool fillStack, char Op)
     if(!App->undo->isEnabled()) App->undo->setEnabled(true);
     if(App->redo->isEnabled())  App->redo->setEnabled(false);
 
-    while(UndoSymbol.count() > QucsSettings.maxUndo) { // "while..." because
+    while(UndoSymbol.size() > QucsSettings.maxUndo) { // "while..." because
       UndoSymbol.removeFirst();    // "maxUndo" could be decreased meanwhile
       UndoSymbol.last();
     }
@@ -322,7 +322,7 @@ void Schematic::setChanged(bool c, bool fillStack, char Op)
   if(!App->undo->isEnabled()) App->undo->setEnabled(true);
   if(App->redo->isEnabled())  App->redo->setEnabled(false);
 
-  while(UndoStack.count() > QucsSettings.maxUndo) { // "while..." because
+  while(UndoStack.size() > QucsSettings.maxUndo) { // "while..." because
     UndoStack.removeFirst();    // "maxUndo" could be decreased meanwhile
     UndoStack.last();
   }*/
@@ -719,7 +719,7 @@ void Schematic::print(QPrinter*, QPainter *Painter, bool printAll, bool fitToPag
             
         if(pg->isSelected)  pg->Type |= 1;  // remember selection
         pg->isSelected = false; 
-        for(int j=0; j<pg->Markers.count(); j++) {
+        for(int j=0; j<pg->Markers.size(); j++) {
           pm = pg->Markers.at(j);
           if(pm->isSelected)  pm->Type |= 1;  // remember selection
           pm->isSelected = false;
@@ -736,7 +736,7 @@ void Schematic::print(QPrinter*, QPainter *Painter, bool printAll, bool fitToPag
         pg = pd->Graphs.at(i);
         if(pg->Type & 1)  pg->isSelected = true;
         pg->Type &= -2;
-        for(int j=0; j<pg->Markers.count(); j++) {
+        for(int j=0; j<pg->Markers.size(); j++) {
           pm = pg->Markers.at(j);
           if(pm->Type & 1)  pm->isSelected = true;
           pm->Type &= -2;
@@ -1030,7 +1030,7 @@ void Schematic::sizeOfAll(int& xmin, int& ymin, int& xmax, int& ymax)
     for(int i=0; i<pd->Graphs.size(); i++) {
       pg = pd->Graphs.at(i);
       // test all markers of diagram
-      for(int j=0; j<pg->Markers.count(); j++) {
+      for(int j=0; j<pg->Markers.size(); j++) {
         pm = pg->Markers.at(j);
         pm->Bounding(x1, y1, x2, y2);
         if(x1 < xmin) xmin = x1;
@@ -1370,7 +1370,7 @@ bool Schematic::load()
 // Saves this Qucs document. Returns the number of subcircuit ports.
 int Schematic::save()
 {
-  qDebug() << "Schematic::save - components" << Components.count();
+  qDebug() << "Schematic::save - components" << Components.size();
   int result = adjustPortNumbers();// same port number for schematic and symbol
   
   qDebug() << "Schematic::save ports" << result;
@@ -1404,7 +1404,7 @@ int Schematic::save()
 // equal add or remove some in the symbol.
 int Schematic::adjustPortNumbers()
 {
-  qDebug() << "Schematic::adjustPortNumbers - components" << Components.count();
+  qDebug() << "Schematic::adjustPortNumbers - components" << Components.size();
   int x1, x2, y1, y2;
   // get size of whole symbol to know where to place new ports
   if(symbolMode)  sizeOfAll(x1, y1, x2, y2);
@@ -1611,7 +1611,7 @@ int Schematic::adjustPortNumbers()
   // handle schematic symbol
   else {
     // go through all components in a schematic
-    qDebug() << "adjustPortNumbers - schematic symbol - DocComps.count" << DocComps.count();
+    qDebug() << "adjustPortNumbers - schematic symbol - DocComps.count" << DocComps.size();
     Component *pc;
     QListIterator<Component *> ic(DocComps);
     while (ic.hasNext()) {
@@ -1795,7 +1795,7 @@ bool Schematic::elementsOnGrid()
       while (ip.hasNext()) {
         pp = ip.next();
         if(pp->Connection->Label)
-          if(pp->Connection->Connections.count() < 2) {
+          if(pp->Connection->Connections.size() < 2) {
             LabelCache.append(pp->Connection->Label);
             pp->Connection->Label->pOwner = 0;
             pp->Connection->Label = 0;
@@ -1839,13 +1839,13 @@ bool Schematic::elementsOnGrid()
       // rescue non-selected node label
       pLabel = 0;
       if(pw->Port1->Label) {
-        if(pw->Port1->Connections.count() < 2) {
+        if(pw->Port1->Connections.size() < 2) {
             pLabel = pw->Port1->Label;
             pw->Port1->Label = 0;
         }
       }
       else if(pw->Port2->Label) {
-        if(pw->Port2->Connections.count() < 2) {
+        if(pw->Port2->Connections.size() < 2) {
             pLabel = pw->Port2->Label;
             pw->Port2->Label = 0;
         }
@@ -1910,7 +1910,7 @@ bool Schematic::elementsOnGrid()
     for(int i=0; i<pd->Graphs.size(); i++) {
       pg = pd->Graphs.at(i);
       // test markers of diagram
-      for(int j=0; j<pg->Markers.count(); j++) {
+      for(int j=0; j<pg->Markers.size(); j++) {
         pm = pg->Markers.at(j);
         if(pm->isSelected) {
 	      x = pm->x1 + pd->cx;

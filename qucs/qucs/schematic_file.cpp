@@ -344,8 +344,8 @@ int Schematic::saveDocument()
   stream << "</Symbol>\n";
 
   stream << "<Components>\n";    // save all components
-  qDebug() << "*** Components" << Components.count();
-  qDebug() << "*** DocComps" << DocComps.count();
+  qDebug() << "*** Components" << Components.size();
+  qDebug() << "*** DocComps" << DocComps.size();
 #warning DocComps or Components??
   QListIterator<Component *> ic(Components);
   while (ic.hasNext())
@@ -374,8 +374,8 @@ int Schematic::saveDocument()
   stream << "</Diagrams>\n";
 
   stream << "<Paintings>\n";     // save all paintings
-  qDebug() << "*** Paintings" << Paintings.count();
-  qDebug() << "*** Paintings" << DocPaints.count();
+  qDebug() << "*** Paintings" << Paintings.size();
+  qDebug() << "*** Paintings" << DocPaints.size();
   QListIterator<Painting *> ip2(Paintings);
   while (ip2.hasNext())
     stream << "  <" << ip2.next()->save() << ">\n";
@@ -586,7 +586,7 @@ void Schematic::simpleInsertWire(Wire *pw)
   Node *pn;
   // check if first wire node lies upon existing node
 //  for(pn = DocNodes.first(); pn != 0; pn = DocNodes.next()) {
-  for(int i=0; i <= DocNodes.count(); i++) {
+  for(int i=0; i <= DocNodes.size(); i++) {
         pn = DocNodes[i];
       if(pn->cx == pw->x1) if(pn->cy == pw->y1) break;
   }
@@ -610,7 +610,7 @@ void Schematic::simpleInsertWire(Wire *pw)
 
   // check if second wire node lies upon existing node
 //  for(pn = DocNodes.first(); pn != 0; pn = DocNodes.next())
-  for(int i=0; i <= DocNodes.count(); i++) {
+  for(int i=0; i <= DocNodes.size(); i++) {
     pn = DocNodes[i];
     if(pn->cx == pw->x2) if(pn->cy == pw->y2) break;
   }
@@ -1147,7 +1147,7 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
           QListIterator<Port *> ip(pc->Ports);
           while (ip.hasNext()) {
             pp = ip.next();
-          //if(i>=d->PortTypes.count())break;
+          //if(i>=d->PortTypes.size())break;
 	        pp->Type = d->PortTypes[i];
 	        pp->Connection->DType = pp->Type;
             i++;
@@ -1374,7 +1374,7 @@ int NumPorts)
   // "SubcircuitPortNames"
   PortTypes.clear();
 //  for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-  for (int i=0; i <= DocComps.count(); i++) {
+  for (int i=0; i <= DocComps.size(); i++) {
     pc = DocComps[i];
     if(pc->Model.at(0) == '.') { // no simulations in subcircuits
       ErrText->insert(
@@ -1476,7 +1476,7 @@ int NumPorts)
 
     // write all components with node names into netlist file
 //    for(pc = DocComps.first(); pc != 0; pc = DocComps.next())
-    for(int i=0; i <= DocComps.count(); i++)
+    for(int i=0; i <= DocComps.size(); i++)
       (*tstream) << DocComps[i]->getNetlist();
 
     (*tstream) << ".Def:End\n";
@@ -1529,7 +1529,7 @@ int NumPorts)
 
       // write all equations into netlist file
 //      for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-      for(int i=0; i <= DocComps.count(); i++) 
+      for(int i=0; i <= DocComps.size(); i++) 
         if(DocComps[i]->Model == "Eqn") 
           (*tstream) << DocComps[i]->get_Verilog_Code(NumPorts);
 
@@ -1539,7 +1539,7 @@ int NumPorts)
 
       // write all components into netlist file
 //      for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-      for(int i=0; i <= DocComps.count(); i++)  {
+      for(int i=0; i <= DocComps.size(); i++)  {
         pc = DocComps[i];
         if(pc->Model != "Eqn") {
           s = pc->get_Verilog_Code(NumPorts);
@@ -1601,7 +1601,7 @@ int NumPorts)
 
       // write all equations into netlist file
 //      for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-      for(int i=0; i <= DocComps.count(); i++) {
+      for(int i=0; i <= DocComps.size(); i++) {
         pc = DocComps[i];
         if(pc->Model == "Eqn") {
           ErrText->insert(
@@ -1618,7 +1618,7 @@ int NumPorts)
 
       // write all components into netlist file
 //      for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-      for(int i=0; i <= DocComps.count(); i++) {
+      for(int i=0; i <= DocComps.size(); i++) {
         pc = DocComps[i];
         if(pc->Model != "Eqn") {
             s = pc->get_VHDL_Code(NumPorts);
@@ -1644,7 +1644,7 @@ int NumPorts)
 bool Schematic::createSubNetlist(QTextStream *stream, int& countInit,
                      QStringList& Collect, QTextEdit *ErrText, int NumPorts)
 {
-//  int Collect_count = Collect.count();   // position for this subcircuit
+//  int Collect_count = Collect.size();   // position for this subcircuit
 
   // TODO: NodeSets have to be put into the subcircuit block.
   if(!giveNodeNames(stream, countInit, Collect, ErrText, NumPorts))
@@ -1680,7 +1680,7 @@ int Schematic::prepareNetlist(QTextStream& stream, QStringList& Collect,
   // Detect simulation domain (analog/digital) by looking at component types.
 //  for(Component *pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
   Component *pc;
-  for(int i=0; i <= DocComps.count(); i++) {
+  for(int i=0; i <= DocComps.size(); i++) {
     pc = DocComps[i];
     if(pc->isActive == COMP_IS_OPEN) continue;
     if(pc->Model.at(0) == '.') {
@@ -1817,7 +1817,7 @@ QString Schematic::createNetlist(QTextStream& stream, int NumPorts)
   QString s, Time;
 //  for(Component *pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
   Component *pc;
-  for(int i=0; i <= DocComps.count(); i++) {
+  for(int i=0; i <= DocComps.size(); i++) {
     pc = DocComps[i];
     if(isAnalog) {
       s = pc->getNetlist();

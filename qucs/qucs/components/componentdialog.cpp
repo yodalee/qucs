@@ -447,7 +447,7 @@ void ComponentDialog::slotSelectProperty(Q3ListViewItem *item)
     }
     Description->setText(PropDesc);
 
-    if(List.count() >= 1) {    // ComboBox with value list or line edit ?
+    if(List.size() >= 1) {    // ComboBox with value list or line edit ?
       ComboEdit->clear();
       ComboEdit->insertStringList(List);
 
@@ -583,7 +583,7 @@ void ComponentDialog::slotApplyInput()
   if(CompNameEdit->text().isEmpty())  CompNameEdit->setText(Comp->Name);
   else
   if(CompNameEdit->text() != Comp->Name) {
-    for(int i=0; i <= Doc->Components.count(); i++)
+    for(int i=0; i <= Doc->Components.size(); i++)
       if(Doc->Components[i]->Name == CompNameEdit->text())
         break;  // found component with the same name ?
     if(pc)  CompNameEdit->setText(Comp->Name);

@@ -125,7 +125,7 @@ void Marker::initText(int n)
   n += m;
 
   nVarPos = 0;
-  nn = (pGraph->cPointsX.count() + 2) * sizeof(double);
+  nn = (pGraph->cPointsX.size() + 2) * sizeof(double);
   if(VarPos)
     VarPos = (double*)realloc(VarPos, nn);
   else
@@ -186,9 +186,9 @@ void Marker::createText()
   }
 
   VarPos = (double*)realloc(VarPos,
-              (pGraph->cPointsX.count() + 2) * sizeof(double));
+              (pGraph->cPointsX.size() + 2) * sizeof(double));
 
-  while((unsigned int)nVarPos < pGraph->cPointsX.count())
+  while((unsigned int)nVarPos < pGraph->cPointsX.size())
     VarPos[nVarPos++] = 0.0;   // fill up VarPos
 
 
