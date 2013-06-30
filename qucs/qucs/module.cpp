@@ -89,16 +89,18 @@ void Module::intoCategory (Module * m) {
 
   // look through existing categories
   Category * cat;
+  bool foundCat = false;
   for (int i=0; i<Category::Categories.size(); i++) {
     cat = Category::Categories.at(i);
     if (cat->Name == m->category) {
       cat->Content.append (m);
+      foundCat = true;
       break;
     }
   }
 
   // if there is no such category, then create it
-  if (!cat) {
+  if (!foundCat) {
     cat = new Category (m->category);
     Category::Categories.append (cat);
     cat->Content.append (m);
