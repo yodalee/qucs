@@ -288,7 +288,7 @@ QString EKV26MOS::netlist()
     s += " pmos=\"1\"";
 
   // output all remaining properties
-  for(int i=1; i <= Props.size(); i++)
+  for(int i=1; i < Props.size(); i++)
     s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
 
   return s + '\n';

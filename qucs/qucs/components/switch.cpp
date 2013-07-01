@@ -75,7 +75,7 @@ QString Switch::netlist()
   s += " "+p2->Name+"=\""+p2->Value+"\"";
   p2 = Props[1];
   s += " "+p2->Name+"=\"["+p2->Value+"]\"";
-  for(int i=2; i <= Props.size(); i++)
+  for(int i=2; i < Props.size(); i++)
     s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
 
   return s + '\n';

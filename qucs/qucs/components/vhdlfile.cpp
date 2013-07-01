@@ -79,7 +79,7 @@ QString VHDL_File::vhdlCode(int)
     if (pr) {
       s += " generic map (";
       s += pr->Value;
-      for(int i=2; i <= Props.size(); i++)
+      for(int i=2; i < Props.size(); i++)
           s += ", " + Props[i]->Value;
       s += ")";
     }

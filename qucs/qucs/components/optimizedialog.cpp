@@ -305,7 +305,7 @@ OptimizeDialog::OptimizeDialog(Optimize_Sim *c_, Schematic *d_)
 
   NameEdit->setText(Comp->Name);
 
-  for( int i=2; i <= Comp->Props.size(); i++) {
+  for( int i=2; i < Comp->Props.size(); i++) {
     pp = Comp->Props.at(i);
     if(pp->Name == "Var") {
       new Q3ListViewItem(VarList, pp->Value.section('|',0,0),

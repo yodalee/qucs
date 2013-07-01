@@ -2255,7 +2255,7 @@ void Schematic::insertComponentNodes(Component *c, bool noOptimize)
            pL = (((Wire*)pe)->Port1->Connections);
 
 //        for(pe1 = pL->first(); pe1!=0; pe1 = pL->next())
-       for(int i=0; i <= pL.size(); i++) {
+       for(int i=0; i < pL.size(); i++) {
            pe1 = pL[i];
           if(pe1 == c) {
             deleteWire((Wire*)pe);
@@ -2405,8 +2405,7 @@ void Schematic::activateCompsWithinRect(int x1, int y1, int x2, int y2)
   y1 = cy1; y2 = cy2;
 
   Component *pc;
-//  for(Component *pc = Components->first(); pc != 0; pc = Components->next()) {
-  for(int i=0; i <= Components.size(); i++) {
+  for(int i=0; i < Components.size(); i++) {
     pc = Components[i];
     pc->Bounding(cx1, cy1, cx2, cy2);
     if(cx1 >= x1) if(cx2 <= x2) if(cy1 >= y1) if(cy2 <= y2) {
@@ -2434,9 +2433,8 @@ void Schematic::activateCompsWithinRect(int x1, int y1, int x2, int y2)
 bool Schematic::activateSpecifiedComponent(int x, int y)
 {
   int x1, y1, x2, y2, a;
-//  for(Component *pc = Components->first(); pc != 0; pc = Components->next()) {
   Component *pc;
-  for(int i=0; i <= Components.size(); i++) {
+  for(int i=0; i < Components.size(); i++) {
     pc = Components[i];
     pc->Bounding(x1, y1, x2, y2);
     if(x >= x1) if(x <= x2) if(y >= y1) if(y <= y2) {
@@ -2465,9 +2463,8 @@ bool Schematic::activateSelectedComponents()
 {
   int a;
   bool sel = false;
-//  for(Component *pc = Components->first(); pc != 0; pc = Components->next())
   Component *pc;
-  for(int i=0; i <= Components.size(); i++) {
+  for(int i=0; i < Components.size(); i++) {
     pc = Components[i];
     if(pc->isSelected) {
       a = pc->isActive - 1;
@@ -2539,9 +2536,8 @@ void Schematic::setCompPorts(Component *pc)
 Component* Schematic::selectCompText(int x_, int y_, int& w, int& h)
 {
   int a, b, dx, dy;
-//  for(Component *pc = Components->first(); pc != 0; pc = Components->next()) {
   Component *pc;
-  for(int i=0; i <= Components.size(); i++) {
+  for(int i=0; i < Components.size(); i++) {
     pc = Components[i];
     a = pc->cx + pc->tx;
     if(x_ < a)  continue;
@@ -2565,9 +2561,8 @@ Component* Schematic::searchSelSubcircuit()
 {
   Component *sub=0;
   // test all components
-//  for(Component *pc = Components->first(); pc != 0; pc = Components->next()) {
   Component *pc;
-  for(int i=0; i <= Components.size(); i++) {
+  for(int i=0; i < Components.size(); i++) {
     pc = Components[i];
     if(!pc->isSelected) continue;
     if(pc->Model != "Sub")
@@ -2584,9 +2579,8 @@ Component* Schematic::searchSelSubcircuit()
 Component* Schematic::selectedComponent(int x, int y)
 {
   // test all components
-//  for(Component *pc = Components->first(); pc != 0; pc = Components->next())
   Component *pc;
-  for(int i=0; i <= Components.size(); i++) {
+  for(int i=0; i < Components.size(); i++) {
     pc = Components[i];
     if(pc->getSelected(x, y))
       return pc;
@@ -2728,7 +2722,6 @@ void Schematic::oneLabel(Node *n1)
 
 //  for(pn = Nodes->first(); pn!=0; pn = Nodes->next())
   QListIterator<Node *> in(Nodes);
-//  for(int i=0; i <= Nodes.size(); i++)
   while (in.hasNext()) {
     pn = in.next();
     pn->y1 = 0;   // mark all nodes as not checked
@@ -2749,8 +2742,7 @@ void Schematic::oneLabel(Node *n1)
       }
     }
 
-//    for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next()) {
-    for(int i=0; i <= pn->Connections.size(); i++) {
+    for(int i=0; i < pn->Connections.size(); i++) {
       pe = pn->Connections[i];
       if(pe->Type != isWire) {
         if(((Component*)pe)->isActive == COMP_IS_ACTIVE)
@@ -2796,8 +2788,7 @@ int Schematic::placeNodeLabel(WireLabel *pl)
   int y = pl->cy;
 
   // check if new node lies upon an existing node
-//  for(pn = Nodes->first(); pn != 0; pn = Nodes->next())
-  for(int i=0; i <= Nodes.size(); i++)
+  for(int i=0; i < Nodes.size(); i++)
     if(Nodes[i]->cx == x) if(Nodes[i]->cy == y) break;
 
   if(!pn)  return -1;

@@ -99,7 +99,7 @@ QString RFedd::netlist()
   p2 = Props.at(2);
   s += " "+p2->Name+"=\""+p2->Value+"\"";
   
-  for ( int i=3; i <= Props.size(); i++){
+  for ( int i=3; i < Props.size(); i++){
     p2 = Props.at(i);
     n = p2->Name.mid(1);
     s += " "+p2->Name+"=\""+Name+"."+p+n+"\"";

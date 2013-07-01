@@ -583,7 +583,7 @@ void ComponentDialog::slotApplyInput()
   if(CompNameEdit->text().isEmpty())  CompNameEdit->setText(Comp->Name);
   else
   if(CompNameEdit->text() != Comp->Name) {
-    for(int i=0; i <= Doc->Components.size(); i++)
+    for(int i=0; i < Doc->Components.size(); i++)
       if(Doc->Components[i]->Name == CompNameEdit->text())
         break;  // found component with the same name ?
     if(pc)  CompNameEdit->setText(Comp->Name);

@@ -613,7 +613,7 @@ void Component::mirrorX()
   int dy = 0;
   if(showName)
     dy = metrics.lineSpacing();   // for "Name"
-  for(int i=0; i <= Props.size(); i++) 
+  for(int i=0; i < Props.size(); i++) 
     if(Props[i]->display)  dy += metrics.lineSpacing();
   if((tx > x1) && (tx < x2)) ty = -ty-dy;     // mirror text position
   else ty = y1+ty+y2;
@@ -692,7 +692,7 @@ void Component::mirrorY()
   if(showName)
     dx = metrics.width(Name);
   Property *pp;
-  for(int i=0; i <= Props.size(); i++) {
+  for(int i=0; i < Props.size(); i++) {
     pp = Props[i];
     if(pp->display) {
       // get width of text
@@ -713,6 +713,7 @@ void Component::mirrorY()
 QString Component::netlist()
 {
   QString s = Model+":"+Name;
+  qDebug() << s;
 
   // output all node names
   Port *p1;
@@ -720,6 +721,7 @@ QString Component::netlist()
   while (ip.hasNext()) {
     p1 = ip.next();
     s += " "+p1->Connection->Name;   // node names
+    qDebug() << s;
   }
 
   // output all properties
@@ -727,8 +729,10 @@ QString Component::netlist()
   QListIterator<Property *> ip2(Props);
   while (ip2.hasNext()) {
     p2 = ip2.next();
-    if(p2->Name != "Symbol")
+    if(p2->Name != "Symbol") {
       s += " "+p2->Name+"=\""+p2->Value+"\"";
+      qDebug() << s;
+    }
   }
   return s + '\n';
 }

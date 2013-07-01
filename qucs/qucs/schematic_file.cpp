@@ -521,7 +521,6 @@ bool Schematic::loadComponents(Q3TextStream *stream, QList<Component *> *List=0)
   QString Line, cstr;
   Component *c;
   while(!stream->atEnd()) {
-      qDebug() << "get component";
     Line = stream->readLine();
     if(Line.at(0) == '<') if(Line.at(1) == '/') return true;
     Line = Line.stripWhiteSpace();
@@ -531,7 +530,6 @@ bool Schematic::loadComponents(Q3TextStream *stream, QList<Component *> *List=0)
     if(!c) return false;
 
     if(List) {  // "paste" ?
-        qDebug() << "append to provided list";
       int z;
       for(z=c->Name.length()-1; z>=0; z--) // cut off number of component name
         if(!c->Name.at(z).isDigit()) break;
@@ -993,13 +991,13 @@ void Schematic::propagateNode(QStringList& Collect,
 
   Cons.append(pn);
 //  for(p2 = Cons.first(); p2 != 0; p2 = Cons.next())
-  QMutableListIterator<Node *> in(Cons);
-//  for(int j=0; j<Cons.size(); j++) {
-  while (in.hasNext()) {
-    p2 = in.next();
+//  QMutableListIterator<Node *> in(Cons);
+  for(int j=0; j<Cons.size(); j++) {
+//  while (in.hasNext()) {
+    p2 = Cons.at(j);
 //    for(pe = p2->Connections.first(); pe != 0; pe = p2->Connections.next()) {
-    for(int i=0; i <= p2->Connections.size(); i++) {
-        pe = p2->Connections.at(i);
+    for(int i=0; i < p2->Connections.size(); i++) {
+      pe = p2->Connections.at(i);
       if(pe->Type == isWire) {
         pw = (Wire*)pe;
         if(p2 != pw->Port1) {
@@ -1020,7 +1018,7 @@ void Schematic::propagateNode(QStringList& Collect,
         }
         if(setName) {
 //          Cons.findRef(p2);   // back to current Connection
-          in.findPrevious(p2);
+//          in.findPrevious(p2);
           if (isAnalog) 
             createNodeSet(Collect, countInit, pw, pn);
           setName = false;
@@ -1044,9 +1042,8 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
   // give the ground nodes the name "gnd", and insert subcircuits etc.
   QListIterator<Component *> it(DocComps);
   Component *pc;
-//  while((pc = it.current()) != 0) {
-  while((pc = it.next()) != 0) {
-//    ++it;
+  while(it.hasNext()) {
+    pc = it.next();
     if(pc->isActive != COMP_IS_ACTIVE) continue;
 
     // check analog/digital typed components
@@ -1083,6 +1080,7 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
         pp = ip.next();
 	    pp->Type = it.data().PortTypes[i];
 	    pp->Connection->DType = pp->Type;
+        i++;
 	  }
 	}
         continue;   // insert each subcircuit just one time
@@ -1104,10 +1102,10 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
       d->creatingLib = creatingLib;
       r = d->createSubNetlist(stream, countInit, Collect, ErrText, NumPorts);
       if (r) {
-	      i = 0;
 	      // save in/out signal types of subcircuit
           Port *pp;
 //	      for(Port *pp = pc->Ports.first(); pp; pp = pc->Ports.next(), i++) {
+          i = 0;
           QListIterator<Port *> ip(pc->Ports);
           while (ip.hasNext()) {
             pp = ip.next();
@@ -1337,9 +1335,8 @@ int NumPorts)
   // collect subcircuit ports and sort their node names into
   // "SubcircuitPortNames"
   PortTypes.clear();
-//  for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-  for (int i=0; i <= DocComps.size(); i++) {
-    pc = DocComps[i];
+  for (int ic=0; ic < DocComps.size(); ic++) {
+    pc = DocComps.at(ic);
     if(pc->Model.at(0) == '.') { // no simulations in subcircuits
       ErrText->insert(
         QObject::tr("WARNING: Ignore simulation component in subcircuit \"%1\".").arg(DocName)+"\n");
@@ -1439,8 +1436,7 @@ int NumPorts)
     (*tstream) << '\n';
 
     // write all components with node names into netlist file
-//    for(pc = DocComps.first(); pc != 0; pc = DocComps.next())
-    for(int i=0; i <= DocComps.size(); i++)
+    for(int i=0; i < DocComps.size(); i++)
       (*tstream) << DocComps[i]->getNetlist();
 
     (*tstream) << ".Def:End\n";
@@ -1492,8 +1488,7 @@ int NumPorts)
       }
 
       // write all equations into netlist file
-//      for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-      for(int i=0; i <= DocComps.size(); i++) 
+      for(int i=0; i < DocComps.size(); i++) 
         if(DocComps[i]->Model == "Eqn") 
           (*tstream) << DocComps[i]->get_Verilog_Code(NumPorts);
 
@@ -1502,8 +1497,7 @@ int NumPorts)
       (*tstream) << " assign gnd = 0;\n"; // should appear only once
 
       // write all components into netlist file
-//      for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-      for(int i=0; i <= DocComps.size(); i++)  {
+      for(int i=0; i < DocComps.size(); i++)  {
         pc = DocComps[i];
         if(pc->Model != "Eqn") {
           s = pc->get_Verilog_Code(NumPorts);
@@ -1564,8 +1558,7 @@ int NumPorts)
       }
 
       // write all equations into netlist file
-//      for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-      for(int i=0; i <= DocComps.size(); i++) {
+      for(int i=0; i < DocComps.size(); i++) {
         pc = DocComps[i];
         if(pc->Model == "Eqn") {
           ErrText->insert(
@@ -1581,8 +1574,7 @@ int NumPorts)
       (*tstream) << " gnd <= '0';\n"; // should appear only once
 
       // write all components into netlist file
-//      for(pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
-      for(int i=0; i <= DocComps.size(); i++) {
+      for(int i=0; i < DocComps.size(); i++) {
         pc = DocComps[i];
         if(pc->Model != "Eqn") {
             s = pc->get_VHDL_Code(NumPorts);
@@ -1642,9 +1634,8 @@ int Schematic::prepareNetlist(QTextStream& stream, QStringList& Collect,
   int allTypes = 0, NumPorts = 0;
 
   // Detect simulation domain (analog/digital) by looking at component types.
-//  for(Component *pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
   Component *pc;
-  for(int i=0; i <= DocComps.size(); i++) {
+  for(int i=0; i < DocComps.size(); i++) {
     pc = DocComps[i];
     if(pc->isActive == COMP_IS_OPEN) continue;
     if(pc->Model.at(0) == '.') {
@@ -1779,12 +1770,13 @@ QString Schematic::createNetlist(QTextStream& stream, int NumPorts)
   FileList.clear();
 
   QString s, Time;
-//  for(Component *pc = DocComps.first(); pc != 0; pc = DocComps.next()) {
   Component *pc;
-  for(int i=0; i <= DocComps.size(); i++) {
+  for(int i=0; i < DocComps.size(); i++) {
     pc = DocComps[i];
     if(isAnalog) {
+      // get each component
       s = pc->getNetlist();
+      qDebug() << s;
     }
     else {
       if(pc->Model == ".Digi" && pc->isActive) {  // simulation component ?

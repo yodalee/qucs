@@ -217,7 +217,7 @@ QString Subcircuit::netlist()
   s += " Type=\""+properName(f)+"\"";
 
   // output all user defined properties
-  for(int i=0; i <= Props.size(); i++)
+  for(int i=0; i < Props.size(); i++)
     s += " "+Props[i]->Name+"=\""+Props[i]->Value+"\"";
   return s + '\n';
 }
