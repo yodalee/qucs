@@ -172,7 +172,7 @@ bool Schematic::pasteFromClipboard(Q3TextStream *stream, QList<Element *> pe)
         if(!loadIntoNothing(stream)) return false; }
       else
       if(Line == "<Paintings>") {
-        #warning if(!loadPaintings(stream, (QList<Painting *>)pe)) return false; 
+#warning if(!loadPaintings(stream, (QList<Painting *>)pe)) return false; 
       }
 #warning  who to cast QList<Element *> to QList<Painting *>? 
       else {
@@ -194,7 +194,7 @@ bool Schematic::pasteFromClipboard(Q3TextStream *stream, QList<Element *> pe)
 #warning  who to cast QList<Element *> to QList<Component *>?
     else
     if(Line == "<Wires>") {
-      if(!loadWires(stream, pe)) return false; }
+      if(!loadWires(stream, &pe)) return false; }
     else
     if(Line == "<Diagrams>") {
 //      if(!loadDiagrams(stream, (Q3PtrList<Diagram>*)pe)) return false; 
@@ -513,8 +513,9 @@ void Schematic::simpleInsertComponent(Component *c)
   DocComps.append(c);
 }
 
+
 // -------------------------------------------------------------
-bool Schematic::loadComponents(Q3TextStream *stream)
+bool Schematic::loadComponents(Q3TextStream *stream, QList<Component *> *List=0)
 {
   qDebug() << "Schematic::loadComponents";
   QString Line, cstr;
@@ -529,49 +530,15 @@ bool Schematic::loadComponents(Q3TextStream *stream)
     c = getComponentFromName(Line);
     if(!c) return false;
 
-   /* if(List) {  // "paste" ?
+    if(List) {  // "paste" ?
         qDebug() << "append to provided list";
       int z;
       for(z=c->Name.length()-1; z>=0; z--) // cut off number of component name
         if(!c->Name.at(z).isDigit()) break;
       c->Name = c->Name.left(z+1);
       List->append(c);
-    }*/
-//    else  
-        simpleInsertComponent(c);
-  }
-
-  QMessageBox::critical(0, QObject::tr("Error"),
-	   QObject::tr("Format Error:\n'Component' field is not closed!"));
-  return false;
-}
-
-// -------------------------------------------------------------
-// overloaded
-bool Schematic::loadComponents(Q3TextStream *stream, QList<Component *> List)
-{
-  qDebug() << "Schematic::loadComponents";
-  QString Line, cstr;
-  Component *c;
-  while(!stream->atEnd()) {
-      qDebug() << "get component";
-    Line = stream->readLine();
-    if(Line.at(0) == '<') if(Line.at(1) == '/') return true;
-    Line = Line.stripWhiteSpace();
-    if(Line.isEmpty()) continue;
-
-    c = getComponentFromName(Line);
-    if(!c) return false;
-
-//    if(List) {  // "paste" ?
-        qDebug() << "append to provided list";
-      int z;
-      for(z=c->Name.length()-1; z>=0; z--) // cut off number of component name
-        if(!c->Name.at(z).isDigit()) break;
-      c->Name = c->Name.left(z+1);
-      List.append(c);
-//    }
-//    else  simpleInsertComponent(c);
+    }
+    else  simpleInsertComponent(c);
   }
 
   QMessageBox::critical(0, QObject::tr("Error"),
@@ -586,7 +553,7 @@ void Schematic::simpleInsertWire(Wire *pw)
   Node *pn;
   // check if first wire node lies upon existing node
 //  for(pn = DocNodes.first(); pn != 0; pn = DocNodes.next()) {
-  for(int i=0; i <= DocNodes.size(); i++) {
+  for(int i=0; i < DocNodes.size(); i++) {
         pn = DocNodes[i];
       if(pn->cx == pw->x1) if(pn->cy == pw->y1) break;
   }
@@ -610,7 +577,7 @@ void Schematic::simpleInsertWire(Wire *pw)
 
   // check if second wire node lies upon existing node
 //  for(pn = DocNodes.first(); pn != 0; pn = DocNodes.next())
-  for(int i=0; i <= DocNodes.size(); i++) {
+  for(int i=0; i < DocNodes.size(); i++) {
     pn = DocNodes[i];
     if(pn->cx == pw->x2) if(pn->cy == pw->y2) break;
   }
@@ -626,7 +593,7 @@ void Schematic::simpleInsertWire(Wire *pw)
 }
 
 // -------------------------------------------------------------
-bool Schematic::loadWires(Q3TextStream *stream, QList<Element *> List)
+bool Schematic::loadWires(Q3TextStream *stream, QList<Element *> *List=0)
 {
   Wire *w;
   QString Line;
@@ -644,16 +611,16 @@ bool Schematic::loadWires(Q3TextStream *stream, QList<Element *> List)
       delete w;
       return false;
     }
-    if(!List.empty()) {
+    if(List) {
       if(w->x1 == w->x2) if(w->y1 == w->y2) if(w->Label) {
 	    w->Label->Type = isMovingLabel;
-        List.append(w->Label);
+        List->append(w->Label);
         delete w;
         continue;
       }
-      List.append(w);
+      List->append(w);
       if(w->Label)
-        List.append(w->Label);
+        List->append(w->Label);
     }
     else simpleInsertWire(w);
   }
@@ -664,7 +631,7 @@ bool Schematic::loadWires(Q3TextStream *stream, QList<Element *> List)
 }
 
 // -------------------------------------------------------------
-bool Schematic::loadDiagrams(Q3TextStream *stream, QList<Diagram *> List)
+bool Schematic::loadDiagrams(Q3TextStream *stream, QList<Diagram *> *List=0)
 {
   Diagram *d;
   QString Line, cstr;
@@ -698,7 +665,7 @@ bool Schematic::loadDiagrams(Q3TextStream *stream, QList<Diagram *> List)
       delete d;
       return false;
     }
-    List.append(d);
+    List->append(d);
   }
 
   QMessageBox::critical(0, QObject::tr("Error"),
@@ -707,7 +674,7 @@ bool Schematic::loadDiagrams(Q3TextStream *stream, QList<Diagram *> List)
 }
 
 // -------------------------------------------------------------
-bool Schematic::loadPaintings(Q3TextStream *stream, QList<Painting *> List)
+bool Schematic::loadPaintings(Q3TextStream *stream, QList<Painting *> *List=0)
 {
   Painting *p=0;
   QString Line, cstr;
@@ -747,7 +714,7 @@ bool Schematic::loadPaintings(Q3TextStream *stream, QList<Painting *> List)
       return false;
     }
     qDebug() << "appending Painting";
-    List.append(p);
+    List->append(p);
   }
 
   QMessageBox::critical(0, QObject::tr("Error"),
@@ -802,7 +769,7 @@ bool Schematic::loadDocument()
     if(Line.isEmpty()) continue;
     qDebug()  << Line;
     if(Line == "<Symbol>") {
-      if(!loadPaintings(&stream, SymbolPaints)) {  //BROKEN
+      if(!loadPaintings(&stream, &SymbolPaints)) {  //BROKEN
 	    file.close();
 	    return false;
       }
@@ -815,16 +782,14 @@ bool Schematic::loadDocument()
       if(!loadComponents(&stream)) { file.close(); return false; } }
     else
     if(Line == "<Wires>") {
-#warning Sort it out, pass list or pass pointer?
-      QList<Element *> dummy;  
-      if(!loadWires(&stream, dummy)) { file.close(); return false; } }
+      if(!loadWires(&stream)) { file.close(); return false; } }
     else
     if(Line == "<Diagrams>") {
-      if(!loadDiagrams(&stream, DocDiags)) { file.close(); return false; } }
+      if(!loadDiagrams(&stream, &DocDiags)) { file.close(); return false; } }
     else
     if(Line == "<Paintings>") {
 #warning DocPaints or Paintings??
-      if(!loadPaintings(&stream, Paintings)) { file.close(); return false; } }
+      if(!loadPaintings(&stream, &Paintings)) { file.close(); return false; } }
     else {
       QMessageBox::critical(0, QObject::tr("Error"),
 		   QObject::tr("File Format Error:\nUnknown field!"));
@@ -922,10 +887,9 @@ bool Schematic::rebuild(QString *s)
 
   // read content *************************
   if(!loadComponents(&stream))  return false;
-  QList<Element *> dummy;
-  if(!loadWires(&stream, dummy))  return false;
-  if(!loadDiagrams(&stream, DocDiags))  return false;
-  if(!loadPaintings(&stream, DocPaints)) return false;
+  if(!loadWires(&stream))  return false;
+  if(!loadDiagrams(&stream, &DocDiags))  return false;
+  if(!loadPaintings(&stream, &DocPaints)) return false;
 
   return true;
 }
@@ -944,7 +908,7 @@ bool Schematic::rebuildSymbol(QString *s)
   Line = stream.readLine();  // skip components
   Line = stream.readLine();  // skip wires
   Line = stream.readLine();  // skip diagrams
-  if(!loadPaintings(&stream, SymbolPaints)) return false;
+  if(!loadPaintings(&stream, &SymbolPaints)) return false;
 
   return true;
 }

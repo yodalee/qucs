@@ -126,9 +126,6 @@ public:
   QList<Node *>      Nodes, DocNodes;
   QList<Diagram *>   Diagrams, DocDiags;
   QList<Painting *>  Paintings, DocPaints;
-  
-  
-  //saving should be from Componens (or its po)
   QList<Component *> Components, DocComps;
   
 
@@ -268,12 +265,11 @@ private:
 
   bool loadProperties(Q3TextStream*);
   void simpleInsertComponent(Component*);
-  bool loadComponents(Q3TextStream*);
-  bool loadComponents(Q3TextStream*, QList<Component *>);
   void simpleInsertWire(Wire*);
-  bool loadWires(Q3TextStream*, QList<Element *>);
-  bool loadDiagrams(Q3TextStream*, QList<Diagram *>);
-  bool loadPaintings(Q3TextStream*, QList<Painting *>);
+  bool loadComponents(Q3TextStream*, QList<Component *> *);
+  bool loadWires(Q3TextStream*, QList<Element *> *);
+  bool loadDiagrams(Q3TextStream*, QList<Diagram *> *);
+  bool loadPaintings(Q3TextStream*, QList<Painting *> *);
   bool loadIntoNothing(Q3TextStream*);
 
   QString createClipboardFile();
