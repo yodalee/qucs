@@ -550,13 +550,16 @@ void Schematic::simpleInsertWire(Wire *pw)
 {
   Node *pn;
   // check if first wire node lies upon existing node
-//  for(pn = DocNodes.first(); pn != 0; pn = DocNodes.next()) {
+  bool foundNode = false;
   for(int i=0; i < DocNodes.size(); i++) {
         pn = DocNodes[i];
-      if(pn->cx == pw->x1) if(pn->cy == pw->y1) break;
+      if(pn->cx == pw->x1) if(pn->cy == pw->y1) {
+        foundNode = true;
+        break;
+      }
   }
 
-  if(!pn) {   // create new node, if no existing one lies at this position
+  if(!foundNode) {   // create new node, if no existing one lies at this position
     pn = new Node(pw->x1, pw->y1);
     DocNodes.append(pn);
   }
@@ -574,13 +577,16 @@ void Schematic::simpleInsertWire(Wire *pw)
   pw->Port1 = pn;
 
   // check if second wire node lies upon existing node
-//  for(pn = DocNodes.first(); pn != 0; pn = DocNodes.next())
+  foundNode = false;
   for(int i=0; i < DocNodes.size(); i++) {
     pn = DocNodes[i];
-    if(pn->cx == pw->x2) if(pn->cy == pw->y2) break;
+    if(pn->cx == pw->x2) if(pn->cy == pw->y2) {
+      foundNode = true;
+      break;
+    }
   }
 
-  if(!pn) {   // create new node, if no existing one lies at this position
+  if(!foundNode) {   // create new node, if no existing one lies at this position
     pn = new Node(pw->x2, pw->y2);
     DocNodes.append(pn);
   }
