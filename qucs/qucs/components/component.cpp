@@ -713,7 +713,8 @@ void Component::mirrorY()
 QString Component::netlist()
 {
   QString s = Model+":"+Name;
-  qDebug() << s;
+  
+  qDebug() << "Component::netlist" << s; 
 
   // output all node names
   Port *p1;
@@ -721,7 +722,6 @@ QString Component::netlist()
   while (ip.hasNext()) {
     p1 = ip.next();
     s += " "+p1->Connection->Name;   // node names
-    qDebug() << s;
   }
 
   // output all properties
@@ -731,7 +731,6 @@ QString Component::netlist()
     p2 = ip2.next();
     if(p2->Name != "Symbol") {
       s += " "+p2->Name+"=\""+p2->Value+"\"";
-      qDebug() << s;
     }
   }
   return s + '\n';
@@ -1108,13 +1107,13 @@ int Component::analyseLine(const QString& Row, int numProps)
     tx = i1;
     ty = i2;
     Name = Row.section(' ',3,3);
-    qDebug() << Name;
+    qDebug() << "Component::analyseLin" << Name << s << Row;
     if(Name.isEmpty())  Name = "SUB";
 
 // what about Lib components? no need to handle?
 // SUB has only one Propp
 #warning Is this needed? Subcircuit has only one Props
-    /*i1 = 1;
+ /*   i1 = 1;
     Property *pp = Props.at(numProps-1);
     for(;;) {
       s = Row.section('"', i1,i1);
@@ -1136,9 +1135,9 @@ int Component::analyseLine(const QString& Row, int numProps)
 
       i1 += 2;
     }
-*/
-    //while(pp != Props.last()) //subcircuit only has 1 prop
-    //  Props.remove();
+
+    while(pp != Props.last()) //subcircuit only has 1 prop
+      Props.remove();*/
     return 0;   // do not count IDs
   }
   else if(s == "Arrow") {

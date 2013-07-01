@@ -468,7 +468,7 @@ bool Schematic::loadProperties(Q3TextStream *stream)
 // Inserts a component without performing logic for wire optimization.
 void Schematic::simpleInsertComponent(Component *c)
 {
-    qDebug() << "Schematic::simpleInsertComponent - to DocNodes";
+//    qDebug() << "Schematic::simpleInsertComponent - to DocNodes";
   Node *pn;
   int x, y;
   // connect every node of component
@@ -685,9 +685,9 @@ bool Schematic::loadPaintings(Q3TextStream *stream, QList<Painting *> *List=0)
   while(!stream->atEnd()) {
     Line = stream->readLine();
     if(Line.at(0) == '<') if(Line.at(1) == '/') return true;
-
+    
     Line = Line.stripWhiteSpace();
-    qDebug() << Line;
+    
     if(Line.isEmpty()) continue;
     if( (Line.at(0) != '<') || (Line.at(Line.length()-1) != '>')) {
       QMessageBox::critical(0, QObject::tr("Error"),
@@ -717,7 +717,6 @@ bool Schematic::loadPaintings(Q3TextStream *stream, QList<Painting *> *List=0)
       delete p;
       return false;
     }
-    qDebug() << "appending Painting";
     List->append(p);
   }
 
@@ -1042,14 +1041,16 @@ void Schematic::propagateNode(QStringList& Collect,
 bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
                    QStringList& Collect, QTextEdit *ErrText, int NumPorts)
 {
+    qDebug() << "Schematic::throughAllComps";
   bool r;
   QString s;
 
   // give the ground nodes the name "gnd", and insert subcircuits etc.
-  QListIterator<Component *> it(DocComps);
+//  QListIterator<Component *> it(DocComps);
   Component *pc;
-  while(it.hasNext()) {
-    pc = it.next();
+  for (int ic=0; ic < DocComps.size(); ic++) {
+//  while(it.hasNext()) {
+    pc = DocComps.at(ic);
     if(pc->isActive != COMP_IS_ACTIVE) continue;
 
     // check analog/digital typed components
@@ -1058,7 +1059,8 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
         ErrText->insert(QObject::tr("ERROR: Component \"%1\" has no analog model.").arg(pc->Name));
         return false;
       }
-    } else {
+    } 
+    else {
       if((pc->Type & isDigitalComponent) == 0) {
         ErrText->insert(QObject::tr("ERROR: Component \"%1\" has no digital model.").arg(pc->Name));
         return false;
@@ -1075,20 +1077,21 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
     if(pc->Model == "Sub") {
       int i;
       QString f = pc->getSubcircuitFile();
+      qDebug() << "Schematic::throughAllComps -- file" << f;
       SubMap::Iterator it = FileList.find(f);
       if(it != FileList.end()) {
-	if (!it.data().PortTypes.isEmpty()) {
-	  i = 0;
-	  // apply in/out signal types of subcircuit
-      Port *pp;
-      QListIterator<Port *> ip(pc->Ports);
-      while (ip.hasNext()) {
-        pp = ip.next();
-	    pp->Type = it.data().PortTypes[i];
-	    pp->Connection->DType = pp->Type;
-        i++;
-	  }
-	}
+	    if (!it.data().PortTypes.isEmpty()) {
+          i = 0;
+          // apply in/out signal types of subcircuit
+          Port *pp;
+          QListIterator<Port *> ip(pc->Ports);
+          while (ip.hasNext()) {
+            pp = ip.next();
+            pp->Type = it.data().PortTypes[i];
+            pp->Connection->DType = pp->Type;
+            i++;
+          }
+        }
         continue;   // insert each subcircuit just one time
       }
       SubFile sub = SubFile("SCH", f);
@@ -1096,6 +1099,7 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
 
       // load subcircuit schematic
       s = pc->Props.first()->Value;
+      qDebug() << "**throughAllComps -- load SCH" << s;
       Schematic *d = new Schematic(0, QucsWorkDir.filePath(s));
       if(!d->loadDocument()) {  // load document if possible
         delete d;
@@ -1780,9 +1784,8 @@ QString Schematic::createNetlist(QTextStream& stream, int NumPorts)
   for(int i=0; i < DocComps.size(); i++) {
     pc = DocComps[i];
     if(isAnalog) {
-      // get each component
+      // get each component netlist entry
       s = pc->getNetlist();
-      qDebug() << s;
     }
     else {
       if(pc->Model == ".Digi" && pc->isActive) {  // simulation component ?
@@ -1801,15 +1804,15 @@ QString Schematic::createNetlist(QTextStream& stream, int NumPorts)
         }
       }
       if (isVerilog) {
-	s = pc->get_Verilog_Code(NumPorts);
+        s = pc->get_Verilog_Code(NumPorts);
       } else {
-	s = pc->get_VHDL_Code(NumPorts);
+        s = pc->get_VHDL_Code(NumPorts);
       }
       if (s.length()>0 && s.at(0) == '\xA7'){
           return s; // return error
       }
     }
-    stream << s;
+    stream << s; // add component to netlist
   }
 
   if(!isAnalog) {

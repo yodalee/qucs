@@ -93,6 +93,8 @@ QString iFile::netlist()
 {
   QString s = Model+":"+Name;
 
+  qDebug() << "iFile::netlist()" << s;
+  
   // output all node names
   QListIterator<Port *> ip(Ports);
   while (ip.hasNext())

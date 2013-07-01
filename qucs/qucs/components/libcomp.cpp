@@ -283,6 +283,8 @@ QString LibComp::createType()
 QString LibComp::netlist()
 {
   QString s = "Sub:"+Name;   // output as subcircuit
+  
+  qDebug() << "LibComp::netlist" << s;
 
   // output all node names
   QListIterator<Port *> ip(Ports);

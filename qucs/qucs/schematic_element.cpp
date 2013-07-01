@@ -2352,8 +2352,7 @@ void Schematic::recreateComponent(Component *Comp)
 void Schematic::insertComponent(Component *c)
 {
     qDebug() << "insertComponent";
-    qDebug() << "DocComps  " << DocComps.size();
-    qDebug() << "Components" << Components.size();
+
   // connect every node of component to corresponding schematic node
   insertComponentNodes(c, false);
 
@@ -2788,10 +2787,14 @@ int Schematic::placeNodeLabel(WireLabel *pl)
   int y = pl->cy;
 
   // check if new node lies upon an existing node
+  bool foundNode = false;
   for(int i=0; i < Nodes.size(); i++)
-    if(Nodes[i]->cx == x) if(Nodes[i]->cy == y) break;
+    if(Nodes[i]->cx == x) if(Nodes[i]->cy == y) {
+      foundNode = true;
+      break;
+    }
 
-  if(!pn)  return -1;
+  if(foundNode)  return -1;
 
   Element *pe = getWireLabel(pn);
   if(pe) {    // name found ?
