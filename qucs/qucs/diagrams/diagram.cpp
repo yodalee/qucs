@@ -204,8 +204,9 @@ void Diagram::createAxisLabels()
     // write all x labels ----------------------------------------
     for(int i=0; i<Graphs.size(); i++) {
       pg = Graphs.at(i);
-      DataX *pD = pg->cPointsX.first();
-      if(!pD) continue;
+      DataX *pD;
+      if(pg->cPointsX.isEmpty()) continue;
+      else pD = pg->cPointsX.first();
       y -= LineSpacing;
       if(Name[0] != 'C') {   // locus curve ?
 	    w = metrics.width(pD->Var) >> 1;
@@ -700,8 +701,9 @@ void Diagram::getAxisLimits(Graph *pg)
 {
   int z;
   double x, y, *p;
-  DataX *pD = pg->cPointsX.first();
-  if(pD == 0) return;
+  DataX *pD;
+  if(pg->cPointsX.empty()) return;
+  else pD = pg->cPointsX.first();
 
   if(Name[0] != 'C') {   // not for location curves
     p = pD->Points;
