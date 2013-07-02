@@ -74,9 +74,10 @@ Element* Param_Sweep::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
 void Param_Sweep::recreate(Schematic*)
 {
-   Property *pp;//= Props.first();
    QListIterator<Property *> ip(Props);
-   pp = ip.next();
+   ip.next();
+   Property *pp = ip.next();
+   ip.next();
    if((pp->Value == "list") || (pp->Value == "const")) {
        // Call them "Symbol" to omit them in the netlist.
        pp = ip.next();

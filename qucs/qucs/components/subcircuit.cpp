@@ -238,7 +238,6 @@ QString Subcircuit::vhdlCode(int)
     s += " generic map (";
     s += pr->Value;
     while (ip.hasNext())
-    //for(pr = Props.next(); pr != 0; pr = Props.next())
       s += ", " + ip.next()->Value;
     s += ")";
   }
@@ -263,7 +262,7 @@ QString Subcircuit::vhdlCode(int)
 // -------------------------------------------------------
 QString Subcircuit::verilogCode(int)
 {
-  Property *pr;// = Props.next();
+  Property *pr;
   QListIterator<Property *> ip(Props);
   pr = ip.next();
   
@@ -276,7 +275,6 @@ QString Subcircuit::verilogCode(int)
     s += " #(";
     s += Verilog_Param(pr->Value);
     while (ip.hasNext())
-//    for(pr = Props.next(); pr != 0; pr = Props.next())
       s += ", " + Verilog_Param(ip.next()->Value);
     s += ")";
   }
