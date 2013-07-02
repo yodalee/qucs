@@ -257,13 +257,13 @@ int TabDiagram::calcDiagram()
 
     startWriting = int(xAxis.limit_min + 0.5); // when to reach visible area
     py = g->cPointsY - 2;
-    if(g->cPointsX.first()) {
+    if(!g->cPointsX.empty()) {  // not empty
 
       if (!g->cPointsY) {   // no data points
-	Str = QObject::tr("invalid");
-	colWidth = checkColumnWidth(Str, metrics, colWidth, x, y);
-	if(colWidth < 0)  goto funcEnd;
-	Texts.append(new Text(x, y, Str));
+	    Str = QObject::tr("invalid");
+        colWidth = checkColumnWidth(Str, metrics, colWidth, x, y);
+        if(colWidth < 0)  goto funcEnd;
+        Texts.append(new Text(x, y, Str));
       }
       else if(sameDependencies(g, firstGraph)) {
         int z=g->cPointsX.first()->count * g->countY;
