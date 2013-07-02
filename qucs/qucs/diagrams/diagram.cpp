@@ -1190,16 +1190,18 @@ bool Diagram::sameDependencies(Graph *g1, Graph *g2)
 {
   if(g1 == g2)  return true;
 
-  DataX *g1Data = g1->cPointsX.first();
-  DataX *g2Data = g2->cPointsX.first();
-  while(g1Data && g2Data) {
+  QListIterator<DataX *> ig1(g1->cPointsX);
+  QListIterator<DataX *> ig2(g2->cPointsX);
+  DataX *g1Data;
+  DataX *g2Data;
+  while(ig1.hasNext() && ig2.hasNext()) {
+    g1Data = ig1.next();
+    g2Data = ig2.next();
     if(g1Data->Var != g2Data->Var)  return false;
-    g1Data = g1->cPointsX.at(1);
-    g2Data = g2->cPointsX.at(1);
   }
 
-  if(g1Data)  return false;  // Is there more data ?
-  if(g2Data)  return false;  // Is there more data ?
+  if(ig1.hasNext())  return false;  // Is there more data ?
+  if(ig2.hasNext())  return false;  // Is there more data ?
   return true;
 }
 
