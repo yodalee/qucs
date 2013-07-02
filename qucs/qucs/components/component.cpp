@@ -1019,7 +1019,6 @@ bool Component::load(const QString& _s)
 
     // for equations
     if(Model != "EDD" && Model != "RFEDD" && Model != "RFEDD2P") {
-        qDebug() << "load()" << Model;
       if(p1->Description.isEmpty()) {  // unknown number of properties ?
         p1->Name = n.section('=',0,0);
         n = n.section('=',1);

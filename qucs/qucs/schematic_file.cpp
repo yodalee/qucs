@@ -637,6 +637,7 @@ bool Schematic::loadWires(Q3TextStream *stream, QList<Element *> *List=0)
 // -------------------------------------------------------------
 bool Schematic::loadDiagrams(Q3TextStream *stream, QList<Diagram *> *List=0)
 {
+  qDebug() << "loadDiagrams";
   Diagram *d;
   QString Line, cstr;
   while(!stream->atEnd()) {
@@ -646,6 +647,7 @@ bool Schematic::loadDiagrams(Q3TextStream *stream, QList<Diagram *> *List=0)
     if(Line.isEmpty()) continue;
 
     cstr = Line.section(' ',0,0);    // diagram type
+    qDebug() << "** diagram type" << cstr;
          if(cstr == "<Rect") d = new RectDiagram();
     else if(cstr == "<Polar") d = new PolarDiagram();
     else if(cstr == "<Tab") d = new TabDiagram();

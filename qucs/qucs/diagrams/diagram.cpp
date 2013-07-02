@@ -502,10 +502,11 @@ void Diagram::clip(float* &p)
 // g->Points must already be empty!!!
 void Diagram::calcData(Graph *g)
 {
+    qDebug() << "calcData";
   double *px;
   double *pz = g->cPointsY;
   if(!pz)  return;
-  if(g->cPointsX.size() < 1) return;
+  if(g->cPointsX.empty()) return;
 
   int i, z, tmp, Counter=2;
   float dx, dy, xtmp, ytmp;
@@ -530,26 +531,28 @@ void Diagram::calcData(Graph *g)
   double Stroke=10.0, Space=10.0; // length of strokes and spaces in pixel
   switch(g->Style) {
     case GRAPHSTYLE_SOLID: // ***** solid line ****************************
+      qDebug() << "*** branch of curves:" << g->countY;
       for(i=g->countY; i>0; i--) {  // every branch of curves
-	px = g->cPointsX.first()->Points;
-	calcCoordinate(px, pz, py, p, p+1, pa);
-	p += 2;
-	for(z=g->cPointsX.first()->count-1; z>0; z--) {  // every point
-	  FIT_MEMORY_SIZE;  // need to enlarge memory block ?
-	  calcCoordinate(px, pz, py, p, p+1, pa);
-	  p += 2;
-	  if(Counter >= 2)   // clipping only if an axis is manual
-	    clip(p);
-	}
-	if(*(p-3) == STROKEEND)
-	  p -= 3;  // no single point after "no stroke"
-	else if(*(p-3) == BRANCHEND) {
-	  if((*(p-2) < 0) || (*(p-1) < 0))
-	    p -= 2;  // erase last hidden point
-	}
-	*(p++) = BRANCHEND;
+        px = g->cPointsX.first()->Points;
+        qDebug() << "px" << px;
+        
+        calcCoordinate(px, pz, py, p, p+1, pa);
+        p += 2;
+        for(z=g->cPointsX.first()->count-1; z>0; z--) {  // every point
+          FIT_MEMORY_SIZE;  // need to enlarge memory block ?
+          calcCoordinate(px, pz, py, p, p+1, pa);
+          p += 2;
+          if(Counter >= 2)   // clipping only if an axis is manual
+              clip(p);
+        }
+        if(*(p-3) == STROKEEND)
+           p -= 3;  // no single point after "no stroke"
+        else if(*(p-3) == BRANCHEND) {
+          if((*(p-2) < 0) || (*(p-1) < 0))
+              p -= 2;  // erase last hidden point
+        }
+        *(p++) = BRANCHEND;
       }
-
 
       *p = GRAPHEND;
 /*z = p-g->Points+1;
@@ -721,11 +724,11 @@ void Diagram::getAxisLimits(Graph *pg)
     if(pDy) {
       p = pDy->Points;
       for(z=pDy->count; z>0; z--) { // check y coordinates (2. dimension)
-	y = *(p++);
-	if(finite(y)) {
-	  if(y > yAxis.max) yAxis.max = y;
-	  if(y < yAxis.min) yAxis.min = y;
-	}
+        y = *(p++);
+        if(finite(y)) {
+          if(y > yAxis.max) yAxis.max = y;
+          if(y < yAxis.min) yAxis.min = y;
+        }
       }
     }
   }
@@ -844,6 +847,7 @@ void Diagram::recalcGraphData()
 // ------------------------------------------------------------------------
 void Diagram::updateGraphData()
 {
+    qDebug() << "updateGraphData - Graphs" << Graphs.size();
   int valid = calcDiagram();   // do not calculate graph data if invalid
 
   Graph *pg;
@@ -961,6 +965,7 @@ int Diagram::loadVarData(const QString& fileName, Graph *g)
     pos = 0;
     tmp = Line.section(' ', pos, pos);
     while(!tmp.isEmpty()) {
+        qDebug() << "append Dependent";
       g->cPointsX.append(new DataX(tmp));  // name of independet variable
       pos++;
       tmp = Line.section(' ', pos, pos);
@@ -974,12 +979,14 @@ int Diagram::loadVarData(const QString& fileName, Graph *g)
   double *p;
   int counting = 0;
   if(isIndep) {    // create independent variable by myself ?
+      qDebug() << "append Independent ?";
     counting = Line.toInt(&ok);  // get number of values
     g->cPointsX.append(new DataX("number", 0, counting));
     if(!ok)  return 0;
 
     p = new double[counting];  // memory of new independent variable
     g->countY = 1;
+#warning current == last?
     g->cPointsX.last()->Points = p;
     for(int z=1; z<=counting; z++)  *(p++) = double(z);
     if(xAxis.min > 1.0)  xAxis.min = 1.0;
@@ -987,14 +994,17 @@ int Diagram::loadVarData(const QString& fileName, Graph *g)
   }
   else {  // ...................................
     // get independent variables from data file
+      qDebug() << "append Independent from file";
     g->countY = 1;
     DataX *bLast = 0;
     if(Name == "Rect3D")  bLast = g->cPointsX.at(1);  // y axis for Rect3D
 
     double min_tmp = xAxis.min, max_tmp = xAxis.max;
     DataX *pD;
-    for(int i=0; i<g->cPointsX.size(); i++) {
-      pD = g->cPointsX.at(i);
+    QListIterator<DataX *> id(g->cPointsX);
+    id.toBack();
+    while (id.hasPrevious()) {
+      pD = id.previous();
       pa = &xAxis;
       if(pD == g->cPointsX.first()) {
         xAxis.min = min_tmp;    // only count first independent variable
@@ -1102,6 +1112,7 @@ else {  // of "if not digital"
 int Diagram::loadIndepVarData(const QString& Variable,
 			      char *FileString, Axis *pa, Graph *pg)
 {
+    qDebug() << "Diagram::loadIndepVarData"<< Variable;
   bool isIndep = false;
   QString Line, tmp;
 
@@ -1153,7 +1164,7 @@ int Diagram::loadIndepVarData(const QString& Variable,
 
   double *p = new double[n];     // memory for new independent variable
 #warning what is the current??
-  qDebug() << "at loadIndepVarData, is DataX current??";
+  qDebug() << "at loadIndepVarData, is DataX current==last??  -- size" << pg->cPointsX.size();
   DataX *pD = pg->cPointsX.last();
   pD->Points = p;
   pD->count  = n;
@@ -1430,12 +1441,13 @@ bool Diagram::load(const QString& Line, Q3TextStream *stream)
       // .......................................................
       // load markers of the diagram
 #warning check if last == current
+      qDebug() << "Diagram::load Graph current==last ?";
+      if(Graphs.isEmpty())  return false;
       pg = Graphs.last();
-      if(!pg)  return false;
       Marker *pm = new Marker(this, pg);
       if(!pm->load(s)) {
-	delete pm;
-	return false;
+        delete pm;
+          return false;
       }
       pg->Markers.append(pm);
       continue;
