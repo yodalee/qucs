@@ -84,10 +84,9 @@ QString EqnDefined::netlist()
     s += " "+iport.next()->Connection->Name;   // node names
 
   // output all properties
-  Property *p2; //= Props.at(2);
-  QListIterator<Property *> ip(Props);
-  while(ip.hasNext()) {
-    p2 = ip.next();
+  Property *p2;
+  for(int i=2; i<Props.size(); i++) {
+    p2 = Props.at(i);
     s += " "+p2->Name+"=\""+Name+"."+p2->Name+"\"";
     e += "  Eqn:Eqn"+Name+p2->Name+" "+
       Name+"."+p2->Name+"=\""+p2->Value+"\" Export=\"no\"\n";
