@@ -948,17 +948,15 @@ bool Component::load(const QString& _s)
 
   // load all properties
   Property *p1;
-  QMutableListIterator<Property *> ip(Props);
-  while (ip.hasNext()) {
-//  for(p1 = Props.first(); p1 != 0; p1 = Props.next()) {
-    p1 = ip.next();
+  for(int i=0; i < Props.size(); i++) {
+    p1 = Props.at(i);
     z++;
     n = s.section('"',z,z);    // property value
     z++;
     // not all properties have to be mentioned (backward compatible)
     if(z > counts) {
       if(p1->Description.isEmpty())
-        ip.remove();    // remove if allocated in vain
+        Props.removeAll(p1);    // remove if allocated in vain
 
       if(Model == "Diode") {
 	if(counts < 56) {  // backward compatible
@@ -1020,14 +1018,16 @@ bool Component::load(const QString& _s)
     }
 
     // for equations
-    if(Model != "EDD" && Model != "RFEDD" && Model != "RFEDD2P")
-    if(p1->Description.isEmpty()) {  // unknown number of properties ?
-      p1->Name = n.section('=',0,0);
-      n = n.section('=',1);
-      // allocate memory for a new property (e.g. for equations)
-      if(Props.size() < (counts>>1)) {
-        Props.insert(z >> 1, new Property("y", "1", true));
-        //Props.prev(); //FIXME
+    if(Model != "EDD" && Model != "RFEDD" && Model != "RFEDD2P") {
+        qDebug() << "load()" << Model;
+      if(p1->Description.isEmpty()) {  // unknown number of properties ?
+        p1->Name = n.section('=',0,0);
+        n = n.section('=',1);
+        // allocate memory for a new property (e.g. for equations)
+        if(Props.size() < (counts>>1)) {
+          Props.insert(z >> 1, new Property("y", "1", true));
+          //Props.prev(); // why? FIXME?
+        }
       }
     }
     if(z == 6)  if(counts == 6)     // backward compatible
