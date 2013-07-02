@@ -150,7 +150,7 @@ int TruthDiagram::calcDiagram()
   firstGraph = g;
   // ................................................
   // all dependent variables
-  for(int i=0; Graphs.size(); i++) {
+  for(int i=0; i < Graphs.size(); i++) {
     g = Graphs.at(i);
     y = y2-tHeight-5;
 
