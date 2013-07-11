@@ -84,13 +84,13 @@ MouseActions::~MouseActions()
 void MouseActions::setPainter(Schematic *Doc)
 {
   // contents to viewport transformation
-
+/* !out  
   Doc->PostPaintEvent(_Translate,-Doc->contentsX(), -Doc->contentsY());
   Doc->PostPaintEvent(_Scale,Doc->Scale, Doc->Scale);
   Doc->PostPaintEvent(_Translate,-Doc->ViewX1, -Doc->ViewY1);
   Doc->PostPaintEvent(_DotLine);
   Doc->PostPaintEvent(_NotRop);
-
+*/
 }
 
 // -----------------------------------------------------------
@@ -285,10 +285,11 @@ void MouseActions::MMoveElement(Schematic *Doc, QMouseEvent *Event)
 
   if(selElem->Type == isPainting) {
     Doc->PostPaintEvent (_NotRop, 0,0,0,0);
+    /* !out
     x -= Doc->contentsX();
     y -= Doc->contentsY();
     ((Painting*)selElem)->MouseMoving(Doc, x, y, gx, gy,
-                                       Doc, x, y, drawn);
+                                       Doc, x, y, drawn);*/
     drawn = true;
     Doc->viewport()->update();
     return;
@@ -351,12 +352,13 @@ void MouseActions::MMoveWire1(Schematic *Doc, QMouseEvent *Event)
   MAx3 = DOC_X_POS(Event->pos().x());
   MAy3 = DOC_Y_POS(Event->pos().y());
   Doc->setOnGrid(MAx3, MAy3);
+  /* !out
   MAx3 = SCR_X_POS(MAx3) - Doc->contentsX();
   MAy3 = SCR_Y_POS(MAy3) - Doc->contentsY();
 
   MAx2  = Doc->visibleWidth();
   MAy2  = Doc->visibleHeight();
-
+*/
   drawn = true;
   Doc->PostPaintEvent (_Line, 0, MAy3, MAx2, MAy3, 0,0, true); // paint
   Doc->PostPaintEvent (_Line, MAx3, 0, MAx3, MAy2, 0,0, true);
@@ -540,10 +542,10 @@ void MouseActions::MMoveDelete(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Line, MAx3-15, MAy3+15, MAx3+15, MAy3-15,0,0,true);
   }
   drawn = true;
-
+/* !out
   MAx3  = Event->pos().x() - Doc->contentsX();
   MAy3  = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Line, MAx3-15, MAy3-15, MAx3+15, MAy3+15,0,0,true); // paint
   Doc->PostPaintEvent (_Line, MAx3-15, MAy3+15, MAx3+15, MAy3-15,0,0,true);
 }
@@ -564,10 +566,10 @@ void MouseActions::MMoveLabel(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Line, MAx3+19, MAy3-12, MAx3+16, MAy3-23,0,0,true);
   }
   drawn = true;
-
+/* !out
   MAx3  = Event->pos().x() - Doc->contentsX();
   MAy3  = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Line, MAx3, MAy3, MAx3+10, MAy3-10,0,0,true); // paint new
   Doc->PostPaintEvent (_Line, MAx3+10, MAy3-10, MAx3+20, MAy3-10,0,0,true);
   Doc->PostPaintEvent (_Line, MAx3+10, MAy3-10, MAx3+10, MAy3-17,0,0,true);
@@ -589,10 +591,10 @@ void MouseActions::MMoveMarker(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Line, MAx3-7, MAy3-10, MAx3+7, MAy3-10,0,0,true);
   }
   drawn = true;
-
+/* !out
   MAx3  = Event->pos().x() - Doc->contentsX();
   MAy3  = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Line, MAx3, MAy3-2, MAx3-8, MAy3-10,0,0,true); // paint new
   Doc->PostPaintEvent (_Line, MAx3+1, MAy3-3, MAx3+8, MAy3-10,0,0,true);
   Doc->PostPaintEvent (_Line, MAx3-7, MAy3-10, MAx3+7, MAy3-10,0,0,true);
@@ -613,10 +615,10 @@ void MouseActions::MMoveMirrorY(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Arc, MAx3-10, MAy3-8, 21, 10, 16*20, 16*140,true);
   }
   drawn = true;
-
+/* !out
   MAx3  = Event->pos().x() - Doc->contentsX();
   MAy3  = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Line, MAx3-11, MAy3-4, MAx3-9, MAy3-9,0,0,true); // paint new
   Doc->PostPaintEvent (_Line, MAx3-11, MAy3-3, MAx3-6, MAy3-3,0,0,true);
   Doc->PostPaintEvent (_Line, MAx3+11, MAy3-4, MAx3+9, MAy3-9,0,0,true);
@@ -639,10 +641,10 @@ void MouseActions::MMoveMirrorX(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Arc, MAx3-8, MAy3-10, 10, 21, 16*110, 16*140,true);
   }
   drawn = true;
-
+/* !out
   MAx3  = Event->pos().x() - Doc->contentsX();
   MAy3  = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Line, MAx3-4, MAy3-11, MAx3-9, MAy3-9,0,0,true); // paint new
   Doc->PostPaintEvent (_Line, MAx3-3, MAy3-11, MAx3-3, MAy3-6,0,0,true);
   Doc->PostPaintEvent (_Line, MAx3-4, MAy3+11, MAx3-9, MAy3+9,0,0,true);
@@ -662,10 +664,10 @@ void MouseActions::MMoveRotate(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Arc, MAx3-10, MAy3-10, 21, 21, -16*20, 16*240,true);
   }
   drawn = true;
-
+/* !out
   MAx3  = Event->pos().x() - Doc->contentsX();
   MAy3  = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Line, MAx3-6, MAy3+8, MAx3-6, MAy3+1,0,0,true); // paint new
   Doc->PostPaintEvent (_Line, MAx3-7, MAy3+8, MAx3-12, MAy3+8,0,0,true);
   Doc->PostPaintEvent (_Arc, MAx3-10, MAy3-10, 21, 21, -16*20, 16*240,true);
@@ -683,10 +685,10 @@ void MouseActions::MMoveActivate(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Line, MAx3, MAy3, MAx3+13, MAy3-9,0, 0, true);
   }
   drawn = true;
-
+/* !out
   MAx3  = Event->pos().x() - Doc->contentsX();
   MAy3  = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Rect, MAx3, MAy3-9, 14, 10, 0, 0, true); // paint new
   Doc->PostPaintEvent (_Line, MAx3, MAy3-9, MAx3+13, MAy3, 0, 0, true);
   Doc->PostPaintEvent (_Line, MAx3, MAy3, MAx3+13, MAy3-9, 0, 0, true);
@@ -707,10 +709,10 @@ void MouseActions::MMoveOnGrid(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Line, MAx3+21, MAy3, MAx3+21, MAy3+15,0,0,true);
   }
   drawn = true;
-
+/* !out
   MAx3  = Event->pos().x() - Doc->contentsX();
   MAy3  = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Line, MAx3+10, MAy3+ 3, MAx3+25, MAy3+3,0,0,true); // paint new
   Doc->PostPaintEvent (_Line, MAx3+10, MAy3+ 7, MAx3+25, MAy3+7,0,0,true);
   Doc->PostPaintEvent (_Line, MAx3+10, MAy3+11, MAx3+25, MAy3+11,0,0,true);
@@ -736,10 +738,10 @@ void MouseActions::MMoveMoveTextB(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Line, MAx3+26, MAy3+ 7, MAx3+26, MAy3+10,0,0,true);
   }
   drawn = true;
-
+/* !out
   MAx3 = Event->pos().x() - Doc->contentsX();
   MAy3 = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Line, MAx3+14, MAy3   , MAx3+16, MAy3,0,0,true); // paint new
   Doc->PostPaintEvent (_Line, MAx3+23, MAy3   , MAx3+25, MAy3,0,0,true);
   Doc->PostPaintEvent (_Line, MAx3+13, MAy3   , MAx3+13, MAy3+ 3,0,0,true);
@@ -782,10 +784,10 @@ void MouseActions::MMoveZoomIn(Schematic *Doc, QMouseEvent *Event)
     Doc->PostPaintEvent (_Ellipse, MAx3+12, MAy3-6, 13, 13,0,0,true);
   }
   drawn = true;
-
+/* !out
   MAx3 = Event->pos().x() - Doc->contentsX();
   MAy3 = Event->pos().y() - Doc->contentsY();
-
+*/
   Doc->PostPaintEvent (_Line, MAx3+14, MAy3   , MAx3+22, MAy3,0,0,true);  // paint new
   Doc->PostPaintEvent (_Line, MAx3+18, MAy3-4 , MAx3+18, MAy3+4,0,0,true);
   Doc->PostPaintEvent (_Ellipse, MAx3+12, MAy3-6, 13, 13,0,0,true);
@@ -1853,8 +1855,8 @@ void MouseActions::MReleaseZoomIn(Schematic *Doc, QMouseEvent *Event)
     MAy1 = int(DX * float(Event->pos().y()));
   }
   else {
-    float xScale = float(Doc->visibleWidth())  / DX;
-    float yScale = float(Doc->visibleHeight()) / DY;
+    float xScale ;// !out = float(Doc->visibleWidth())  / DX;
+    float yScale ;//= float(Doc->visibleHeight()) / DY;
     if(xScale > yScale) xScale = yScale;
     yScale  = Doc->Scale;
     xScale /= yScale;
@@ -1862,10 +1864,10 @@ void MouseActions::MReleaseZoomIn(Schematic *Doc, QMouseEvent *Event)
 
     if(MAx2 > 0)  MAx1 -= int(float(MAx2)*yScale);
     if(MAy2 > 0)  MAy1 -= int(float(MAy2)*yScale);
-    MAx1 = int(float(MAx1) * xScale) - Doc->contentsX();
-    MAy1 = int(float(MAy1) * xScale) - Doc->contentsY();
+// !out    MAx1 = int(float(MAx1) * xScale) - Doc->contentsX();
+//    MAy1 = int(float(MAy1) * xScale) - Doc->contentsY();
   }
-  Doc->scrollBy(MAx1, MAy1);
+// !out  Doc->scrollBy(MAx1, MAy1);
 
   QucsMain->MouseMoveAction = &MouseActions::MMoveZoomIn;
   QucsMain->MouseReleaseAction = 0;

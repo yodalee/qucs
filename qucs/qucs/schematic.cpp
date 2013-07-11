@@ -117,8 +117,8 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
     Frame_Text2 = tr("Date:");
     Frame_Text3 = tr("Revision:");
 
-    setVScrollBarMode(Q3ScrollView::AlwaysOn);
-    setHScrollBarMode(Q3ScrollView::AlwaysOn);
+//    setVScrollBarMode(Q3ScrollView::AlwaysOn);
+//    setHScrollBarMode(Q3ScrollView::AlwaysOn);
     viewport()->setPaletteBackgroundColor(QucsSettings.BGColor);
     viewport()->setMouseTracking(true);
     viewport()->setAcceptDrops(true);  // enable drag'n drop
@@ -418,10 +418,10 @@ void Schematic::paintFrame(ViewPainter *p)
 void Schematic::drawContents(QPainter *p, int, int, int, int)
 {
   ViewPainter Painter;
-  Painter.init(p, Scale, -ViewX1, -ViewY1, contentsX(), contentsY());
+  Painter.init(p, Scale, -ViewX1, -ViewY1, 0, 0);// !out contentsX(), contentsY());
 
-  paintGrid(&Painter, contentsX(), contentsY(),
-            visibleWidth(), visibleHeight());
+//  paintGrid(&Painter, 0, 0, //  !out contentsX(), contentsY(),
+//            visibleWidth(), visibleHeight());
 
   if(!symbolMode)
     paintFrame(&Painter);
@@ -740,8 +740,8 @@ float Schematic::zoom(float s)
   // to hidden. This causes some flicker, but it is still nicer.
   viewport()->setHidden(true);
 //  setHidden(true);
-  resizeContents(int(Scale*float(ViewX2 - ViewX1)),
-                 int(Scale*float(ViewY2 - ViewY1)));
+// !out  resizeContents(int(Scale*float(ViewX2 - ViewX1)),
+//                 int(Scale*float(ViewY2 - ViewY1)));
 //  setHidden(false);
   viewport()->setHidden(false);
 
@@ -755,8 +755,8 @@ float Schematic::zoomBy(float s)
 {
   zoom(s);
   s -= 1.0;
-  scrollBy( int(s * float(contentsX()+visibleWidth()/2)),
-            int(s * float(contentsY()+visibleHeight()/2)) );
+// !out scrollBy( int(s * float(contentsX()+visibleWidth()/2)),
+//            int(s * float(contentsY()+visibleHeight()/2)) );
   return Scale;
 }
 
@@ -773,8 +773,8 @@ void Schematic::showAll()
     return;
   }
 
-  float xScale = float(visibleWidth()) / float(UsedX2-UsedX1+80);
-  float yScale = float(visibleHeight()) / float(UsedY2-UsedY1+80);
+  float xScale; // !out = float(visibleWidth()) / float(UsedX2-UsedX1+80);
+  float yScale; // = float(visibleHeight()) / float(UsedY2-UsedY1+80);
   if(xScale > yScale) xScale = yScale;
   xScale /= Scale;
 
@@ -809,7 +809,7 @@ void Schematic::showNoZoom()
   ViewY1 = y1-40;
   ViewX2 = x2+40;
   ViewY2 = y2+40;
-  resizeContents(x2-x1+80, y2-y1+80);
+// !out  resizeContents(x2-x1+80, y2-y1+80);
   viewport()->update();
   App->view->drawn = false;
 }
@@ -835,10 +835,10 @@ void Schematic::enlargeView(int x1, int y1, int x2, int y2)
   }
   if(x2 > ViewX2) ViewX2 = x2+40;
   if(y2 > ViewY2) ViewY2 = y2+40;
-
+/* !out
   resizeContents(int(Scale*float(ViewX2 - ViewX1)),
 		int(Scale*float(ViewY2 - ViewY1)));
-  scrollBy(dx,dy);
+  scrollBy(dx,dy); */
 }
 
 // ---------------------------------------------------
@@ -1295,7 +1295,7 @@ bool Schematic::load()
   if(ViewX2 < UsedX2)  ViewX2 = UsedX2;
   if(ViewY2 < UsedY2)  ViewY2 = UsedY2;
   zoom(1.0f);
-  setContentsPos(tmpViewX1, tmpViewY1);
+// !out  setContentsPos(tmpViewX1, tmpViewY1);
   tmpViewX1 = tmpViewY1 = -200;   // was used as temporary cache
   return true;
 }
@@ -1814,9 +1814,9 @@ void Schematic::switchPaintMode()
   int tmp, t2;
   float temp;
   temp = Scale; Scale  = tmpScale;  tmpScale  = temp;
-  tmp = contentsX();
-  t2  = contentsY();
-  setContentsPos(tmpPosX, tmpPosY);
+// !out tmp = contentsX();
+//  t2  = contentsY();
+//  setContentsPos(tmpPosX, tmpPosY);
   tmpPosX = tmp;
   tmpPosY = t2;
   tmp = ViewX1; ViewX1 = tmpViewX1; tmpViewX1 = tmp;
@@ -1836,14 +1836,14 @@ void Schematic::switchPaintMode()
 // **********                                                 **********
 // *********************************************************************
 void Schematic::contentsWheelEvent(QWheelEvent *Event)
-{
+{ /* !out
   App->editText->setHidden(true);  // disable edit of component property
   int delta = Event->delta() >> 1;     // use smaller steps
 
   // ...................................................................
   if((Event->state() & Qt::ShiftModifier) ||
      (Event->orientation() == Qt::Horizontal)) { // scroll horizontally ?
-      if(delta > 0) { if(scrollLeft(delta)) scrollBy(-delta, 0); }
+      if(delta > 0) { if(scrollLeft(delta)) scroll(-delta, 0); }
       else { if(scrollRight(delta)) scrollBy(-delta, 0); }
       viewport()->update(); // because QScrollView thinks nothing has changed
       App->view->drawn = false;
@@ -1866,7 +1866,7 @@ void Schematic::contentsWheelEvent(QWheelEvent *Event)
       App->view->drawn = false;
   }
 
-  Event->accept();   // QScrollView must not handle this event
+  Event->accept();   // QScrollView must not handle this event */
 }
 
 // -----------------------------------------------------------
@@ -1875,7 +1875,7 @@ void Schematic::contentsWheelEvent(QWheelEvent *Event)
 bool Schematic::scrollUp(int step)
 {
   int diff;
-
+/* !out
   diff = contentsY() - step;
   if(diff < 0) {     // scroll outside the active area ?  (upwards)
     resizeContents(contentsWidth(), contentsHeight()-diff);
@@ -1890,7 +1890,7 @@ bool Schematic::scrollUp(int step)
     resizeContents(contentsWidth(), contentsHeight()-diff);
     ViewY2 -= diff;
   }
-
+*/
   return true;
 }
 
@@ -1900,7 +1900,7 @@ bool Schematic::scrollUp(int step)
 bool Schematic::scrollDown(int step)
 {
   int diff;
-
+/* !out
   diff = contentsHeight() - contentsY()-visibleHeight() + step;
   if(diff < 0) {     // scroll outside the active area ?  (downwards)
     resizeContents(contentsWidth(), contentsHeight()-diff);
@@ -1916,7 +1916,7 @@ bool Schematic::scrollDown(int step)
     ViewY1 -= diff;
     return false;
   }
-
+*/
   return true;
 }
 
@@ -1926,7 +1926,7 @@ bool Schematic::scrollDown(int step)
 bool Schematic::scrollLeft(int step)
 {
   int diff;
-
+/* !out
   diff = contentsX() - step;
   if(diff < 0) {     // scroll outside the active area ?  (to the left)
     resizeContents(contentsWidth()-diff, contentsHeight());
@@ -1941,7 +1941,7 @@ bool Schematic::scrollLeft(int step)
     resizeContents(contentsWidth()-diff, contentsHeight());
     ViewX2 -= diff;
   }
-
+*/
   return true;
 }
 
@@ -1951,7 +1951,7 @@ bool Schematic::scrollLeft(int step)
 bool Schematic::scrollRight(int step)
 {
   int diff;
-
+/* !out
   diff = contentsWidth() - contentsX()-visibleWidth() + step;
   if(diff < 0) {     // scroll outside the active area ?  (to the right)
     resizeContents(contentsWidth()-diff, contentsHeight());
@@ -1967,7 +1967,7 @@ bool Schematic::scrollRight(int step)
     ViewX1 -= diff;
     return false;
   }
-
+*/
   return true;
 }
 

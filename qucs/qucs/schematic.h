@@ -33,8 +33,7 @@
 #include <QDragEnterEvent>
 #include "viewpainter.h"
 #include "node.h"
-
-#include <Q3ScrollView>
+#include <QGraphicsView>
 #include <QPainter>
 #include <Q3PtrList>
 #include <QFile>
@@ -66,7 +65,7 @@ struct SubFile {
 };
 typedef QMap<QString, SubFile> SubMap;
 
-class Schematic : public Q3ScrollView, public QucsDoc {
+class Schematic : public QGraphicsView, public QucsDoc {
   Q_OBJECT
 public:
   Schematic(QucsApp*, const QString&);

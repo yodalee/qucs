@@ -942,8 +942,8 @@ void QucsApp::slotCursorLeft()
       movingElements.clear();
     }
     else {
-      if(Doc->scrollLeft(Doc->horizontalScrollBar()->lineStep()))
-        Doc->scrollBy(-Doc->horizontalScrollBar()->lineStep(), 0);
+//      if(Doc->scrollLeft(Doc->horizontalScrollBar()->lineStep()))
+//    !out    Doc->scrollBy(-Doc->horizontalScrollBar()->lineStep(), 0);
     }
 
     Doc->viewport()->update();
@@ -971,8 +971,8 @@ void QucsApp::slotCursorRight()
       movingElements.clear();
     }
     else {
-      if(Doc->scrollRight(-Doc->horizontalScrollBar()->lineStep()))
-        Doc->scrollBy(Doc->horizontalScrollBar()->lineStep(), 0);
+//      if(Doc->scrollRight(-Doc->horizontalScrollBar()->lineStep()))
+//      !out  Doc->scrollBy(Doc->horizontalScrollBar()->lineStep(), 0);
     }
 
     Doc->viewport()->update();
@@ -1018,8 +1018,8 @@ void QucsApp::slotCursorUp()
       movingElements.clear();
     }
     else {
-      if(Doc->scrollUp(Doc->verticalScrollBar()->lineStep()))
-        Doc->scrollBy(0, -Doc->verticalScrollBar()->lineStep());
+//      if(Doc->scrollUp(Doc->verticalScrollBar()->lineStep()))
+//      !out  Doc->scrollBy(0, -Doc->verticalScrollBar()->lineStep());
     }
 
     Doc->viewport()->update();
@@ -1067,8 +1067,8 @@ void QucsApp::slotCursorDown()
       movingElements.clear();
     }
     else {
-      if(Doc->scrollDown(-Doc->verticalScrollBar()->lineStep()))
-        Doc->scrollBy(0, Doc->verticalScrollBar()->lineStep());
+//      if(Doc->scrollDown(-Doc->verticalScrollBar()->lineStep()))
+//      !out  Doc->scrollBy(0, Doc->verticalScrollBar()->lineStep());
     }
 
     Doc->viewport()->update();
@@ -1165,10 +1165,10 @@ void QucsApp::slotApplyCompText()
     s = pp->Value;
   editText->setMinimumWidth(editText->fontMetrics().width(s)+4);
 
-
+/* !out
   Doc->contentsToViewport(int(Doc->Scale * float(view->MAx1 - Doc->ViewX1)),
 			 int(Doc->Scale * float(view->MAy1 - Doc->ViewY1)),
-			 view->MAx2, view->MAy2);
+			 view->MAx2, view->MAy2); */
   editText->setReadOnly(false);
   if(pp) {  // is it a property ?
     s = pp->Value;
