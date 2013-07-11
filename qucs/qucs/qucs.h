@@ -29,7 +29,6 @@
 //#include <Q3PopupMenu>
 #include <QMouseEvent>
 #include <QCloseEvent>
-#include <Q3ScrollView>
 #include <QMenu>
 #include <QToolBar>
 #include <QAction>
