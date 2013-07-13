@@ -71,3 +71,11 @@ Element* Ampere_ac::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Ampere_ac();
   return 0;
 }
+
+QRectF Ampere_ac::boundingRect() const
+{
+}
+
+void Ampere_ac::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

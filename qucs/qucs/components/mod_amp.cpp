@@ -72,6 +72,14 @@ Element * mod_amp::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF mod_amp::boundingRect() const
+{
+}
+
+void mod_amp::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void mod_amp::createSymbol()
 {
 

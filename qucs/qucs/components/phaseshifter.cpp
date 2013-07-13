@@ -66,3 +66,11 @@ Element* Phaseshifter::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Phaseshifter();
   return 0;
 }
+
+QRectF Phaseshifter::boundingRect() const
+{
+}
+
+void Phaseshifter::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

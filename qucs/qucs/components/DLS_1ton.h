@@ -20,6 +20,8 @@ class DLS_1ton : public Component
     ~DLS_1ton() { };
     Component* newOne();
     static Element* info(QString&, char* &, bool getNewOne=false);
+    QRectF boundingRect() const;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);    
   protected:
     void createSymbol();
 };

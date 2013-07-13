@@ -78,3 +78,11 @@ Element* Triac::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Triac();
   return 0;
 }
+
+QRectF Triac::boundingRect() const
+{
+}
+
+void Triac::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

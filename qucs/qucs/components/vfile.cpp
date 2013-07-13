@@ -82,6 +82,14 @@ Element* vFile::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF vFile::boundingRect() const
+{
+}
+
+void vFile::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 QString vFile::getSubcircuitFile()
 {

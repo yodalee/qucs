@@ -29,6 +29,8 @@ public:
   static Element* info(QString&, char* &, bool getNewOne=false);
   static Element* info1(QString&, char* &, bool getNewOne=false);
   static Element* info2(QString&, char* &, bool getNewOne=false);
+  QRectF boundingRect() const;
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);
 
   QString getSubcircuitFile();
 

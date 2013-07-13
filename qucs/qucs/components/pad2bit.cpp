@@ -15,7 +15,7 @@
 
 pad2bit::pad2bit()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("2bit pattern generator verilog device");
 
   Props.append (new Property ("Number", "0", false,
@@ -43,6 +43,14 @@ Element * pad2bit::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new pad2bit();
   return 0;
+}
+
+QRectF pad2bit::boundingRect() const
+{
+}
+
+void pad2bit::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void pad2bit::createSymbol()

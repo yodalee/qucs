@@ -22,7 +22,7 @@
 
 mux4to1::mux4to1()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("4to1 multiplexer verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * mux4to1::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new mux4to1();
   return 0;
+}
+
+QRectF mux4to1::boundingRect() const
+{
+}
+
+void mux4to1::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void mux4to1::createSymbol()

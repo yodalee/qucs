@@ -63,3 +63,11 @@ Element* dcBlock::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new dcBlock();
   return 0;
 }
+
+QRectF dcBlock::boundingRect() const
+{
+}
+
+void dcBlock::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

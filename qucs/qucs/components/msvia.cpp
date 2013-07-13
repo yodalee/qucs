@@ -69,6 +69,14 @@ Element* MSvia::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF MSvia::boundingRect() const
+{
+}
+
+void MSvia::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 QString MSvia::netlist()
 {

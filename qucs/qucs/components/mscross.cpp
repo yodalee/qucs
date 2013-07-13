@@ -66,6 +66,14 @@ Element* MScross::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF MScross::boundingRect() const
+{
+}
+
+void MScross::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void MScross::createSymbol()
 {
   Lines.append(new Line(-30,  0,-18,  0,QPen(Qt::darkBlue,2)));

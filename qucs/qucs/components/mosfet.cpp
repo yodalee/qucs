@@ -81,6 +81,14 @@ Element* MOSFET::info_depl(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF MOSFET::boundingRect() const
+{
+}
+
+void MOSFET::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 void MOSFET::createSymbol()
 {

@@ -22,7 +22,7 @@
 
 comp_4bit::comp_4bit()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("4bit comparator verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * comp_4bit::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new comp_4bit();
   return 0;
+}
+
+QRectF comp_4bit::boundingRect() const
+{
+}
+
+void comp_4bit::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void comp_4bit::createSymbol()

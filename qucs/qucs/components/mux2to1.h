@@ -20,6 +20,8 @@ class mux2to1 : public Component
     ~mux2to1() { };
     Component* newOne();
     static Element* info(QString&, char* &, bool getNewOne=false);
+    QRectF boundingRect() const;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);    
   protected:
     void createSymbol();
     QString vhdlCode(int);

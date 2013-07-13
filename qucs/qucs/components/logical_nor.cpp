@@ -48,3 +48,11 @@ Element* Logical_NOR::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Logical_NOR();
   return 0;
 }
+
+QRectF Logical_NOR::boundingRect() const
+{
+}
+
+void Logical_NOR::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

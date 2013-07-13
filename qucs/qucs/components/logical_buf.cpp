@@ -23,7 +23,7 @@
 
 Logical_Buf::Logical_Buf()
 {
-  Type = isComponent;   // both analog and digital
+  ElemType = isComponent;   // both analog and digital
   Description = QObject::tr("logical buffer");
 
   // the list order must be preserved !!!
@@ -133,4 +133,12 @@ Element* Logical_Buf::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new Logical_Buf();
   return 0;
+}
+
+QRectF Logical_Buf::boundingRect() const
+{
+}
+
+void Logical_Buf::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }

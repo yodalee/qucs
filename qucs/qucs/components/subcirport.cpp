@@ -22,7 +22,7 @@
 
 SubCirPort::SubCirPort()
 {
-  Type = isComponent;   // both analog and digital
+  ElemType = isComponent;   // both analog and digital
   Description = QObject::tr("port of a subcircuit");
 
   // This property must be the first one !
@@ -96,6 +96,14 @@ Element* SubCirPort::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new SubCirPort();
   return 0;
+}
+
+QRectF SubCirPort::boundingRect() const
+{
+}
+
+void SubCirPort::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 // -------------------------------------------------------

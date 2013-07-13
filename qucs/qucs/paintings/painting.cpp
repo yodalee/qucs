@@ -21,7 +21,7 @@ using namespace std;
 
 Painting::Painting()
 {
-  Type = isPainting;
+  ElemType = isPainting;
   State = 0;
 }
 

@@ -30,7 +30,7 @@
 Arrow::Arrow()
 {
   Name = "Arrow ";
-  isSelected = false;
+  ElemSelected = false;
   Pen = QPen(QColor());
   cx = cy = 0;
   x1 = x2 = 0;
@@ -52,7 +52,7 @@ void Arrow::paint(ViewPainter *p)
 {
   Q3PointArray Points;
   int x1_, y1_, x2_, y2_, x3_, y3_;
-  if(isSelected) {
+  if(ElemSelected) {
     p->Painter->setPen(QPen(Qt::darkGray,Pen.width()+5));
     p->drawLine(cx, cy, cx+x2, cy+y2);
     p->drawLine(cx+x2, cy+y2, cx+xp1, cy+yp1);

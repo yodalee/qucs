@@ -99,6 +99,14 @@ Element* SParamFile::info2(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF SParamFile::boundingRect() const
+{
+}
+
+void SParamFile::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 QString SParamFile::getSubcircuitFile()
 {

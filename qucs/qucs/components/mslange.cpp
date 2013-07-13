@@ -79,3 +79,11 @@ Element* MSlange::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new MSlange();
   return 0;
 }
+
+QRectF MSlange::boundingRect() const
+{
+}
+
+void MSlange::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

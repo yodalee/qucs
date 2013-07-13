@@ -92,3 +92,11 @@ Element* CPWstep::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new CPWstep();
   return 0;
 }
+
+QRectF CPWstep::boundingRect() const
+{
+}
+
+void CPWstep::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

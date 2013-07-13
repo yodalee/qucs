@@ -21,6 +21,8 @@ class EKV26MOS : public MultiViewComponent
     Component* newOne();
     static Element* info(QString&, char* &, bool getNewOne=false);
     static Element* info_pmos(QString&, char* &, bool getNewOne=false);
+    QRectF boundingRect() const;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);    
   protected:
     void createSymbol();
     QString netlist();

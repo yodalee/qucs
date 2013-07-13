@@ -22,7 +22,7 @@
 
 mux8to1::mux8to1()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("8to1 multiplexer verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * mux8to1::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new mux8to1();
   return 0;
+}
+
+QRectF mux8to1::boundingRect() const
+{
+}
+
+void mux8to1::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void mux8to1::createSymbol()

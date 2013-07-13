@@ -22,7 +22,7 @@
 
 greytobinary4bit::greytobinary4bit()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("4bit grey to binary converter verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * greytobinary4bit::info(QString& Name, char * &BitmapFile, bool getNewO
 
   if(getNewOne) return new greytobinary4bit();
   return 0;
+}
+
+QRectF greytobinary4bit::boundingRect() const
+{
+}
+
+void greytobinary4bit::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void greytobinary4bit::createSymbol()

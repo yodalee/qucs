@@ -87,3 +87,11 @@ Element* CPWgap::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new CPWgap();
   return 0;
 }
+
+QRectF CPWgap::boundingRect() const
+{
+}
+
+void CPWgap::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

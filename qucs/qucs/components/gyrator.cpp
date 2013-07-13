@@ -74,3 +74,11 @@ Element* Gyrator::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Gyrator();
   return 0;
 }
+
+QRectF Gyrator::boundingRect() const
+{
+}
+
+void Gyrator::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

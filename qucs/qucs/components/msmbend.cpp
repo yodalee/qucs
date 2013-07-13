@@ -66,3 +66,11 @@ Element* MSmbend::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new MSmbend();
   return 0;
 }
+
+QRectF MSmbend::boundingRect() const
+{
+}
+
+void MSmbend::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

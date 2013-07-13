@@ -23,7 +23,7 @@
 
 dmux3to8::dmux3to8()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("3to8 demultiplexer verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -54,6 +54,14 @@ Element * dmux3to8::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new dmux3to8();
   return 0;
+}
+
+QRectF dmux3to8::boundingRect() const
+{
+}
+
+void dmux3to8::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void dmux3to8::createSymbol()

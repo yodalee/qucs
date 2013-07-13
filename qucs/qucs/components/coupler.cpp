@@ -85,3 +85,11 @@ Element* Coupler::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Coupler();
   return 0;
 }
+
+QRectF Coupler::boundingRect() const
+{
+}
+
+void Coupler::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

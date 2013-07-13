@@ -72,3 +72,21 @@ Element* Diac::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Diac();
   return 0;
 }
+
+QRectF Diac::boundingRect() const
+{
+   // \todo
+  //return outer bounds of item as a rectangle
+  //Let's just return a null rectangle for now
+  //to satisfy implementation of this pure virtual function
+  return *(new QRectF());
+    
+}
+
+void Diac::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+  Q_UNUSED(item);
+  Q_UNUSED(widget);
+  // \todo
+    
+}

@@ -76,3 +76,11 @@ Element* Ampere_noise::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Ampere_noise();
   return 0;
 }
+
+QRectF Ampere_noise::boundingRect() const
+{
+}
+
+void Ampere_noise::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

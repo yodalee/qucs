@@ -283,6 +283,14 @@ Element * hic0_full::info_pnp(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF hic0_full::boundingRect() const
+{
+}
+
+void hic0_full::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void hic0_full::createSymbol()
 {
   // normal bipolar

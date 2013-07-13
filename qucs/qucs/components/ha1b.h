@@ -20,6 +20,8 @@ class ha1b : public Component
     ~ha1b() { };
     Component* newOne();
     static Element* info(QString&, char* &, bool getNewOne=false);
+    QRectF boundingRect() const;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);    
   protected:
     void createSymbol();
     QString vhdlCode(int);

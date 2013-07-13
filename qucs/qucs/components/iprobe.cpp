@@ -70,3 +70,11 @@ Element* iProbe::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new iProbe();
   return 0;
 }
+
+QRectF iProbe::boundingRect() const
+{
+}
+
+void iProbe::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

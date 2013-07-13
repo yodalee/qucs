@@ -95,3 +95,11 @@ void AC_Sim::recreate(Schematic*)
     Props.next()->Name = "Points";
   }
 }
+
+QRectF AC_Sim::boundingRect() const
+{
+}
+
+void AC_Sim::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

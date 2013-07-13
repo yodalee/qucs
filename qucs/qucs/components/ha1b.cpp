@@ -22,7 +22,7 @@
 
 ha1b::ha1b()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("1bit half adder verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * ha1b::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new ha1b();
   return 0;
+}
+
+QRectF ha1b::boundingRect() const
+{
+}
+
+void ha1b::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void ha1b::createSymbol()

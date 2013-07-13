@@ -82,3 +82,11 @@ Element* iRect::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new iRect();
   return 0;
 }
+
+QRectF iRect::boundingRect() const
+{
+}
+
+void iRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

@@ -70,3 +70,11 @@ Element* MSopen::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new MSopen();
   return 0;
 }
+
+QRectF MSopen::boundingRect() const
+{
+}
+
+void MSopen::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

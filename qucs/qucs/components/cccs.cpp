@@ -79,3 +79,11 @@ Element* CCCS::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new CCCS();
   return 0;
 }
+
+QRectF CCCS::boundingRect() const
+{
+}
+
+void CCCS::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

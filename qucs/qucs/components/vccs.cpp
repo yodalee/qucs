@@ -81,3 +81,11 @@ Element* VCCS::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new VCCS();
   return 0;
 }
+
+QRectF VCCS::boundingRect() const
+{
+}
+
+void VCCS::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

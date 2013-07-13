@@ -72,3 +72,11 @@ Element* Hybrid::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Hybrid();
   return 0;
 }
+
+QRectF Hybrid::boundingRect() const
+{
+}
+
+void Hybrid::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

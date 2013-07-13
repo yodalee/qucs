@@ -107,7 +107,7 @@ bool MouseActions::pasteElements(Schematic *Doc)
   xmax = ymax = INT_MIN;
   // First, get the max and min coordinates of all selected elements.
   for(pe = movingElements.first(); pe != 0; pe = movingElements.next()) {
-    if(pe->Type == isWire) {
+    if(pe->ElemType == isWire) {
       if(pe->x1 < xmin) xmin = pe->x1;
       if(pe->x2 > xmax) xmax = pe->x2;
       if(pe->y1 < ymin) ymin = pe->y1;
@@ -127,7 +127,7 @@ bool MouseActions::pasteElements(Schematic *Doc)
 
   // moving with mouse cursor in the midpoint
   for(pe = movingElements.first(); pe != 0; pe = movingElements.next())
-    if(pe->Type & isLabel) {
+    if(pe->ElemType & isLabel) {
       pe->cx += xmin;  pe->x1 += xmin;
       pe->cy += ymin;  pe->y1 += ymin;
     }
@@ -179,7 +179,7 @@ void MouseActions::endElementMoving(Schematic *Doc, Q3PtrList<Element> *movEleme
   Element *pe;
   for(pe = movElements->first(); pe!=0; pe = movElements->next()) {
 //    pe->isSelected = false;  // deselect first (maybe afterwards pe == NULL)
-    switch(pe->Type) {
+    switch(pe->ElemType) {
       case isWire:
         if(pe->x1 == pe->x2)
           if(pe->y1 == pe->y2) {
@@ -234,7 +234,7 @@ void MouseActions::moveElements(Q3PtrList<Element> *movElements, int x, int y)
   Wire *pw;
   Element *pe;
   for(pe = movElements->first(); pe != 0; pe = movElements->next()) {
-    if(pe->Type == isWire) {
+    if(pe->ElemType == isWire) {
       pw = (Wire*)pe;   // connected wires are not moved completely
 
       if(((unsigned long)pw->Port1) > 3) {
@@ -282,7 +282,7 @@ void MouseActions::MMoveElement(Schematic *Doc, QMouseEvent *Event)
   //QPainter painter(Doc->viewport());
   setPainter(Doc);
 
-  if(selElem->Type == isPainting) {
+  if(selElem->ElemType == isPainting) {
     Doc->PostPaintEvent (_NotRop, 0,0,0,0);
     /* !out
     x -= Doc->contentsX();
@@ -422,7 +422,7 @@ void MouseActions::MMoveMoving(Schematic *Doc, QMouseEvent *Event)
   Wire *pw;
   // Changes the position of all moving elements by dx/dy
   for(Element *pe=movingElements.first(); pe!=0; pe=movingElements.next()) {
-    if(pe->Type == isWire) {
+    if(pe->ElemType == isWire) {
       pw = (Wire*)pe;   // connecting wires are not moved completely
 
       if(((unsigned long)pw->Port1) > 3) { pw->x1 += MAx1;  pw->y1 += MAy1; }
@@ -808,18 +808,18 @@ void MouseActions::rightPressMenu(Schematic *Doc, QMouseEvent *Event, float fX, 
   focusElement = Doc->selectElement(fX, fY, false);
 
   if(focusElement)  // remove special function (4 least significant bits)
-    focusElement->Type &= isSpecialMask;
+    focusElement->ElemType &= isSpecialMask;
 
 
   // define menu
   ComponentMenu->clear();
   while(true) {
     if(focusElement) {
-      focusElement->isSelected = true;
+      focusElement->ElemSelected = true;
       ComponentMenu->insertItem(
          QObject::tr("Edit Properties"), QucsMain, SLOT(slotEditElement()));
 
-      if((focusElement->Type & isComponent) == 0) break;
+      if((focusElement->ElemType & isComponent) == 0) break;
     }
     else {
       QucsMain->symEdit->addTo(ComponentMenu);
@@ -831,7 +831,7 @@ void MouseActions::rightPressMenu(Schematic *Doc, QMouseEvent *Event, float fX, 
   }
   while(true) {
     if(focusElement)
-      if(focusElement->Type == isGraph) break;
+      if(focusElement->ElemType == isGraph) break;
     if(!QucsMain->onGrid->isOn())
       QucsMain->onGrid->addTo(ComponentMenu);
     QucsMain->editCopy->addTo(ComponentMenu);
@@ -841,7 +841,7 @@ void MouseActions::rightPressMenu(Schematic *Doc, QMouseEvent *Event, float fX, 
   }
   if(!QucsMain->editDelete->isOn())
     QucsMain->editDelete->addTo(ComponentMenu);
-  if(focusElement) if(focusElement->Type == isMarker) {
+  if(focusElement) if(focusElement->ElemType == isMarker) {
     ComponentMenu->insertSeparator();
     QString s = QObject::tr("power matching");
     if( ((Marker*)focusElement)->pGraph->Var == "Sopt" )
@@ -853,14 +853,14 @@ void MouseActions::rightPressMenu(Schematic *Doc, QMouseEvent *Event, float fX, 
   }
   do {
     if(focusElement) {
-      if(focusElement->Type == isDiagram) break;
-      if(focusElement->Type == isGraph) {
+      if(focusElement->ElemType == isDiagram) break;
+      if(focusElement->ElemType == isGraph) {
         QucsMain->graph2csv->addTo(ComponentMenu);
         break;
       }
     }
     ComponentMenu->insertSeparator();
-    if(focusElement) if(focusElement->Type & isComponent)
+    if(focusElement) if(focusElement->ElemType & isComponent)
       if(!QucsMain->editActivate->isOn())
         QucsMain->editActivate->addTo(ComponentMenu);
     if(!QucsMain->editRotate->isOn())
@@ -872,7 +872,7 @@ void MouseActions::rightPressMenu(Schematic *Doc, QMouseEvent *Event, float fX, 
 
     // right-click menu to go into hierarchy
     if(focusElement) {
-      if(focusElement->Type & isComponent)
+      if(focusElement->ElemType & isComponent)
 	if(((Component*)focusElement)->Model == "Sub")
 	  if(!QucsMain->intoH->isOn())
 	    QucsMain->intoH->addTo(ComponentMenu);
@@ -907,7 +907,7 @@ void MouseActions::MPressLabel(Schematic *Doc, QMouseEvent*, float fX, float fY)
   if(pw) pe = Doc->getWireLabel(pw->Port1);
   else pe = Doc->getWireLabel(pn);
   if(pe) {
-    if(pe->Type & isComponent) {
+    if(pe->ElemType & isComponent) {
       QMessageBox::information(0, QObject::tr("Info"),
                  QObject::tr("The ground potential cannot be labeled!"));
       return;
@@ -973,9 +973,9 @@ void MouseActions::MPressSelect(Schematic *Doc, QMouseEvent *Event, float fX, fl
 
 
   if(focusElement)
-  switch(focusElement->Type) {
+  switch(focusElement->ElemType) {
     case isPaintingResize:  // resize painting ?
-      focusElement->Type = isPainting;
+      focusElement->ElemType = isPainting;
       QucsMain->MouseReleaseAction = &MouseActions::MReleaseResizePainting;
       QucsMain->MouseMoveAction = &MouseActions::MMoveResizePainting;
       QucsMain->MousePressAction = 0;
@@ -989,7 +989,7 @@ void MouseActions::MPressSelect(Schematic *Doc, QMouseEvent *Event, float fX, fl
           if(((Diagram*)focusElement)->Name != "Curve")
             isMoveEqual = true;  // diagram must be square
 
-      focusElement->Type = isDiagram;
+      focusElement->ElemType = isDiagram;
       MAx1 = focusElement->cx;
       MAx2 = focusElement->x2;
       if(((Diagram*)focusElement)->State & 1) {
@@ -1014,7 +1014,7 @@ void MouseActions::MPressSelect(Schematic *Doc, QMouseEvent *Event, float fX, fl
       MAy1 = MAx1;
 
     case isDiagramVScroll:
-      focusElement->Type = isDiagram;
+      focusElement->ElemType = isDiagram;
 
       No = ((TabDiagram*)focusElement)->scroll(MAy1);
 
@@ -1037,7 +1037,7 @@ void MouseActions::MPressSelect(Schematic *Doc, QMouseEvent *Event, float fX, fl
       return;
 
     case isComponentText:  // property text of component ?
-      focusElement->Type &= (~isComponentText) | isComponent;
+      focusElement->ElemType &= (~isComponentText) | isComponent;
 
       MAx3 = No;
       QucsMain->slotApplyCompText();
@@ -1083,9 +1083,9 @@ void MouseActions::MPressSelect(Schematic *Doc, QMouseEvent *Event, float fX, fl
   }
   else {  // element could be moved
     if(!Ctrl) {
-      if(!focusElement->isSelected)// Don't move selected elements if clicked
+      if(!focusElement->ElemSelected)// Don't move selected elements if clicked
         Doc->deselectElements(focusElement); // element was not selected.
-      focusElement->isSelected = true;
+      focusElement->ElemSelected = true;
     }
     Doc->setOnGrid(MAx1, MAy1);
     QucsMain->MouseMoveAction = &MouseActions::MMoveMoving;
@@ -1097,7 +1097,7 @@ void MouseActions::MPressDelete(Schematic *Doc, QMouseEvent*, float fX, float fY
 {
   Element *pe = Doc->selectElement(fX, fY, false);
   if(pe) {
-    pe->isSelected = true;
+    pe->ElemSelected = true;
     Doc->deleteElements();
 
     Doc->sizeOfAll(Doc->UsedX1, Doc->UsedY1, Doc->UsedX2, Doc->UsedY2);
@@ -1170,13 +1170,13 @@ void MouseActions::MPressRotate(Schematic *Doc, QMouseEvent*, float fX, float fY
 {
   Element *e = Doc->selectElement(int(fX), int(fY), false);
   if(e == 0) return;
-  e->Type &= isSpecialMask;  // remove special functions
+  e->ElemType &= isSpecialMask;  // remove special functions
 
   
   WireLabel *pl;
   int x1, y1, x2, y2;
 //  e->isSelected = false;
-  switch(e->Type) {
+  switch(e->ElemType) {
     case isComponent:
     case isAnalogComponent:
     case isDigitalComponent:
@@ -1229,7 +1229,7 @@ void MouseActions::MPressElement(Schematic *Doc, QMouseEvent *Event, float, floa
 
   
   int x1, y1, x2, y2, rot;
-  if(selElem->Type & isComponent) {
+  if(selElem->ElemType & isComponent) {
     Component *Comp = (Component*)selElem;
     switch(Event->button()) {
       case Qt::LeftButton :
@@ -1267,7 +1267,7 @@ void MouseActions::MPressElement(Schematic *Doc, QMouseEvent *Event, float, floa
     return;
 
   }  // of "if(isComponent)"
-  else if(selElem->Type == isDiagram) {
+  else if(selElem->ElemType == isDiagram) {
     if(Event->button() != Qt::LeftButton) return;
 
     Diagram *Diag = (Diagram*)selElem;
@@ -1435,10 +1435,10 @@ void MouseActions::MPressOnGrid(Schematic *Doc, QMouseEvent*, float fX, float fY
 {
   Element *pe = Doc->selectElement(fX, fY, false);
   if(pe) {
-    pe->Type &= isSpecialMask;  // remove special functions (4 lowest bits)
+    pe->ElemType &= isSpecialMask;  // remove special functions (4 lowest bits)
 
     // onGrid is toggle action -> no other element can be selected
-    pe->isSelected = true;
+    pe->ElemSelected = true;
     Doc->elementsOnGrid();
 
     Doc->sizeOfAll(Doc->UsedX1, Doc->UsedY1, Doc->UsedX2, Doc->UsedY2);
@@ -1497,7 +1497,7 @@ void MouseActions::MReleaseSelect(Schematic *Doc, QMouseEvent *Event)
   if(!ctrl) Doc->deselectElements(focusElement);
 
   if(focusElement)  if(Event->button() == Qt::LeftButton)
-    if(focusElement->Type == isWire) {
+    if(focusElement->ElemType == isWire) {
       Doc->selectWireLine(focusElement, ((Wire*)focusElement)->Port1, ctrl);
       Doc->selectWireLine(focusElement, ((Wire*)focusElement)->Port2, ctrl);
     }
@@ -1648,7 +1648,7 @@ void MouseActions::moveElements(Schematic *Doc, int& x1, int& y1)
   Doc->setOnGrid(x1, y1);
 
   for(pe=movingElements.first(); pe!=0; pe=movingElements.next()) {
-    if(pe->Type & isLabel) {
+    if(pe->ElemType & isLabel) {
       pe->cx += x1;  pe->x1 += x1;
       pe->cy += y1;  pe->y1 += y1;
     }
@@ -1665,7 +1665,7 @@ void MouseActions::rotateElements(Schematic *Doc, int& x1, int& y1)
   Doc->setOnGrid(x1, y1);
 
   for(pe = movingElements.first(); pe != 0; pe = movingElements.next()) {
-    switch(pe->Type) {
+    switch(pe->ElemType) {
     case isComponent:
     case isAnalogComponent:
     case isDigitalComponent:
@@ -1706,8 +1706,8 @@ void MouseActions::MReleasePaste(Schematic *Doc, QMouseEvent *Event)
   case Qt::LeftButton :
     // insert all moved elements into document
     for(pe = movingElements.first(); pe!=0; pe = movingElements.next()) {
-      pe->isSelected = false;
-      switch(pe->Type) {
+      pe->ElemSelected = false;
+      switch(pe->ElemType) {
 	case isWire:
 	  if(pe->x1 == pe->x2) if(pe->y1 == pe->y2)  break;
 	  Doc->insertWire((Wire*)pe);
@@ -1727,7 +1727,7 @@ void MouseActions::MReleasePaste(Schematic *Doc, QMouseEvent *Event)
 	  Doc->enlargeView(x1, y1, x2, y2);
 	  break;
 	case isMovingLabel:
-	  pe->Type = isNodeLabel;
+	  pe->ElemType = isNodeLabel;
 	  Doc->placeNodeLabel((WireLabel*)pe);
 	  break;
 	case isComponent:
@@ -1850,7 +1850,7 @@ void MouseActions::editElement(Schematic *Doc, QMouseEvent *Event)
   QFileInfo Info(Doc->DocName);
   float fX = DOC_X_FPOS, fY = DOC_Y_FPOS;
 
-  switch(focusElement->Type) {
+  switch(focusElement->ElemType) {
     case isComponent:
     case isAnalogComponent:
     case isDigitalComponent:

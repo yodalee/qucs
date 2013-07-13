@@ -86,3 +86,11 @@ Element* Substrate::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Substrate();
   return 0;
 }
+
+QRectF Substrate::boundingRect() const
+{
+}
+
+void Substrate::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

@@ -98,6 +98,14 @@ Element * photodiode::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF photodiode::boundingRect() const
+{
+}
+
+void photodiode::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void photodiode::createSymbol()
 {
   Arcs.append(new Arc(-12,-12, 24, 24, 0, 16*360,QPen(Qt::red,2)));

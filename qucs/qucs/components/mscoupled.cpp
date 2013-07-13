@@ -87,3 +87,11 @@ Element* MScoupled::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new MScoupled();
   return 0;
 }
+
+QRectF MScoupled::boundingRect() const
+{
+}
+
+void MScoupled::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

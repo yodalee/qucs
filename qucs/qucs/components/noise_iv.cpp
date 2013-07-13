@@ -93,3 +93,11 @@ Element* Noise_iv::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Noise_iv();
   return 0;
 }
+
+QRectF Noise_iv::boundingRect() const
+{
+}
+
+void Noise_iv::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

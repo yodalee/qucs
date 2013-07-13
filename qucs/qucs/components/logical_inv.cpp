@@ -23,7 +23,7 @@
 
 Logical_Inv::Logical_Inv()
 {
-  Type = isComponent;   // both analog and digital
+  ElemType = isComponent;   // both analog and digital
   Description = QObject::tr("logical inverter");
 
   // the list order must be preserved !!!
@@ -150,4 +150,12 @@ Element* Logical_Inv::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new Logical_Inv();
   return 0;
+}
+
+QRectF Logical_Inv::boundingRect() const
+{
+}
+
+void Logical_Inv::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }

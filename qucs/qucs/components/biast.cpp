@@ -75,3 +75,11 @@ Element* BiasT::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new BiasT();
   return 0;
 }
+
+QRectF BiasT::boundingRect() const
+{
+}
+
+void BiasT::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

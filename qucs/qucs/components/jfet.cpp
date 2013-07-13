@@ -113,6 +113,14 @@ Element* JFET::info_p(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF JFET::boundingRect() const
+{
+}
+
+void JFET::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 void JFET::createSymbol()
 {

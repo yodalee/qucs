@@ -29,6 +29,8 @@ public:
  ~VHDL_File() {};
   Component* newOne();
   static Element* info(QString&, char* &, bool getNewOne=false);
+  QRectF boundingRect() const;
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);  
 
   bool createSubNetlist(QTextStream *);
   QString getErrorText() { return ErrText; }

@@ -22,7 +22,7 @@
 
 andor4x4::andor4x4()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("4x4 andor verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * andor4x4::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new andor4x4();
   return 0;
+}
+
+QRectF andor4x4::boundingRect() const
+{
+}
+
+void andor4x4::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void andor4x4::createSymbol()

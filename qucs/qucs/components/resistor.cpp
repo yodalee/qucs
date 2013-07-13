@@ -102,3 +102,11 @@ Element* Resistor::info_us(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Resistor(false);
   return 0;
 }
+
+QRectF Resistor::boundingRect() const
+{
+}
+
+void Resistor::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

@@ -71,3 +71,11 @@ Element* BondWire::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new BondWire();
   return 0;
 }
+
+QRectF BondWire::boundingRect() const
+{
+}
+
+void BondWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

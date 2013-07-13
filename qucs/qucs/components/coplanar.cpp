@@ -89,3 +89,11 @@ Element* Coplanar::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Coplanar();
   return 0;
 }
+
+QRectF Coplanar::boundingRect() const
+{
+}
+
+void Coplanar::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

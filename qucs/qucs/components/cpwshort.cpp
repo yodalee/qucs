@@ -86,3 +86,11 @@ Element* CPWshort::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new CPWshort();
   return 0;
 }
+
+QRectF CPWshort::boundingRect() const
+{
+}
+
+void CPWshort::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

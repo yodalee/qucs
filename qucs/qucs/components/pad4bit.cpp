@@ -15,7 +15,7 @@
 
 pad4bit::pad4bit()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("4bit pattern generator verilog device");
 
   Props.append (new Property ("Number", "0", false,
@@ -43,6 +43,14 @@ Element * pad4bit::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new pad4bit();
   return 0;
+}
+
+QRectF pad4bit::boundingRect() const
+{
+}
+
+void pad4bit::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void pad4bit::createSymbol()

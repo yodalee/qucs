@@ -69,6 +69,14 @@ Element * potentiometer::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF potentiometer::boundingRect() const
+{
+}
+
+void potentiometer::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void potentiometer::createSymbol()
 {
   // frame

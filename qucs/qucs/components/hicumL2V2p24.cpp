@@ -328,6 +328,14 @@ Element * hicumL2V2p24::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF hicumL2V2p24::boundingRect() const
+{
+}
+
+void hicumL2V2p24::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void hicumL2V2p24::createSymbol()
 {
   // normal bipolar

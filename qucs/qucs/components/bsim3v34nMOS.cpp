@@ -855,6 +855,14 @@ Element * bsim3v34nMOS::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF bsim3v34nMOS::boundingRect() const
+{
+}
+
+void bsim3v34nMOS::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void bsim3v34nMOS::createSymbol()
 {
 

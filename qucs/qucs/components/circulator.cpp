@@ -71,3 +71,11 @@ Element* Circulator::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Circulator();
   return 0;
 }
+
+QRectF Circulator::boundingRect() const
+{
+}
+
+void Circulator::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

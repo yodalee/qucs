@@ -69,3 +69,11 @@ Element* OpAmp::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new OpAmp();
   return 0;
 }
+
+QRectF OpAmp::boundingRect() const
+{
+}
+
+void OpAmp::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

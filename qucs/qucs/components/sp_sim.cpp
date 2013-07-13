@@ -104,3 +104,11 @@ void SP_Sim::recreate(Schematic*)
     Props.next()->Name = "Points";
   }
 }
+
+QRectF SP_Sim::boundingRect() const
+{
+}
+
+void SP_Sim::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

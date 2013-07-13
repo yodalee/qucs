@@ -63,3 +63,11 @@ Element* Ampere_dc::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Ampere_dc();
   return 0;
 }
+
+QRectF Ampere_dc::boundingRect() const
+{
+}
+
+void Ampere_dc::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

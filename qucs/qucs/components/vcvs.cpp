@@ -82,3 +82,11 @@ Element* VCVS::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new VCVS();
   return 0;
 }
+
+QRectF VCVS::boundingRect() const
+{
+}
+
+void VCVS::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

@@ -87,3 +87,11 @@ Element* TunnelDiode::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new TunnelDiode();
   return 0;
 }
+
+QRectF TunnelDiode::boundingRect() const
+{
+}
+
+void TunnelDiode::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

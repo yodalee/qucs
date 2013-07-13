@@ -48,3 +48,11 @@ Element* Logical_NAND::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Logical_NAND();
   return 0;
 }
+
+QRectF Logical_NAND::boundingRect() const
+{
+}
+
+void Logical_NAND::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

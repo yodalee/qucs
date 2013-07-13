@@ -85,3 +85,11 @@ Element* Relais::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Relais();
   return 0;
 }
+
+QRectF Relais::boundingRect() const
+{
+}
+
+void Relais::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

@@ -75,3 +75,11 @@ Element* AM_Modulator::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new AM_Modulator();
   return 0;
 }
+
+QRectF AM_Modulator::boundingRect() const
+{
+}
+
+void AM_Modulator::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

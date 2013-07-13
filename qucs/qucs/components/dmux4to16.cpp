@@ -22,7 +22,7 @@
 
 dmux4to16::dmux4to16()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("4to16 demultiplexer verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * dmux4to16::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new dmux4to16();
   return 0;
+}
+
+QRectF dmux4to16::boundingRect() const
+{
+}
+
+void dmux4to16::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void dmux4to16::createSymbol()

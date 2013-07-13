@@ -164,6 +164,14 @@ Element* BJTsub::info_pnp(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF BJTsub::boundingRect() const
+{
+}
+
+void BJTsub::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 void BJTsub::createSymbol()
 {

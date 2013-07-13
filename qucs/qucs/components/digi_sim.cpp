@@ -21,7 +21,7 @@
 
 Digi_Sim::Digi_Sim()
 {
-  Type = isDigitalComponent;
+  ElemType = isDigitalComponent;
   Description = QObject::tr("digital simulation");
 
   QString  s = Description;
@@ -68,4 +68,12 @@ Element* Digi_Sim::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new Digi_Sim();
   return 0;
+}
+
+QRectF Digi_Sim::boundingRect() const
+{
+}
+
+void Digi_Sim::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }

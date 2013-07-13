@@ -84,3 +84,21 @@ Element* RectLine::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new RectLine();
   return 0;
 }
+
+QRectF RectLine::boundingRect() const
+{
+   // \todo
+  //return outer bounds of item as a rectangle
+  //Let's just return a null rectangle for now
+  //to satisfy implementation of this pure virtual function
+  return *(new QRectF());
+    
+}
+
+void RectLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+  Q_UNUSED(item);
+  Q_UNUSED(widget);
+  // \todo
+    
+}

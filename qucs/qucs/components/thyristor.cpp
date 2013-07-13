@@ -74,3 +74,11 @@ Element* Thyristor::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Thyristor();
   return 0;
 }
+
+QRectF Thyristor::boundingRect() const
+{
+}
+
+void Thyristor::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

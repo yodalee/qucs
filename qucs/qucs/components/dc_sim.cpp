@@ -85,3 +85,11 @@ Element* DC_Sim::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new DC_Sim();
   return 0;
 }
+
+QRectF DC_Sim::boundingRect() const
+{
+}
+
+void DC_Sim::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

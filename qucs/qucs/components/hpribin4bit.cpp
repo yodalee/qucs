@@ -22,7 +22,7 @@
 
 hpribin4bit::hpribin4bit()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("4bit highest priority encoder (binary form) verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * hpribin4bit::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new hpribin4bit();
   return 0;
+}
+
+QRectF hpribin4bit::boundingRect() const
+{
+}
+
+void hpribin4bit::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void hpribin4bit::createSymbol()

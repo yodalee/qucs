@@ -22,7 +22,7 @@
 
 fa1b::fa1b()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("1bit full adder verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * fa1b::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new fa1b();
   return 0;
+}
+
+QRectF fa1b::boundingRect() const
+{
+}
+
+void fa1b::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void fa1b::createSymbol()

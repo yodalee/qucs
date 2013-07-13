@@ -48,3 +48,11 @@ Element* Logical_XNOR::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Logical_XNOR();
   return 0;
 }
+
+QRectF Logical_XNOR::boundingRect() const
+{
+}
+
+void Logical_XNOR::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

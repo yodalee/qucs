@@ -81,3 +81,11 @@ Element* vRect::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new vRect();
   return 0;
 }
+
+QRectF vRect::boundingRect() const
+{
+}
+
+void vRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

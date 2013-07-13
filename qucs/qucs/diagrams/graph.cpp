@@ -23,7 +23,7 @@
 
 Graph::Graph(const QString& _Line)
 {
-  Type = isGraph;
+  ElemType = isGraph;
 
   Var    = _Line;
   countY = 0;    // no points in graph
@@ -31,7 +31,7 @@ Graph::Graph(const QString& _Line)
   Color  = 0x0000ff;   // blue
   Style  = 0;    // solid line
   Precision  = 3;
-  isSelected = false;
+  ElemSelected = false;
   yAxisNo = 0;   // left y axis
 
   ScrPoints = 0;
@@ -55,7 +55,7 @@ void Graph::paint(ViewPainter *p, int x0, int y0)
   if(ScrPoints == 0)
     return;
 
-  if(isSelected) {
+  if(ElemSelected) {
     p->Painter->setPen(QPen(Qt::darkGray,Thick*p->PrintScale+4));
     paintLines(p, x0, y0);
 

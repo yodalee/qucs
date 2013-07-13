@@ -65,3 +65,11 @@ Element* dcFeed::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new dcFeed();
   return 0;
 }
+
+QRectF dcFeed::boundingRect() const
+{
+}
+
+void dcFeed::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

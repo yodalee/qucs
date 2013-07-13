@@ -220,6 +220,14 @@ Element * EKV26MOS::info_pmos(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF EKV26MOS::boundingRect() const
+{
+}
+
+void EKV26MOS::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void EKV26MOS::createSymbol()
 {
   // put in here symbol drawing code and terminal definitions

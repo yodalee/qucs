@@ -102,6 +102,14 @@ Element* Diode::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF Diode::boundingRect() const
+{
+}
+
+void Diode::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 void Diode::createSymbol()
 {

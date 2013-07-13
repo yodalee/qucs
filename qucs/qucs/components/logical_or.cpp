@@ -48,3 +48,11 @@ Element* Logical_OR::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Logical_OR();
   return 0;
 }
+
+QRectF Logical_OR::boundingRect() const
+{
+}
+
+void Logical_OR::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

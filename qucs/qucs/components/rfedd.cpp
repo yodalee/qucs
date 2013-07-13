@@ -78,6 +78,14 @@ Element* RFedd::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF RFedd::boundingRect() const
+{
+}
+
+void RFedd::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 QString RFedd::netlist()
 {

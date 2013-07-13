@@ -595,6 +595,14 @@ Element * bsim4v30pMOS::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF bsim4v30pMOS::boundingRect() const
+{
+}
+
+void bsim4v30pMOS::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void bsim4v30pMOS::createSymbol()
 {
   Lines.append(new Line(-14,-13,-14, 13,QPen(Qt::darkBlue,3)));

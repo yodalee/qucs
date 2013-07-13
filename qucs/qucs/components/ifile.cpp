@@ -80,6 +80,14 @@ Element* iFile::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF iFile::boundingRect() const
+{
+}
+
+void iFile::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 QString iFile::getSubcircuitFile()
 {

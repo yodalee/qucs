@@ -20,6 +20,8 @@ class dmux4to16 : public Component
     ~dmux4to16() { };
     Component* newOne();
     static Element* info(QString&, char* &, bool getNewOne=false);
+    QRectF boundingRect() const;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);    
   protected:
     void createSymbol();
     QString vhdlCode(int);

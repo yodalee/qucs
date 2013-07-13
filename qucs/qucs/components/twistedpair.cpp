@@ -92,3 +92,11 @@ Element* TwistedPair::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new TwistedPair();
   return 0;
 }
+
+QRectF TwistedPair::boundingRect() const
+{
+}
+
+void TwistedPair::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

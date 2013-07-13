@@ -79,6 +79,14 @@ Element* SpiceFile::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF SpiceFile::boundingRect() const
+{
+}
+
+void SpiceFile::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 void SpiceFile::createSymbol()
 {

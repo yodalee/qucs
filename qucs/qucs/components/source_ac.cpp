@@ -86,3 +86,11 @@ Element* Source_ac::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Source_ac();
   return 0;
 }
+
+QRectF Source_ac::boundingRect() const
+{
+}
+
+void Source_ac::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

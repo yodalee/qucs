@@ -93,6 +93,14 @@ Element * nigbt::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF nigbt::boundingRect() const
+{
+}
+
+void nigbt::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void nigbt::createSymbol()
 {
   // bipolar

@@ -86,3 +86,11 @@ Element* vExp::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new vExp();
   return 0;
 }
+
+QRectF vExp::boundingRect() const
+{
+}
+
+void vExp::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

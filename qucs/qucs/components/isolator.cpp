@@ -70,3 +70,11 @@ Element* Isolator::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Isolator();
   return 0;
 }
+
+QRectF Isolator::boundingRect() const
+{
+}
+
+void Isolator::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

@@ -70,3 +70,11 @@ Element* HB_Sim::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new HB_Sim();
   return 0;
 }
+
+QRectF HB_Sim::boundingRect() const
+{
+}
+
+void HB_Sim::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

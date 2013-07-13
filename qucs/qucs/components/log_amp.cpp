@@ -87,6 +87,14 @@ Element * log_amp::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF log_amp::boundingRect() const
+{
+}
+
+void log_amp::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void log_amp::createSymbol()
 {
   Lines.append(new Line(-30,-20,-20,-20,QPen(Qt::darkBlue,2)));

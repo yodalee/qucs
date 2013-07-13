@@ -22,7 +22,7 @@
 
 Digi_Source::Digi_Source()
 {
-  Type = isComponent;   // both analog and digital
+  ElemType = isComponent;   // both analog and digital
   Description = QObject::tr("digital source");
 
   Lines.append(new Line(-10,  0,  0,  0,QPen(Qt::darkGreen,2)));
@@ -78,6 +78,14 @@ Element* Digi_Source::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new Digi_Source();
   return 0;
+}
+
+QRectF Digi_Source::boundingRect() const
+{
+}
+
+void Digi_Source::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 // -------------------------------------------------------

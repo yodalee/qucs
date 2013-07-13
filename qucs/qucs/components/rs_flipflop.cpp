@@ -21,7 +21,7 @@
 
 RS_FlipFlop::RS_FlipFlop()
 {
-  Type = isDigitalComponent;
+  ElemType = isDigitalComponent;
   Description = QObject::tr("RS flip flop");
 
   Props.append(new Property("t", "0", false, QObject::tr("delay time")));
@@ -114,4 +114,12 @@ Element* RS_FlipFlop::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new RS_FlipFlop();
   return 0;
+}
+
+QRectF RS_FlipFlop::boundingRect() const
+{
+}
+
+void RS_FlipFlop::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }

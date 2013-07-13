@@ -22,7 +22,7 @@
 
 jkff_SR::jkff_SR()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("jk flip flop with set and reset verilog device");
 
   Props.append (new Property ("TR_H", "6", false,
@@ -55,6 +55,14 @@ Element * jkff_SR::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new jkff_SR();
   return 0;
+}
+
+QRectF jkff_SR::boundingRect() const
+{
+}
+
+void jkff_SR::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void jkff_SR::createSymbol()

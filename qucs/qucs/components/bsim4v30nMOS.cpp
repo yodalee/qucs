@@ -596,6 +596,14 @@ Element * bsim4v30nMOS::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF bsim4v30nMOS::boundingRect() const
+{
+}
+
+void bsim4v30nMOS::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void bsim4v30nMOS::createSymbol()
 {
   // put in here symbol drawing code and terminal definitions

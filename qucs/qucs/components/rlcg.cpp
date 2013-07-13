@@ -82,3 +82,11 @@ Element* RLCG::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new RLCG();
   return 0;
 }
+
+QRectF RLCG::boundingRect() const
+{
+}
+
+void RLCG::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

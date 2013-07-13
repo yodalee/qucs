@@ -23,7 +23,7 @@
 
 JK_FlipFlop::JK_FlipFlop()
 {
-  Type = isDigitalComponent;
+  ElemType = isDigitalComponent;
   Description = QObject::tr("JK flip flop with asynchron set and reset");
 
   Props.append(new Property("t", "0", false, QObject::tr("delay time")));
@@ -148,4 +148,12 @@ Element* JK_FlipFlop::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new JK_FlipFlop();
   return 0;
+}
+
+QRectF JK_FlipFlop::boundingRect() const
+{
+}
+
+void JK_FlipFlop::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }

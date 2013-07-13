@@ -62,6 +62,14 @@ Element* Optimize_Sim::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF Optimize_Sim::boundingRect() const
+{
+}
+
+void Optimize_Sim::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 QString Optimize_Sim::netlist()
 {

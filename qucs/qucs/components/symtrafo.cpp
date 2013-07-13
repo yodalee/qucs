@@ -94,3 +94,11 @@ Element* symTrafo::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new symTrafo();
   return 0;
 }
+
+QRectF symTrafo::boundingRect() const
+{
+}
+
+void symTrafo::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

@@ -15,7 +15,7 @@
 
 pad3bit::pad3bit()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("3bit pattern generator verilog device");
 
   Props.append (new Property ("Number", "0", false,
@@ -43,6 +43,14 @@ Element * pad3bit::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new pad3bit();
   return 0;
+}
+
+QRectF pad3bit::boundingRect() const
+{
+}
+
+void pad3bit::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void pad3bit::createSymbol()

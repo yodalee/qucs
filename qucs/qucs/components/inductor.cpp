@@ -62,3 +62,11 @@ Element* Inductor::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Inductor();
   return 0;
 }
+
+QRectF Inductor::boundingRect() const
+{
+}
+
+void Inductor::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

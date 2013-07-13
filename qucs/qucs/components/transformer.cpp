@@ -78,3 +78,11 @@ Element* Transformer::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Transformer();
   return 0;
 }
+
+QRectF Transformer::boundingRect() const
+{
+}
+
+void Transformer::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

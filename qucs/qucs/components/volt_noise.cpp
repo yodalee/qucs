@@ -71,3 +71,11 @@ Element* Volt_noise::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Volt_noise();
   return 0;
 }
+
+QRectF Volt_noise::boundingRect() const
+{
+}
+
+void Volt_noise::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

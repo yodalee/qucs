@@ -76,3 +76,11 @@ Element* TLine_4Port::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new TLine_4Port();
   return 0;
 }
+
+QRectF TLine_4Port::boundingRect() const
+{
+}
+
+void TLine_4Port::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

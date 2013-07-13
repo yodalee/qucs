@@ -80,3 +80,11 @@ Element* CCVS::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new CCVS();
   return 0;
 }
+
+QRectF CCVS::boundingRect() const
+{
+}
+
+void CCVS::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

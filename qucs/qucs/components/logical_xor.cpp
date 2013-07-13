@@ -48,3 +48,11 @@ Element* Logical_XOR::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Logical_XOR();
   return 0;
 }
+
+QRectF Logical_XOR::boundingRect() const
+{
+}
+
+void Logical_XOR::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

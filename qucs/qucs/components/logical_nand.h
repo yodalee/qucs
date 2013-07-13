@@ -27,6 +27,8 @@ public:
  ~Logical_NAND();
   Component* newOne();
   static Element* info(QString&, char* &, bool getNewOne=false);
+  QRectF boundingRect() const;
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);  
 };
 
 #endif

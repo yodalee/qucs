@@ -70,6 +70,14 @@ Element* EqnDefined::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF EqnDefined::boundingRect() const
+{
+}
+
+void EqnDefined::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 QString EqnDefined::netlist()
 {

@@ -21,7 +21,7 @@
 
 logic_1::logic_1()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("logic 1 verilog device");
 
  Props.append (new Property ("LEVEL", "1", false,
@@ -50,6 +50,14 @@ Element * logic_1::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new logic_1();
   return 0;
+}
+
+QRectF logic_1::boundingRect() const
+{
+}
+
+void logic_1::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void logic_1::createSymbol()

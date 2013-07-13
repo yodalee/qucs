@@ -76,3 +76,11 @@ Element* CoaxialLine::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new CoaxialLine();
   return 0;
 }
+
+QRectF CoaxialLine::boundingRect() const
+{
+}
+
+void CoaxialLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

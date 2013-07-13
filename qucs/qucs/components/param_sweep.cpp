@@ -72,6 +72,14 @@ Element* Param_Sweep::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF Param_Sweep::boundingRect() const
+{
+}
+
+void Param_Sweep::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void Param_Sweep::recreate(Schematic*)
 {
   Property *pp = Props.at(1);

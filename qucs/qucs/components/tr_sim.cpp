@@ -121,3 +121,11 @@ void TR_Sim::recreate(Schematic*)
     Props.next()->Name = "Points";
   }
 }
+
+QRectF TR_Sim::boundingRect() const
+{
+}
+
+void TR_Sim::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

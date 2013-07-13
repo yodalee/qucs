@@ -67,3 +67,11 @@ Element* Amplifier::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Amplifier();
   return 0;
 }
+
+QRectF Amplifier::boundingRect() const
+{
+}
+
+void Amplifier::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

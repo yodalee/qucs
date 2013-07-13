@@ -61,6 +61,14 @@ Element* Switch::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF Switch::boundingRect() const
+{
+}
+
+void Switch::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 QString Switch::netlist()
 {

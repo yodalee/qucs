@@ -174,6 +174,14 @@ Element * MESFET::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF MESFET::boundingRect() const
+{
+}
+
+void MESFET::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void MESFET::createSymbol()
 {
   // put in here symbol drawing code and terminal definitions

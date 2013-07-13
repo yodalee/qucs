@@ -29,7 +29,7 @@
 
 Verilog_File::Verilog_File()
 {
-  Type = isDigitalComponent;
+  ElemType = isDigitalComponent;
   Description = QObject::tr("Verilog file");
 
   Props.append(new Property("File", "sub.v", false,
@@ -63,6 +63,14 @@ Element* Verilog_File::info(QString& Name, char* &BitmapFile, bool getNewOne)
     return p;
   }
   return 0;
+}
+
+QRectF Verilog_File::boundingRect() const
+{
+}
+
+void Verilog_File::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 // -------------------------------------------------------

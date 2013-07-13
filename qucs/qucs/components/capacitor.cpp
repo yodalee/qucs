@@ -50,6 +50,14 @@ Element* Capacitor::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF Capacitor::boundingRect() const
+{
+}
+
+void Capacitor::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void Capacitor::createSymbol()
 {
   if(Props.getLast()->Value.at(0) == 'n') {

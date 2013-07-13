@@ -72,6 +72,14 @@ Element* MStee::info(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF MStee::boundingRect() const
+{
+}
+
+void MStee::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 void MStee::createSymbol()
 {
   Lines.append(new Line(-30,  0,-18,  0,QPen(Qt::darkBlue,2)));

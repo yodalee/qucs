@@ -80,3 +80,11 @@ Element* MSgap::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new MSgap();
   return 0;
 }
+
+QRectF MSgap::boundingRect() const
+{
+}
+
+void MSgap::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

@@ -96,3 +96,11 @@ Element* Mutual2::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Mutual2();
   return 0;
 }
+
+QRectF Mutual2::boundingRect() const
+{
+}
+
+void Mutual2::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

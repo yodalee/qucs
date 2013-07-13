@@ -22,7 +22,7 @@
 
 comp_1bit::comp_1bit()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("1bit comparator verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * comp_1bit::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new comp_1bit();
   return 0;
+}
+
+QRectF comp_1bit::boundingRect() const
+{
+}
+
+void comp_1bit::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void comp_1bit::createSymbol()

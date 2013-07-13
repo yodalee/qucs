@@ -79,3 +79,11 @@ Element* vPulse::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new vPulse();
   return 0;
 }
+
+QRectF vPulse::boundingRect() const
+{
+}
+
+void vPulse::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

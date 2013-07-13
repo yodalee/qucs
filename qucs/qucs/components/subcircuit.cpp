@@ -37,7 +37,7 @@
 
 Subcircuit::Subcircuit()
 {
-  Type = isComponent;   // both analog and digital
+  ElemType = isComponent;   // both analog and digital
   Description = QObject::tr("subcircuit");
 
   Props.append(new Property("File", "", false,
@@ -71,6 +71,14 @@ Element* Subcircuit::info(QString& Name, char* &BitmapFile, bool getNewOne)
     return p;
   }
   return 0;
+}
+
+QRectF Subcircuit::boundingRect() const
+{
+}
+
+void Subcircuit::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 // ---------------------------------------------------------------------

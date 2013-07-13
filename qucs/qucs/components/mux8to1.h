@@ -20,6 +20,8 @@ class mux8to1 : public Component
     ~mux8to1() { };
     Component* newOne();
     static Element* info(QString&, char* &, bool getNewOne=false);
+    QRectF boundingRect() const;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);    
   protected:
     void createSymbol();
     QString vhdlCode(int);

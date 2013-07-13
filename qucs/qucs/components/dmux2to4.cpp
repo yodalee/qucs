@@ -22,7 +22,7 @@
 
 dmux2to4::dmux2to4()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("2to4 demultiplexer verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * dmux2to4::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new dmux2to4();
   return 0;
+}
+
+QRectF dmux2to4::boundingRect() const
+{
+}
+
+void dmux2to4::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void dmux2to4::createSymbol()

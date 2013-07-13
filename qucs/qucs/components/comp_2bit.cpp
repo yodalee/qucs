@@ -22,7 +22,7 @@
 
 comp_2bit::comp_2bit()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("2bit comparator verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * comp_2bit::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new comp_2bit();
   return 0;
+}
+
+QRectF comp_2bit::boundingRect() const
+{
+}
+
+void comp_2bit::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void comp_2bit::createSymbol()

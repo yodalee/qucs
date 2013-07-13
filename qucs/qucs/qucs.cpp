@@ -2341,7 +2341,7 @@ void QucsApp::slotSymbolEdit()
 void QucsApp::slotPowerMatching()
 {
   if(!view->focusElement) return;
-  if(view->focusElement->Type != isMarker) return;
+  if(view->focusElement->ElemType != isMarker) return;
   Marker *pm = (Marker*)view->focusElement;
 
 //  double Z0 = 50.0;
@@ -2367,7 +2367,7 @@ void QucsApp::slotPowerMatching()
 void QucsApp::slot2PortMatching()
 {
   if(!view->focusElement) return;
-  if(view->focusElement->Type != isMarker) return;
+  if(view->focusElement->ElemType != isMarker) return;
   Marker *pm = (Marker*)view->focusElement;
 
   QString DataSet;

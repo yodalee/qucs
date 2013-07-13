@@ -73,3 +73,11 @@ Element* Attenuator::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Attenuator();
   return 0;
 }
+
+QRectF Attenuator::boundingRect() const
+{
+}
+
+void Attenuator::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

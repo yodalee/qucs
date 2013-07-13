@@ -65,3 +65,11 @@ Element* MScorner::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new MScorner();
   return 0;
 }
+
+QRectF MScorner::boundingRect() const
+{
+}
+
+void MScorner::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

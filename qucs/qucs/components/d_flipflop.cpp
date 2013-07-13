@@ -21,7 +21,7 @@
 
 D_FlipFlop::D_FlipFlop()
 {
-  Type = isDigitalComponent;
+  ElemType = isDigitalComponent;
   Description = QObject::tr("D flip flop with asynchron reset");
 
   Props.append(new Property("t", "0", false, QObject::tr("delay time")));
@@ -119,4 +119,12 @@ Element* D_FlipFlop::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new D_FlipFlop();
   return 0;
+}
+
+QRectF D_FlipFlop::boundingRect() const
+{
+}
+
+void D_FlipFlop::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }

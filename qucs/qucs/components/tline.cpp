@@ -72,3 +72,11 @@ Element* TLine::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new TLine();
   return 0;
 }
+
+QRectF TLine::boundingRect() const
+{
+}
+
+void TLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

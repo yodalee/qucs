@@ -63,6 +63,14 @@ Element* BJT::info_pnp(QString& Name, char* &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF BJT::boundingRect() const
+{
+}
+
+void BJT::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 void BJT::createSymbol()
 {

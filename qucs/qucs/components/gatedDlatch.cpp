@@ -22,7 +22,7 @@
 
 gatedDlatch::gatedDlatch()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("gated D latch verilog device");
 
   Props.append (new Property ("TR_H", "6", false,
@@ -55,6 +55,14 @@ Element * gatedDlatch::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new gatedDlatch();
   return 0;
+}
+
+QRectF gatedDlatch::boundingRect() const
+{
+}
+
+void gatedDlatch::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void gatedDlatch::createSymbol()

@@ -22,7 +22,7 @@
 
 fa2b::fa2b()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("2bit full adder verilog device");
 
   Props.append (new Property ("TR", "6", false,
@@ -53,6 +53,14 @@ Element * fa2b::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new fa2b();
   return 0;
+}
+
+QRectF fa2b::boundingRect() const
+{
+}
+
+void fa2b::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void fa2b::createSymbol()

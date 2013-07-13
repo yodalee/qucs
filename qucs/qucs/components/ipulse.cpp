@@ -80,3 +80,11 @@ Element* iPulse::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new iPulse();
   return 0;
 }
+
+QRectF iPulse::boundingRect() const
+{
+}
+
+void iPulse::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

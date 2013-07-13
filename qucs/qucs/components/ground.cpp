@@ -21,7 +21,7 @@
 
 Ground::Ground()
 {
-  Type = isComponent;   // both analog and digital
+  ElemType = isComponent;   // both analog and digital
   Description = QObject::tr("ground (reference potential)");
 
   Lines.append(new Line(  0,  0,  0, 10,QPen(Qt::darkBlue,2)));
@@ -57,6 +57,14 @@ Element* Ground::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new Ground();
   return 0;
+}
+
+QRectF Ground::boundingRect() const
+{
+}
+
+void Ground::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 // -------------------------------------------------------

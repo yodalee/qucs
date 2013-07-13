@@ -73,3 +73,11 @@ Element* MSline::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new MSline();
   return 0;
 }
+
+QRectF MSline::boundingRect() const
+{
+}
+
+void MSline::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

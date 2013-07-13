@@ -64,3 +64,11 @@ Element* Volt_dc::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new Volt_dc();
   return 0;
 }
+
+QRectF Volt_dc::boundingRect() const
+{
+}
+
+void Volt_dc::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

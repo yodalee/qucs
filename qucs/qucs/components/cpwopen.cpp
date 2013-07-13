@@ -89,3 +89,11 @@ Element* CPWopen::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new CPWopen();
   return 0;
 }
+
+QRectF CPWopen::boundingRect() const
+{
+}
+
+void CPWopen::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

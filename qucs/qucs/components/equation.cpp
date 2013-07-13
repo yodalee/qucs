@@ -21,7 +21,7 @@
 
 Equation::Equation()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr("equation");
 
   QFont f = QucsSettings.font;
@@ -88,4 +88,12 @@ Element* Equation::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
   if(getNewOne)  return new Equation();
   return 0;
+}
+
+QRectF Equation::boundingRect() const
+{
+}
+
+void Equation::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }

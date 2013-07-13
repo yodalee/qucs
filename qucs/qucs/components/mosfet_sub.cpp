@@ -185,6 +185,14 @@ Element* MOSFET_sub::info_depl(QString& Name,
   return 0;
 }
 
+QRectF MOSFET_sub::boundingRect() const
+{
+}
+
+void MOSFET_sub::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
+
 // -------------------------------------------------------
 void MOSFET_sub::createSymbol()
 {

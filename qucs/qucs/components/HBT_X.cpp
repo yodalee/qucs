@@ -236,3 +236,11 @@ Element * HBT_X::info(QString& Name, char * &BitmapFile, bool getNewOne)
   if(getNewOne) return new HBT_X();
   return 0;
 }
+
+QRectF HBT_X::boundingRect() const
+{
+}
+
+void HBT_X::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

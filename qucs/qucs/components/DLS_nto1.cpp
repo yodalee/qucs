@@ -45,6 +45,22 @@ Element * DLS_nto1::info(QString& Name, char * &BitmapFile, bool getNewOne)
   return 0;
 }
 
+QRectF DLS_nto1::boundingRect() const
+{
+  // \todo
+  //return outer bounds of item as a rectangle
+  //Let's just return a null rectangle for now
+  //to satisfy implementation of this pure virtual function
+  return *(new QRectF());
+}
+
+void DLS_nto1::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+  Q_UNUSED(item);
+  Q_UNUSED(widget);
+  // \todo
+}
+
 void DLS_nto1::createSymbol()
 {
   Lines.append(new Line(-30, -30, 30,-30,QPen(Qt::darkRed,2)));

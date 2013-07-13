@@ -22,7 +22,7 @@
 
 tff_SR::tff_SR()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("T flip flop with set and reset verilog device");
 
   Props.append (new Property ("TR_H", "6", false,
@@ -55,6 +55,14 @@ Element * tff_SR::info(QString& Name, char * &BitmapFile, bool getNewOne)
 
   if(getNewOne) return new tff_SR();
   return 0;
+}
+
+QRectF tff_SR::boundingRect() const
+{
+}
+
+void tff_SR::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
 }
 
 void tff_SR::createSymbol()

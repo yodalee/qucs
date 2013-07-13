@@ -77,3 +77,11 @@ Element* MSstep::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new MSstep();
   return 0;
 }
+
+QRectF MSstep::boundingRect() const
+{
+}
+
+void MSstep::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

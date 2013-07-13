@@ -65,3 +65,11 @@ Element* MSrstub::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new MSrstub();
   return 0;
 }
+
+QRectF MSrstub::boundingRect() const
+{
+}
+
+void MSrstub::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}

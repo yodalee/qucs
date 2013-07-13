@@ -84,3 +84,11 @@ Element* CoupledTLine::info(QString& Name, char* &BitmapFile, bool getNewOne)
   if(getNewOne)  return new CoupledTLine();
   return 0;
 }
+
+QRectF CoupledTLine::boundingRect() const
+{
+}
+
+void CoupledTLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+}
