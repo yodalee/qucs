@@ -138,6 +138,7 @@ QucsApp::QucsApp()
   SearchDia = new SearchDialog(this);
 
   // creates a document called "untitled"
+  qDebug() << "new Schematic";
   new Schematic(this, "");
 
   select->setOn(true);  // switch on the 'select' action
@@ -203,6 +204,7 @@ void QucsApp::initView()
   // set application icon
   setIcon (QPixmap(QucsSettings.BitmapDir + "big.qucs.xpm"));
 
+  // hold the documetns : schematic, text files, ...
   DocumentTab = new QTabWidget(this);
   setCentralWidget(DocumentTab);
 

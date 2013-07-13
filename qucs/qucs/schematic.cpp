@@ -99,11 +99,22 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
 
   isVerilog = false;
   creatingLib = false;
+  
+  // instanatiate scene, and set it to view
+  scene = new QGraphicsScene;
+  this->setSceneRect(50, 50, 350, 350);
+  this->setScene(scene);
+  
   QFileInfo Info(Name_);
   if(App) {
-    if(Name_.isEmpty())
+    if(Name_.isEmpty()) {
+      
+      qDebug() << "adding new schematic";
+      
+      //Constructor already add the schematic as a tab
       App->DocumentTab->addTab(this, QPixmap(empty_xpm),
                             QObject::tr("untitled"));
+    }
     else
       App->DocumentTab->addTab(this, QPixmap(empty_xpm),
                             Info.fileName());
@@ -119,9 +130,9 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
 
 //    setVScrollBarMode(Q3ScrollView::AlwaysOn);
 //    setHScrollBarMode(Q3ScrollView::AlwaysOn);
-    viewport()->setPaletteBackgroundColor(QucsSettings.BGColor);
-    viewport()->setMouseTracking(true);
-    viewport()->setAcceptDrops(true);  // enable drag'n drop
+    this->viewport()->setPaletteBackgroundColor(QucsSettings.BGColor);
+//    viewport()->setMouseTracking(true);
+//    viewport()->setAcceptDrops(true);  // enable drag'n drop
 #warning removed those signals, crashes on it...
     /*connect(horizontalScrollBar(),
 		SIGNAL(prevLine()), SLOT(slotScrollLeft()));
@@ -1942,6 +1953,15 @@ bool Schematic::scrollRight(int step)
   }
 */
   return true;
+}
+
+void Schematic::mousePressEvent(QMouseEvent *e)
+{
+    double rad = 1;
+       QPointF pt = mapToScene(e->pos());
+       scene->addEllipse(pt.x()-rad, pt.y()-rad, rad*2.0, rad*2.0, 
+           QPen(), QBrush(Qt::SolidPattern));
+    
 }
 
 // -----------------------------------------------------------
