@@ -42,8 +42,6 @@
 #include "components/libcomp.h"
 
 
-extern QDir QucsWorkDir;
-
 // Here the subcircuits, SPICE components etc are collected. It must be
 // global to also work within the subcircuits.
 SubMap FileList;
@@ -172,9 +170,8 @@ bool Schematic::pasteFromClipboard(Q3TextStream *stream, QList<Element *> pe)
         if(!loadIntoNothing(stream)) return false; }
       else
       if(Line == "<Paintings>") {
-#warning if(!loadPaintings(stream, (QList<Painting *>)pe)) return false; 
+        if(!loadPaintings(stream, (QList<Painting*>*)&pe)) return false;
       }
-#warning  who to cast QList<Element *> to QList<Painting *>? 
       else {
         QMessageBox::critical(0, QObject::tr("Error"),
 		   QObject::tr("Clipboard Format Error:\nUnknown field!"));
@@ -189,22 +186,19 @@ bool Schematic::pasteFromClipboard(Q3TextStream *stream, QList<Element *> pe)
   while(!stream->atEnd()) {
     Line = stream->readLine();
     if(Line == "<Components>") {
-//      if(!loadComponents(stream, (Q3PtrList<Component>*)pe)) return false; 
+      if(!loadComponents(stream, (QList<Component*>*)&pe)) return false;
     }
-#warning  who to cast QList<Element *> to QList<Component *>?
     else
     if(Line == "<Wires>") {
       if(!loadWires(stream, &pe)) return false; }
     else
     if(Line == "<Diagrams>") {
-//      if(!loadDiagrams(stream, (Q3PtrList<Diagram>*)pe)) return false; 
+      if(!loadDiagrams(stream, (QList<Diagram*>*)&pe)) return false;
     }
-#warning cast
     else
     if(Line == "<Paintings>") {
-//      if(!loadPaintings(stream, (Q3PtrList<Painting>*)pe)) return false; 
+      if(!loadPaintings(stream, (QList<Painting*>*)&pe)) return false;
     }
-#warning cast
     else {
       QMessageBox::critical(0, QObject::tr("Error"),
 		   QObject::tr("Clipboard Format Error:\nUnknown field!"));
@@ -347,7 +341,7 @@ int Schematic::saveDocument()
   qDebug() << "*** Components" << Components.size();
   qDebug() << "*** DocComps" << DocComps.size();
 #warning DocComps or Components??
-  QListIterator<Component *> ic(Components);
+  QListIterator<Component *> ic(DocComps);
   while (ic.hasNext())
     stream << "  " << ic.next()->save() << "\n";
   stream << "</Components>\n";
@@ -1101,8 +1095,7 @@ bool Schematic::throughAllComps(QTextStream *stream, int& countInit,
 
       // load subcircuit schematic
       s = pc->Props.first()->Value;
-      qDebug() << "**throughAllComps -- load SCH" << s;
-      Schematic *d = new Schematic(0, QucsWorkDir.filePath(s));
+      Schematic *d = new Schematic(0, QucsSettings.QucsWorkDir.filePath(s));
       if(!d->loadDocument()) {  // load document if possible
         delete d;
         ErrText->insert(QObject::tr("ERROR: Cannot load subcircuit \"%1\".").arg(s));

@@ -203,6 +203,12 @@ void QucsApp::slotZoomIn(bool on)
 		&MouseActions::MMoveZoomIn, &MouseActions::MPressZoomIn);
 }
 
+
+void QucsApp::slotEscape()
+{
+    select->setChecked(true);
+}
+
 // -----------------------------------------------------------------------
 // Is called when the select toolbar button is pressed.
 void QucsApp::slotSelect(bool on)
@@ -210,10 +216,9 @@ void QucsApp::slotSelect(bool on)
   QWidget *w = DocumentTab->currentPage();
   if(w->inherits("QTextEdit")) {
     ((TextDoc*)w)->viewport()->setFocus();
-
-    select->blockSignals(true);
-    select->setOn(true);
-    select->blockSignals(false);
+      select->blockSignals(true);
+      select->setOn(true);
+      select->blockSignals(false);
     return;
   }
 
@@ -598,14 +603,14 @@ void QucsApp::editFile(const QString& File)
 // Is called to show the output messages of the last simulation.
 void QucsApp::slotShowLastMsg()
 {
-  editFile(QucsHomeDir.filePath("log.txt"));
+  editFile(QucsSettings.QucsHomeDir.filePath("log.txt"));
 }
 
 // ------------------------------------------------------------------------
 // Is called to show the netlist of the last simulation.
 void QucsApp::slotShowLastNetlist()
 {
-  editFile(QucsHomeDir.filePath("netlist.txt"));
+  editFile(QucsSettings.QucsHomeDir.filePath("netlist.txt"));
 }
 
 // ------------------------------------------------------------------------
@@ -785,7 +790,7 @@ void QucsApp::slotAddToProject()
   while(it != FileList.end()) {
     Info.setFile(*it);
     origFile.setName(*it);
-    destFile.setName(QucsWorkDir.absPath() + 
+    destFile.setName(QucsSettings.QucsWorkDir.absPath() +
                      QDir::separator() + Info.fileName());
 
     if(!origFile.open(QIODevice::ReadOnly)) {
@@ -1008,15 +1013,23 @@ void QucsApp::slotApplyCompText()
   view->MAy1 = pc->cy + pc->ty;
 
   int z, n=0;  // "n" is number of property on screen
-  QListIterator<Property *> ip(pc->Props);
-  pp = ip.next();
-  for(z=view->MAx3; z>0; z--) {  // calculate "n"
-    if(!pp) {  // should never happen
+  //QListIterator<Property *> ip(pc->Props);
+  int i=2;
+  if(pc->Props.size()>1)
+      pp = pc->Props[1];
+  else
+  {
       editText->setHidden(true);
       return;
-    }
+  }
+  for(z=view->MAx3; z>0; z--) {  // calculate "n"
     if(pp->display) n++;   // is visible ?
-    pp = ip.next();
+    if(i<pc->Props.size()) pp = pc->Props[i++];
+    else
+    {  // should never happen
+          editText->setHidden(true);
+          return;
+    }
   }
   
   pp = 0;
@@ -1052,12 +1065,11 @@ void QucsApp::slotApplyCompText()
 
     n++;     // next row on screen
     (view->MAx3)++;  // next property
-    pp = pc->Props.at(view->MAx3-1);  // search for next property
 
     Doc->viewport()->update();
     view->drawn = false;
-
-    if(!pp) {     // was already last property ?
+    if(view->MAx3-1 < pc->Props.size())pp = pc->Props.at(view->MAx3-1);  // search for next property
+    else {     // was already last property ?
       editText->setHidden(true);
       return;
     }
@@ -1065,8 +1077,8 @@ void QucsApp::slotApplyCompText()
 
     while(!pp->display) {  // search for next visible property
       (view->MAx3)++;  // next property
-      pp = ip.next();
-      if(!pp) {     // was already last property ?
+      if(i<pc->Props.size()) pp = pc->Props[i++];
+      else{     // was already last property ?
         editText->setHidden(true);
         return;
       }

@@ -164,17 +164,15 @@ int Component::getTextSelected(int x_, int y_, float Corr)
 
   Property *pp;
   int propNumber = 0;
-  QListIterator<Property *> ip(Props);
-  while (ip.hasNext()) {
-    pp = ip.next();
-    propNumber += 1;  //FIXME?
-    if(pp->display)
-      if((dy--) < 1) break;
+  for(int i=0; i< Props.size(); i++)
+  {
+  //while (ip.hasNext()) {
+      pp = Props[i];
+      propNumber += 1;  //FIXME?
+      if(pp->display)
+        if((dy--) < 1) break;
   }
-  if(!pp) return -1;
-
-  // get width of text
-#warning crash here
+  if(Props.size()<1)return -1;
   w = metrics.width(pp->Name+"="+pp->Value);
   if(x_ > w) return -1;
   return propNumber+1;  // number the property
