@@ -122,7 +122,7 @@ bool Optimize_Sim::createASCOFiles()
 
     stream << "# Parameters #\n";
     int i=1;
-    for(int par=2; par <= Props.size(); par++) {
+    for(int par=2; par < Props.size(); par++) {
       pp = Props.at(par);
       if(pp->Name == "Var") {
 	stream << "Parameter " << i << ":";
@@ -143,14 +143,14 @@ bool Optimize_Sim::createASCOFiles()
     stream << "#\n\n";
 
     stream << "# Measurements #\n";
-    for(int par=2; par <= Props.size(); par++) {
+    for(int par=2; par < Props.size(); par++) {
       pp = Props.at(par);
       if(pp->Name == "Goal") {
-	val = pp->Value.section('|',1,1);
-	QString Type, Value;
-	Value = pp->Value.section('|',2,2);
-	if (val == "MIN" || val == "MAX" || val == "MON") {
-	  Value = "---";
+        val = pp->Value.section('|',1,1);
+        QString Type, Value;
+        Value = pp->Value.section('|',2,2);
+        if (val == "MIN" || val == "MAX" || val == "MON") {
+        Value = "---";
 	}
 	Type = val;
 	val = pp->Value.section('|',0,0);
@@ -174,7 +174,7 @@ bool Optimize_Sim::createASCOFiles()
     if(!ExtractDir.cd("extract"))
       return false;
   }      
-  for(int par=2; par <= Props.size(); par++) {
+  for(int par=2; par < Props.size(); par++) {
     pp = Props.at(par);
     if(pp->Name == "Goal") {
       QString VarName = pp->Value.section('|',0,0);
@@ -202,7 +202,7 @@ bool Optimize_Sim::createASCOnetlist()
 {
   Property* pp;
   QStringList vars;
-  for(int par=2; par <= Props.size(); par++) {
+  for(int par=2; par < Props.size(); par++) {
     pp = Props.at(par);
     if(pp->Name == "Var") {
       vars += pp->Value.section('|',0,0);
@@ -235,7 +235,7 @@ bool Optimize_Sim::loadASCOout()
   bool changed = false;
   Property* pp;
   QStringList vars;
-  for(int par=2; par <= Props.size(); par++) {
+  for(int par=2; par < Props.size(); par++) {
     pp = Props.at(par);
     if(pp->Name == "Var") {
       vars += pp->Value.section('|',0,0);
@@ -255,7 +255,7 @@ bool Optimize_Sim::loadASCOout()
     QString Name = *it;
     Name = Name.stripWhiteSpace();
     if(vars.contains(Name)) {
-      for(int par=2; par <= Props.size(); par++) {
+      for(int par=2; par < Props.size(); par++) {
           pp = Props.at(par);
           if(pp->Name == "Var") {
               QString val[6];
