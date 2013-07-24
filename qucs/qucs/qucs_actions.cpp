@@ -1014,9 +1014,9 @@ void QucsApp::slotApplyCompText()
 
   int z, n=0;  // "n" is number of property on screen
   //QListIterator<Property *> ip(pc->Props);
-  int i=2;
+  int p_i=1;
   if(pc->Props.size()>1)
-      pp = pc->Props[1];
+      pp = pc->Props[0];
   else
   {
       editText->setHidden(true);
@@ -1024,7 +1024,7 @@ void QucsApp::slotApplyCompText()
   }
   for(z=view->MAx3; z>0; z--) {  // calculate "n"
     if(pp->display) n++;   // is visible ?
-    if(i<pc->Props.size()) pp = pc->Props[i++];
+    if(p_i<pc->Props.size()) pp = pc->Props[p_i++];
     else
     {  // should never happen
           editText->setHidden(true);
@@ -1038,23 +1038,23 @@ void QucsApp::slotApplyCompText()
 
   if(!editText->isHidden()) {   // is called the first time ?
     // no -> apply value to current property
-    if(view->MAx3 == 0) {   // component name ?
-      Component *pc2;
-      if(!editText->text().isEmpty())
-        if(pc->Name != editText->text()) {
-          QListIterator<Component *> ip2(Doc->Components);
-          while (ip2.hasNext()) {
-            pc2 = ip2.next();
-//          for(pc2 = Doc->Components->first(); pc2!=0; pc2 = Doc->Components->next())
-            if(pc2->Name == editText->text())
-              break;  // found component with the same name ?
+      if(view->MAx3 == 0) {   // component name ?
+        Component *pc2;
+        if(!editText->text().isEmpty())
+          if(pc->Name != editText->text()) {
+            for(int i=0; i<Doc->Components.size(); i++)
+            {
+                pc2 = Doc->Components[i];
+                if(pc2->Name == editText->text())
+                  break;  // found component with the same name ?
+            }
+            if(!pc2) {
+              pc->Name = editText->text();
+              Doc->setChanged(true, true);  // only one undo state
+            }
           }
-          if(!pc2) {
-            pc->Name = editText->text();
-            Doc->setChanged(true, true);  // only one undo state
-          }
-        }
-    }
+      }
+
     else if(pp) {  // property was applied
       if(pp->Value != editText->text()) {
         pp->Value = editText->text();
@@ -1077,7 +1077,7 @@ void QucsApp::slotApplyCompText()
 
     while(!pp->display) {  // search for next visible property
       (view->MAx3)++;  // next property
-      if(i<pc->Props.size()) pp = pc->Props[i++];
+      if((view->MAx3-1)<pc->Props.size()) pp = pc->Props[view->MAx3-1];
       else{     // was already last property ?
         editText->setHidden(true);
         return;
