@@ -1450,10 +1450,8 @@ int Schematic::copySelectedElements(QList<Element *> p)
 
   // test all components *********************************
   // Insert components before wires in order to prevent short-cut removal.
-  QListIterator<Component *> ic(Components);
-  //for(pc = Components->first(); pc != 0; )
-  while (ic.hasNext()) {
-    pc = ic.next();
+  for(int i=0; i<Components.size(); i++) {
+      pc = Components[i];
     if(pc->isSelected) {
       p.append(pc);
       count++; // selected component count
@@ -1467,16 +1465,13 @@ int Schematic::copySelectedElements(QList<Element *> p)
       }
 
       Components.takeAt(Components.indexOf(pc)); // ->take();   // take component out of the document
-//      pc = Components->current();
+      i--;
     }
-//    else pc = Components->next();
-//    else pc = ic.next(); 
   }
 
   // test all wires and wire labels ***********************
-  QListIterator<Wire *> iw(Wires);
-  while (iw.hasNext()) {
-    pw = iw.next();
+  for(int i=0; i<Wires.size(); i++) {
+      pw = Wires[i];
     if(pw->Label) if(pw->Label->isSelected)
       p.append(pw->Label);
 
@@ -1489,40 +1484,38 @@ int Schematic::copySelectedElements(QList<Element *> p)
       pw->Port2->State = 4;
 #warning FIXME
       Wires.takeAt(Wires.indexOf(pw));//->take();  
-      //pw = Wires->current();
+      i--;
     }
-//    else pw = Wires->next();
   }
 
   // ..............................................
   // Inserts wires, if a connection to a not moving element is found.
   // The order of the "for"-loops is important to guarantee a stable
   // operation: components, new wires, old wires
-  
-#warning commented out
-  
-  /*
-  pc = (Component*)p->first();
-  for(i=0; i<count; i++) {
-    for(pp = pc->Ports.first(); pp!=0; pp = pc->Ports.next())
-       newMovingWires(p, pp->Connection, count);
 
-    p->findRef(pc);   // back to the real current pointer
-    pc = (Component*)p->next();
+  for(i=0; i<count; i++) {
+    pc = (Component*)p[i];
+    for(int j=0; j< pc->Ports.size(); j++)
+    {
+        pp = pc->Ports[j];
+       newMovingWires(p, pp->Connection, count);
+    }
+  }
+  for(int i=0; i<p.size(); i++)  // new wires
+  {
+      pe = (Element*)p[i];
+      if(pe->isSelected)
+          break;
   }
 
-  for(pe = (Element*)pc; pe != 0; pe = p->next())  // new wires
-    if(pe->isSelected)
-      break;
-
-  for(pw = (Wire*)pe; pw != 0; pw = (Wire*)p->next())
-    if(pw->Type == isWire) {  // not working on labels
-      newMovingWires(p, pw->Port1, count);
-      newMovingWires(p, pw->Port2, count);
-      p->findRef(pw);   // back to the real current pointer
-    }
-*/
-
+  for(int i=0; i<p.size(); i++)
+  {
+      pw = (Wire*)p[i];
+        if(pw->Type == isWire) {  // not working on labels
+          newMovingWires(p, pw->Port1, count);
+          newMovingWires(p, pw->Port2, count);
+        }
+  }
   // ..............................................
   // delete the unused nodes
   
@@ -1600,13 +1593,16 @@ int Schematic::copySelectedElements(QList<Element *> p)
       Graph *pg;
       for(int i=0; i<pd->Graphs.size(); i++) {
         pg = pd->Graphs.at(i);          
-        for(Marker *pm = pg->Markers.first(); pm != 0; )
+        for( int j=0; j< pg->Markers.size(); j++ )
+        {
+          Marker *pm = pg->Markers[j];
           if(pm->isSelected) {
             count++;
             p.append(pm);
 //            pg->Markers.take();
 //            pm = pg->Markers.current();
           }
+        }
 //          else pm = pg->Markers.next();
       }
 
@@ -1699,24 +1695,23 @@ bool Schematic::deleteElements()
   bool sel = false;
 
   Component *pc;// = Components->first();
-  QListIterator<Component *> ic(Components);
+
 //FIXME how can it delete mid loop??
 #warning this does not look right
-  while(ic.hasNext()) {     // all selected component
-    pc = ic.next();
+  for(int i=0; i<Components.size(); i++) {//     // all selected component
+      pc = Components[i];
     if(pc->isSelected) {
       deleteComp(pc);     //FIXME maybe a QMutableListIterator, to be deleted
-//      pc = Components->current();
+      i--;
       sel = true;
     }
-//    else pc = Components->next();
   }
 
   Wire *pw; // = Wires->first();
 #warning mutable  
-  QListIterator<Wire *> iw(Wires);
-  while(iw.hasNext()) {      // all selected wires and their labels
-    pw = iw.next();
+
+  for(int i=0; i<Wires.size(); i++) {      // all selected wires and their labels
+      pw = Wires[i];
     if(pw->Label)
       if(pw->Label->isSelected) {
         delete pw->Label;
@@ -1726,17 +1721,15 @@ bool Schematic::deleteElements()
 
     if(pw->isSelected) {
       deleteWire(pw);
-//      pw = Wires->current();
+      i--;
       sel = true;
     }
-//    else pw = Wires->next();
   }
 
   // all selected labels on nodes ***************************
   Node *pn;
-  QListIterator<Node *> in(Nodes);
-  while (in.hasNext()) {
-    pn = in.next();
+  for(int i=0; i<Nodes.size(); i++) {
+      pn = Nodes[i];
     if(pn->Label)
       if(pn->Label->isSelected) {
         delete pn->Label;
@@ -1746,54 +1739,54 @@ bool Schematic::deleteElements()
   }
 
   Diagram *pd;// = Diagrams->first();
-  QListIterator<Diagram *> id(Diagrams);
-  while(id.hasNext()) {      // test all diagrams
-    pd = id.next();
+  for(int i=0; i<Diagrams.size(); i++) {      // test all diagrams
+      pd = Diagrams[i];
     if(pd->isSelected) {
-//      Diagrams->remove();
-//      pd = Diagrams->current();
-      sel = true;
+        Diagrams.remove(pd);
+        i--;
+        sel = true;
     }
     else {
       bool wasGraphDeleted = false;
       // all graphs of diagram
-      for(Graph *pg = pd->Graphs.first(); pg != 0; ) {
+      for(int i=0; i<pd->Graphs.size(); i++) {
+          Graph* pg = pd->Graphs[i];
         // all markers of diagram
-        for(Marker *pm = pg->Markers.first(); pm != 0; )
+        for(int j=0; j< pg->Markers.size(); j++)
+        {
+            Marker *pm = pg->Markers[j];
           if(pm->isSelected) {
-//            pg->Markers.remove();
-//            pm = pg->Markers.current();
+              pg->Markers.remove(pm);
+              j--;
             sel = true;
           }
-//          else  pm = pg->Markers.next();
+        }
 
         if(pg->isSelected) {
-//          pd->Graphs.remove();
-//          pg = pd->Graphs.current();
+            pd->Graphs.remove(pg);
+            i--;
           sel = wasGraphDeleted = true;
         }
-//        else  pg = pd->Graphs.next();
+
       }
       if(wasGraphDeleted)
         pd->recalcGraphData();  // update diagram (resize etc.)
 
-//      pd = Diagrams->next();
     }
   }
 
 #warning mutable?
   Painting *pp;// = Paintings->first();
-  QListIterator<Painting *> ip(Paintings);
-  while(ip.hasNext()) {    // test all paintings
-    pp = ip.next();
+
+  for(int i=0; i<Paintings.size(); i++) {    // test all paintings
+      pp = Paintings[i];
     if(pp->isSelected)
       if(pp->Name.at(0) != '.') {  // do not delete "PortSym", "ID_text"
 	sel = true;
-	Paintings.removeAt(Paintings.indexOf(pp));
-//	pp = Paintings->current();
+    Paintings.remove(pp);
+    i--;
 	continue; // it will either way
       }
-//    pp = Paintings->next();
   }
 
   if(sel) {

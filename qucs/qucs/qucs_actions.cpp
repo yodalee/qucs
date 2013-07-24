@@ -1048,7 +1048,7 @@ void QucsApp::slotApplyCompText()
                 if(pc2->Name == editText->text())
                   break;  // found component with the same name ?
             }
-            if(!pc2) {
+            if(Doc->Components.size()<1) {
               pc->Name = editText->text();
               Doc->setChanged(true, true);  // only one undo state
             }
@@ -1216,7 +1216,7 @@ void QucsApp::slotExportGraphAsCsv()
   int Count = g->countY * g->cPointsX.first()->count;
   for(n = 0; n < Count; n++) {
     m = n;
-    for(int i=1; g->cPointsX.size(); i++) {
+    for(int i=0; g->cPointsX.size(); i++) {
       pD = g->cPointsX.at(i);  
       Stream << *(pD->Points + m%pD->count) << ';';
       m /= pD->count;
