@@ -523,119 +523,121 @@ bool Schematic::connectVWires2(Wire *w)
 // (the ports of the wire) are connected or not.
 int Schematic::insertWire(Wire *w)
 {
-  int  tmp, con = 0;
-  bool ok;
+    int  tmp, con = 0;
+    bool ok;
 
-  // change coordinates if necessary (port 1 coordinates must be less
-  // port 2 coordinates)
-  if(w->x1 > w->x2) { tmp = w->x1; w->x1 = w->x2; w->x2 = tmp; }
-  else
-  if(w->y1 > w->y2) { tmp = w->y1; w->y1 = w->y2; w->y2 = tmp; }
-  else con = 0x100;
+    // change coordinates if necessary (port 1 coordinates must be less
+    // port 2 coordinates)
+    if(w->x1 > w->x2) { tmp = w->x1; w->x1 = w->x2; w->x2 = tmp; }
+    else
+        if(w->y1 > w->y2) { tmp = w->y1; w->y1 = w->y2; w->y2 = tmp; }
+        else con = 0x100;
 
-  tmp = insertWireNode1(w);
-  if(tmp == 0) return 3;  // no new wire and no open connection
-  if(tmp > 1) con |= 2;   // insert node and remember if it remains open
+    tmp = insertWireNode1(w);
+    if(tmp == 0) return 3;  // no new wire and no open connection
+    if(tmp > 1) con |= 2;   // insert node and remember if it remains open
 
-  if(w->isHorizontal()) ok = connectHWires1(w);
-  else ok = connectVWires1(w);
-  if(!ok) return 3;
-  
-  tmp = insertWireNode2(w);
-  if(tmp == 0) return 3;  // no new wire and no open connection
-  if(tmp > 1) con |= 1;   // insert node and remember if it remains open
+    if(w->isHorizontal()) ok = connectHWires1(w);
+    else ok = connectVWires1(w);
+    if(!ok) return 3;
 
-  if(w->isHorizontal()) ok = connectHWires2(w);
-  else ok = connectVWires2(w);
-  if(!ok) return 3;
+    tmp = insertWireNode2(w);
+    if(tmp == 0) return 3;  // no new wire and no open connection
+    if(tmp > 1) con |= 1;   // insert node and remember if it remains open
 
-  // change node 1 and 2
-  if(con > 255) con = ((con >> 1) & 1) | ((con << 1) & 2);
+    if(w->isHorizontal()) ok = connectHWires2(w);
+    else ok = connectVWires2(w);
+    if(!ok) return 3;
 
-  Wires.append(w);    // add wire to the schematic
+    // change node 1 and 2
+    if(con > 255) con = ((con >> 1) & 1) | ((con << 1) & 2);
 
-  int  n1, n2;
-  Wire *pw, *nw;
-  Node *pn, *pn2;
-  Element *pe;
-  // ................................................................
-  // Check if the new line covers existing nodes.
-  // In order to also check new appearing wires -> use "for"-loop
-//  for(pw = Wires->current(); pw != 0; pw = Wires->next()) ?
-  for(int i=Wires.size()-1; i<Wires.size(); i++) {
-      pw = Wires[i];
-    for(int j=0; j<Nodes.size(); j++) { // check every node
-//    for(pn = Nodes->first(); pn != 0; ) {  // check every node
-        pn=Nodes[j];
-      if(pn->cx == pw->x1) {
-        if(pn->cy <= pw->y1) { continue; }
-        if(pn->cy >= pw->y2) { continue; }
-      }
-      else if(pn->cy == pw->y1) {
-        if(pn->cx <= pw->x1) { continue; }
-        if(pn->cx >= pw->x2) { continue; }
-      }
-      else {  continue; }
+    Wires.append(w);    // add wire to the schematic
 
-      n1 = 2; n2 = 3;
-      pn2 = pn;
-      // check all connections of the current node
-//      for(pe=pn->Connections.first(); pe!=0; pe=pn->Connections.next()) {
-      for(int k=0; k<pn->Connections.size(); k++) {
-          pe = pn->Connections[k];
-        if(pe->Type != isWire) continue;
-        nw = (Wire*)pe;
-	// wire lies within the new ?
-	if(pw->isHorizontal() != nw->isHorizontal()) continue;
+    int  n1, n2;
+    Wire *pw, *nw;
+    Node *pn, *pn2;
+    Element *pe;
+    // ................................................................
+    // Check if the new line covers existing nodes.
+    // In order to also check new appearing wires -> use "for"-loop
+    //  for(pw = Wires->current(); pw != 0; pw = Wires->next()) ?
+    for(int i=Wires.size()-1; i<Wires.size(); i++) {
+        pw = Wires[i];
+        int savedIndex;
+        savedIndex=i;
+        for(int j=0; j<Nodes.size(); j++) { // check every node
+            //    for(pn = Nodes->first(); pn != 0; ) {  // check every node
+            pn=Nodes[j];
+            if(pn->cx == pw->x1) {
+                if(pn->cy <= pw->y1) { continue; }
+                if(pn->cy >= pw->y2) { continue; }
+            }
+            else if(pn->cy == pw->y1) {
+                if(pn->cx <= pw->x1) { continue; }
+                if(pn->cx >= pw->x2) { continue; }
+            }
+            else {  continue; }
 
-        pn  = nw->Port1;
-        pn2 = nw->Port2;
-        n1  = pn->Connections.size();
-        n2  = pn2->Connections.size();
-        if(n1 == 1) {
-          Nodes.removeOne(pn);     // delete node 1 if open
-          pn2->Connections.removeOne(nw);   // remove connection
-          pn = pn2;
+            n1 = 2; n2 = 3;
+            pn2 = pn;
+            // check all connections of the current node
+            //      for(pe=pn->Connections.first(); pe!=0; pe=pn->Connections.next()) {
+            for(int k=0; k<pn->Connections.size(); k++) {
+                pe = pn->Connections[k];
+                if(pe->Type != isWire) continue;
+                nw = (Wire*)pe;
+                // wire lies within the new ?
+                if(pw->isHorizontal() != nw->isHorizontal()) continue;
+
+                pn  = nw->Port1;
+                pn2 = nw->Port2;
+                n1  = pn->Connections.size();
+                n2  = pn2->Connections.size();
+                if(n1 == 1) {
+                    Nodes.removeOne(pn);     // delete node 1 if open
+                    pn2->Connections.removeOne(nw);   // remove connection
+                    pn = pn2;
+                }
+
+                if(n2 == 1) {
+                    pn->Connections.removeOne(nw);   // remove connection
+                    Nodes.removeOne(pn2);     // delete node 2 if open
+                    pn2 = pn;
+                }
+
+                if(pn == pn2) {
+                    if(nw->Label) {
+                        pw->Label = nw->Label;
+                        pw->Label->pOwner = pw;
+                    }
+                    Wires.removeOne(nw);    // delete wire
+                    i=savedIndex-1;
+                    //          Wires->findRef(pw);      // set back to current wire
+                }
+                break;
+            }
+            if(n1 == 1) if(n2 == 1) continue;
+
+            // split wire into two wires
+            if((pw->x1 != pn->cx) || (pw->y1 != pn->cy)) {
+                nw = new Wire(pw->x1, pw->y1, pn->cx, pn->cy, pw->Port1, pn);
+                pn->Connections.append(nw);
+                Wires.append(nw);
+                i=savedIndex-1;
+                pw->Port1->Connections.append(nw);
+            }
+            pw->Port1->Connections.removeOne(nw);
+            pw->x1 = pn2->cx;
+            pw->y1 = pn2->cy;
+            pw->Port1 = pn2;
+            pn2->Connections.append(pw);
         }
-
-        if(n2 == 1) {
-          pn->Connections.removeOne(nw);   // remove connection
-          Nodes.removeOne(pn2);     // delete node 2 if open
-          pn2 = pn;
-        }
-
-        if(pn == pn2) {
-	  if(nw->Label) {
-	    pw->Label = nw->Label;
-	    pw->Label->pOwner = pw;
-	  }
-          Wires.removeOne(nw);    // delete wire
-
-//          Wires->findRef(pw);      // set back to current wire
-        }
-        break;
-      }
-      if(n1 == 1) if(n2 == 1) continue;
-
-      // split wire into two wires
-      if((pw->x1 != pn->cx) || (pw->y1 != pn->cy)) {
-        nw = new Wire(pw->x1, pw->y1, pn->cx, pn->cy, pw->Port1, pn);
-        pn->Connections.append(nw);
-        Wires.append(nw);
-//        Wires->findRef(pw);
-        pw->Port1->Connections.append(nw);
-      }
-      pw->Port1->Connections.removeOne(nw);
-      pw->x1 = pn2->cx;
-      pw->y1 = pn2->cy;
-      pw->Port1 = pn2;
-      pn2->Connections.append(pw);
     }
-  }
 
-  if (Wires.indexOf(w))  // if two wire lines with different labels ...
-    oneLabel(w->Port1);       // ... are connected, delete one label
-  return con | 0x0200;   // sent also end flag
+    if (Wires.indexOf(w))  // if two wire lines with different labels ...
+        oneLabel(w->Port1);       // ... are connected, delete one label
+    return con | 0x0200;   // sent also end flag
 }
 
 // ---------------------------------------------------
@@ -930,7 +932,7 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
   // test all wires and wire labels
   Wire *pw = 0;
 
-  for(int i=0; i<Wires.size(); i++) {
+  for(int i=Wires.size()-1; i>0; i--) {
       pw = Wires[i];
     if(pw->getSelected(x, y)) {
       if(flag) { pw->isSelected ^= flag; return pw; }
@@ -952,13 +954,10 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
       if(pl->isSelected) pe_sel = pl;
     }
   }
-
+  Component* pc;
   // test all components
-  Component *pc = 0;
-  QListIterator<Component *> ic(Components);
-  ic.toBack();
-  while (ic.hasPrevious()) {
-    pc = ic.previous();
+  for(int i=Components.size()-1; i>0; i--) {
+      pc = Components[i];
     if(pc->getSelected(x, y)) {
       if(flag) { pc->isSelected ^= flag; return pc; }
       if(pe_sel) {
@@ -983,10 +982,8 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
   // test all diagrams
   Diagram *pd;
   Marker *pm;
-  QListIterator<Diagram *> id(Diagrams);
-  id.toBack();
-  while (id.hasPrevious()) {
-    pd = id.previous();
+  for(int i=Diagrams.size()-1; i>0; i--) {
+      pd = Diagrams[i];
     for(int i=0; i<pd->Graphs.size(); i++) { 
       pg = pd->Graphs.at(i);
       // test markers of graphs
@@ -1056,12 +1053,9 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
   }
 
   // test all paintings 
-#warning why back to front? 
   Painting *pp = 0;
-  QListIterator<Painting *> ip(Paintings);
-  ip.toBack();
-  while (ip.hasPrevious()) {
-    pp = ip.previous();
+  for(int i=Paintings.size()-1; i>0; i--) {
+      pp = Paintings[i];
     if(pp->isSelected)
       if(pp->resizeTouched(fX, fY, Corr))
         if(pe_1st == 0) {
@@ -1264,10 +1258,10 @@ void Schematic::selectMarkers()
   Marker *pm;
   for(int i=0; i<Diagrams.size(); i++) {
       pd = Diagrams[i];
-    for(int i=0; i<pd->Graphs.size(); i++) {
-      pg = pd->Graphs.at(i);
-      for(int j=0; j<pg->Markers.size(); j++) {
-        pm = pg->Markers.at(j);
+    for(int j=0; j<pd->Graphs.size(); j++) {
+      pg = pd->Graphs.at(j);
+      for(int k=0; k<pg->Markers.size(); k++) {
+        pm = pg->Markers.at(k);
         pm->isSelected = true;
       }
     }
@@ -1391,7 +1385,6 @@ void Schematic::newMovingWires(QList<Element *>* p, Node *pn, int pos)
 // list 'p' and deletes them from the document.
 int Schematic::copySelectedElements(QList<Element *> *p)
 {
-  qDebug() << "Schematic::copySelectedElements  --- BADLY commented out";
   int count = 0;
   Port      *pp;
   Component *pc;
@@ -1604,10 +1597,8 @@ int Schematic::copyElements(int& x1, int& y1, int& x2, int& y2,
   }
   // find upper most selected painting
   Painting *pp;
-  QListIterator<Painting *> ip(Paintings);
-  ip.toBack();
-  while (ip.hasPrevious()) {
-    pp = ip.previous();
+  for(int i=Paintings.size()-1; i>0; i--) {
+      pp = Paintings[i];
     if(pp->isSelected) {
       pp->Bounding(bx1, by1, bx2, by2);
       if(bx1 < x1) x1 = bx1;
@@ -1631,20 +1622,16 @@ bool Schematic::deleteElements()
 
   Component *pc;// = Components->first();
 
-//FIXME how can it delete mid loop??
-#warning this does not look right
   for(int i=0; i<Components.size(); i++) {//     // all selected component
       pc = Components[i];
     if(pc->isSelected) {
-      deleteComp(pc);     //FIXME maybe a QMutableListIterator, to be deleted
+      deleteComp(pc);
       i--;
       sel = true;
     }
   }
 
   Wire *pw; // = Wires->first();
-#warning mutable  
-
   for(int i=0; i<Wires.size(); i++) {      // all selected wires and their labels
       pw = Wires[i];
     if(pw->Label)
@@ -1710,7 +1697,6 @@ bool Schematic::deleteElements()
     }
   }
 
-#warning mutable?
   Painting *pp;// = Paintings->first();
 
   for(int i=0; i<Paintings.size(); i++) {    // test all paintings
@@ -1790,10 +1776,8 @@ bool Schematic::aligning(int Mode)
   // Go backwards in order to insert node labels before its component.
 //  for( = ElementCache.last(); pe != 0; pe = ElementCache.prev())
   Element *pe;
-  QListIterator<Element *> ie(ElementCache);
-  ie.toBack();
-  while (ie.hasPrevious()) {
-    pe = ie.previous();
+  for(int i=ElementCache.size()-1; i>0; i--) {
+      pe = ElementCache[i];
     switch(pe->Type) {
       case isComponent:
       case isAnalogComponent:
@@ -1862,49 +1846,33 @@ bool Schematic::aligning(int Mode)
 // ---------------------------------------------------
 bool Schematic::distributeHorizontal()
 {
-  qDebug() << "Schematic::distributeHorizontal  -- BROKEN";
   int x1, y1, x2, y2;
   int bx1, by1, bx2, by2;
-  QList<Element *> ElementCache;
+  QList<Element*> ElementCache;
   int count = copyElements(x1, y1, x2, y2, &ElementCache);
   if(count < 1) return false;
 
   Element *pe;
   WireLabel *pl;
   // Node labels are not counted for, so put them to the end.
-  QMutableListIterator<Element *> ie(ElementCache);
-  while (ie.hasPrevious()) {
-    pe = ie.previous();
-    if(pe->Type == isNodeLabel) {
-      ie.remove();
-      ElementCache.append(pe);
-//      ElementCache.removeRef(pe);
-    }
-  }
 /*  for(pe = ElementCache.last(); pe != 0; pe = ElementCache.prev())
     if(pe->Type == isNodeLabel) {
       ElementCache.append(pe);
       ElementCache.removeRef(pe);
-    } it was commented out?! was it working?*/
-
+    }*/
+  int k=-1;
   // using bubble sort to get elements x ordered
-  QMutableListIterator<Element *> ies(ElementCache);
   if(count > 1)
     for(int i = count-1; i>0; i--) {
-      ies.toFront();
-      pe = ies.next();
+      pe = ElementCache[++k];
       for(int j=0; j<i; j++) {
         pe->getCenter(bx1, by1);
-        pe = ies.next();
+        pe=ElementCache[++k];
         pe->getCenter(bx2, by2);
         if(bx1 > bx2) {  // change two elements ?
-          // current gets previous, step back one position
-          ies.setValue(ies.previous());
-          // new current gets temp 
-          ies.setValue(pe);
-          // step forward to initial position
-          ies.next(); 
-//          pe = ElementCache.next(); //Need another step?
+            ElementCache.replace(j+1, ElementCache[--k]);
+          ElementCache.replace(j, pe);
+          pe = ElementCache[++k];
         }
       }
     }
@@ -1917,10 +1885,8 @@ bool Schematic::distributeHorizontal()
   if(count > 1) dx = (x2-x1)/(count-1);
   // re-insert elements and put them at right position
   // Go backwards in order to insert node labels before its component.
-  QListIterator<Element *> ie2(ElementCache);
-  ie2.toBack();
-  while (ie2.hasPrevious()) {
-    pe = ie2.previous();
+  for(int i= ElementCache.size()-1; i>0; i--) {
+    pe = ElementCache[i];
     switch(pe->Type) {
       case isComponent:
       case isAnalogComponent:
@@ -1989,23 +1955,21 @@ bool Schematic::distributeVertical()
 
   Element *pe;
   // using bubble sort to get elements x ordered
-  QMutableListIterator<Element *> ies(ElementCache);
+  int k=-1;
   if(count > 1)
     for(int i = count-1; i>0; i--) {
-      ies.toFront();
-      pe = ies.next();
+      ElementCache[++k];
       for(int j=0; j<i; j++) {
         pe->getCenter(bx1, by1);
-        pe = ies.next();
+        pe = ElementCache[++k];
         pe->getCenter(bx2, by2);
         if(bx1 > bx2) {  // change two elements ?
           // current gets previous, step back one position
-          ies.setValue(ies.previous());
+          *ElementCache[k]=*(ElementCache[--k]);
           // new current gets temp 
-          ies.setValue(pe);
+          *ElementCache[k]=*(pe);
           // step forward to initial position
-          ies.next(); 
-//          pe = ElementCache.next(); //Need another step?
+          k++;
         }
       }
     }
@@ -2017,10 +1981,8 @@ bool Schematic::distributeVertical()
   if(count > 1) dy = (y2-y1)/(count-1);
   // re-insert elements and put them at right position
   // Go backwards in order to insert node labels before its component.
-  QListIterator<Element *> ie2(ElementCache);
-  ie2.toBack();
-  while (ie2.hasPrevious()) {
-    pe = ie2.previous();
+  for(int i=ElementCache.size()-1; i>0; i--) {
+      pe = ElementCache[i];
     switch(pe->Type) {
       case isComponent:
       case isAnalogComponent:
@@ -2111,7 +2073,7 @@ void Schematic::setComponentNumber(Component *c)
   }
   if(!used) return;   // port number not in use 
 
-  
+#warning this part was not in master
   // Find the first free port number
   // Create list of existing port numbers
   QList<int> portList;
@@ -2131,6 +2093,7 @@ void Schematic::setComponentNumber(Component *c)
   }
    
   s  = QString::number(newN);
+#warning up to here
   pp->Value = s; // set new number
 }
 
@@ -2206,9 +2169,8 @@ void Schematic::recreateComponent(Component *Comp)
     // Save the labels whose node is not connected to somewhere else.
     // Otherwise the label would be deleted.
     pl = plMem = (WireLabel**)malloc(PortCount * sizeof(WireLabel*));
-    QListIterator<Port *> ip(Comp->Ports);
-    while (ip.hasNext()) {
-      pp = ip.next();
+    for(int i=0; i<Comp->Ports.size(); i++) {
+        pp = Comp->Ports[i];
       if(pp->Connection->Connections.size() < 2) {
         *(pl++) = pp->Connection->Label;
         pp->Connection->Label = 0;
@@ -2237,9 +2199,8 @@ void Schematic::recreateComponent(Component *Comp)
   if(PortCount > 0) {
     // restore node labels
     pl = plMem;
-    QListIterator<Port *> ip(Comp->Ports);
-    while (ip.hasNext()) {
-      pp = ip.next();
+    for(int i=0; i<Comp->Ports.size(); i++) {
+      pp = Comp->Ports[i];
       if(*pl != 0) {
         (*pl)->cx = pp->Connection->cx;
         (*pl)->cy = pp->Connection->cy;
@@ -2284,9 +2245,8 @@ void Schematic::insertComponent(Component *c)
     // determines the name by looking for names with the same
     // prefix and increment the number
     Component *pc;
-    QListIterator<Component *> ic(Components);
-    while (ic.hasNext()) {
-      pc = ic.next();
+    for(int i=0; i<Components.size(); i++) {
+        pc = Components[i];
       if(pc->Name.left(len) == c->Name) {
         s = pc->Name.right(pc->Name.length()-len);
         z = s.toInt(&ok);
@@ -2403,9 +2363,8 @@ void Schematic::setCompPorts(Component *pc)
   WireLabel *pl;
   QList<WireLabel *> LabelCache;
 
-  QListIterator<Port *> ip(pc->Ports);
-  while (ip.hasNext()) {
-    pp = ip.next();
+  for(int i=0; i<pc->Ports.size(); i++) {
+      pp = pc->Ports[i];
     pp->Connection->Connections.removeOne((Element*)pc);// delete connections
     switch(pp->Connection->Connections.size()) {
       case 0:
@@ -2425,10 +2384,8 @@ void Schematic::setCompPorts(Component *pc)
 
   // Re-connect component node to schematic node. This must be done completely
   // after the first loop in order to avoid problems with node labels.
-//  for(pp = pc->Ports.first(); pp!=0; pp = pc->Ports.next())
-  QListIterator<Port *> ip2(pc->Ports);
-  while (ip2.hasNext()) {
-    pp = ip2.next();
+  for(int i=0; i<pc->Ports.size(); i++) {
+      pp = pc->Ports[i];
     pp->Connection = insertNode(pp->x+pc->cx, pp->y+pc->cy, pc);
   }
 
@@ -2503,9 +2460,8 @@ void Schematic::deleteComp(Component *c)
   Port *pn;
 
   // delete all port connections
-  QListIterator<Port *> ip(c->Ports);
-  while (ip.hasNext()) {
-    pn = ip.next();
+  for(int i=0; i<c->Ports.size(); i++) {
+    pn = c->Ports[i];
     switch(pn->Connection->Connections.size()) {
       case 1  : if(pn->Connection->Label) delete pn->Connection->Label;
                 Nodes.removeOne(pn->Connection);  // delete open nodes
@@ -2529,10 +2485,8 @@ int Schematic::copyComponents(int& x1, int& y1, int& x2, int& y2,
   Component *pc;
   int bx1, by1, bx2, by2, count=0;
   // find bounds of all selected components
-  QListIterator<Component *> ic(Components);
-//  for(pc = Components->first(); pc != 0; ) {
-  while (ic.hasNext()) {
-    pc = ic.next();
+  for(int i=0; i<Components.size(); i++) {
+      pc = Components[i];
     if(pc->isSelected) {
       pc->Bounding(bx1, by1, bx2, by2);  // is needed because of "distribute
       if(bx1 < x1) x1 = bx1;             // uniformly"
@@ -2544,9 +2498,8 @@ int Schematic::copyComponents(int& x1, int& y1, int& x2, int& y2,
       ElementCache->append(pc);
 
       Port *pp;   // rescue non-selected node labels
-      QListIterator<Port *> ip(pc->Ports);
-      while (ip.hasNext()) {
-        pp = ip.next();
+      for(int j=0; j<pc->Ports.size(); j++) {
+          pp = pc->Ports[j];
         if(pp->Connection->Label)
           if(pp->Connection->Connections.size() < 2) {
             ElementCache->append(pp->Connection->Label);
@@ -2575,9 +2528,8 @@ void Schematic::copyComponents2(int& x1, int& y1, int& x2, int& y2,
 {
   Component *pc;
   // find bounds of all selected components
-  QListIterator<Component *> ic(Components);
-  while (ic.hasNext()) {
-    pc = ic.next();
+  for(int i=0; i<Components.size(); i++) {
+    pc = Components[i];
     if(pc->isSelected) {
       // is better for unsymmetrical components
       if(pc->cx < x1)  x1 = pc->cx;
@@ -2588,9 +2540,8 @@ void Schematic::copyComponents2(int& x1, int& y1, int& x2, int& y2,
       ElementCache->append(pc);
 
       Port *pp;   // rescue non-selected node labels
-      QListIterator<Port *> ip(pc->Ports);
-      while (ip.hasNext()) {
-        pp = ip.next();
+      for(int j=0; j<pc->Ports.size(); j++) {
+        pp = pc->Ports[j];
         if(pp->Connection->Label)
           if(pp->Connection->Connections.size() < 2) {
             ElementCache->append(pp->Connection->Label);
@@ -2628,9 +2579,8 @@ void Schematic::oneLabel(Node *n1)
   QList<Node *> Cons;
 
 //  for(pn = Nodes->first(); pn!=0; pn = Nodes->next())
-  QListIterator<Node *> in(Nodes);
-  while (in.hasNext()) {
-    pn = in.next();
+  for(int i=0; i<Nodes.size(); i++) {
+      pn = Nodes[i];
     pn->y1 = 0;   // mark all nodes as not checked
   }
 
@@ -2732,24 +2682,22 @@ Element* Schematic::getWireLabel(Node *pn_)
   Element *pe = 0;
   QList<Node *> Cons;
 
-  QListIterator<Node *> in(Nodes);
-  while (in.hasNext()){
-    pn = in.next();
-    pn->y1 = 0;   // mark all nodes as not checked
+  for(int i=0; i<Nodes.size(); i++){
+      pn = Nodes[i];
+      pn->y1 = 0;   // mark all nodes as not checked
   }
 
   Cons.append(pn_);
   pn_->y1 = 1;  // mark Node as already checked
-  QListIterator<Node *> in2(Cons);
-  while (in2.hasNext()) {
-    pn = in2.next();
+
+  for(int i=0; i<Cons.size(); i++) {
+      pn = Cons[i];
     if(pn->Label) 
       return pn;
     else {      
-      QListIterator<Element *> ie(pn->Connections);
-      while (ie.hasNext()) {
-        pe = ie.next();
-        qDebug() << "hasnext";
+
+        for(int j=0; j<pn->Connections.size(); j++) {
+            pe = pn->Connections[j];
         if(pe->Type != isWire) {
 	      if(((Component*)pe)->isActive == COMP_IS_ACTIVE)
               if(((Component*)pe)->Model == "GND") 
@@ -2804,9 +2752,8 @@ void Schematic::copyLabels(int& x1, int& y1, int& x2, int& y2,
   WireLabel *pl;
   // find bounds of all selected wires
   Wire *pw;
-  QListIterator<Wire *> iw(Wires);
-  while (iw.hasNext()) {
-    pw = iw.next();
+  for(int i=0; i<Wires.length(); i++) {
+      pw = Wires[i];
     pl = pw->Label;
     if(pl) if(pl->isSelected) {
       if(pl->x1 < x1) x1 = pl->x1;
@@ -2818,9 +2765,8 @@ void Schematic::copyLabels(int& x1, int& y1, int& x2, int& y2,
   }
   
   Node *pn;
-  QListIterator<Node *> in(Nodes);
-  while (in.hasNext()) {
-    pn = in.next();
+  for(int i=0; i<Nodes.size(); i++) {
+    pn = Nodes[i];
     pl = pn->Label;
     if(pl) if(pl->isSelected) {
       if(pl->x1 < x1) x1 = pl->x1;
@@ -2846,9 +2792,8 @@ Painting* Schematic::selectedPainting(float fX, float fY)
   float Corr = 5.0 / Scale; // size of line select
 
   Painting *pp;// = Paintings->first();
-  QListIterator<Painting *> ip(Paintings);
-  while(ip.hasNext()) {
-    pp = ip.next();
+  for(int i=0; i<Paintings.size(); i++) {
+      pp = Paintings[i];
     if(pp->getSelected(fX, fY, Corr))
       return pp;
   }
@@ -2863,10 +2808,8 @@ void Schematic::copyPaintings(int& x1, int& y1, int& x2, int& y2,
   Painting *pp;
   int bx1, by1, bx2, by2;
   // find boundings of all selected paintings
-#warning mutable?
-  QListIterator<Painting *> ip(Paintings);
-  while(ip.hasNext()) {
-    pp = ip.next();
+  for(int i=0; i<Paintings.size(); i++) {
+      pp = Paintings[i];
     if(pp->isSelected) {
       pp->Bounding(bx1, by1, bx2, by2);
       if(bx1 < x1) x1 = bx1;
@@ -2875,9 +2818,7 @@ void Schematic::copyPaintings(int& x1, int& y1, int& x2, int& y2,
       if(by2 > y2) y2 = by2;
 
       ElementCache->append(pp);
-      Paintings.takeAt(Paintings.indexOf(pp));
-//      pp = Paintings->current();
+      Paintings.takeAt(i--);
     }
-//    else pp = Paintings->next();
   }
 }

@@ -594,12 +594,10 @@ void OptimizeDialog::slotApply()
   }
 
   Q3ListViewItem *item;
-  Property *pp;// = Comp->Props.at(2);
-  QListIterator<Property *> ip(Comp->Props);
-  pp = ip.next(); //0
-  pp = ip.next(); //1
-  pp = ip.next(); //2
+  Property *pp;
   // apply all the new property values in the ListView
+  int i=2;
+
   for(item = VarList->firstChild(); item != 0; item = item->itemBelow()) {
     Prop = item->text(0) + "|" + 
            ((item->text(1) == tr("yes")) ? "yes" : "no") + "|" +
@@ -608,7 +606,8 @@ void OptimizeDialog::slotApply()
            ((item->text(5) == tr("linear double")) ? "LIN_DOUBLE" :
            ((item->text(5) == tr("logarithmic double")) ? "LOG_DOUBLE" :
            ((item->text(5) == tr("linear integer")) ? "LIN_INT" : "LOG_INT")));
-
+    if(i<Comp->Props.size())pp=Comp->Props[i++];
+    else pp=0;
     if(pp) {
       if(pp->Name != "Var") {
         pp->Name = "Var";
@@ -623,11 +622,12 @@ void OptimizeDialog::slotApply()
       Comp->Props.append(new Property("Var", Prop, false, ""));
       changed = true;
     }
-    pp = ip.next();
   }
 
   for(item = GoalList->firstChild(); item != 0; item = item->itemBelow()) {
-    Prop = item->text(0) + "|" +
+      if(i<Comp->Props.size())pp=Comp->Props[i++];
+      else pp=0;
+      Prop = item->text(0) + "|" +
            ((item->text(1) == tr("minimize")) ? "MIN" :
            ((item->text(1) == tr("maximize")) ? "MAX" :
            ((item->text(1) == tr("less")) ? "LE" :
@@ -649,14 +649,10 @@ void OptimizeDialog::slotApply()
       Comp->Props.append(new Property("Goal", Prop, false, ""));
       changed = true;
     }
-    pp = ip.next();
   }
 
   // if more properties than in ListView -> delete the rest
-  if(pp) {
-    pp = ip.previous();
-    //Comp->Props.last();
-    while(pp != Comp->Props.last())
+  while(i<Comp->Props.size()) {
       Comp->Props.removeLast();
     changed = true;
   }
