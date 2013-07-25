@@ -97,7 +97,7 @@ public:
   bool  createSubcircuitSymbol();
 
   QString copySelected(bool);
-  bool    paste(Q3TextStream*, QList<Element *>);
+  bool    paste(Q3TextStream*, QList<Element *>*);
   bool    load();
   int     save();
   int     saveSymbolCpp (void);
@@ -201,15 +201,15 @@ public:
   void  deleteWire(Wire*);
 
   Marker* setMarker(int, int);
-  void    markerLeftRight(bool, QList<Element *>);
-  void    markerUpDown(bool, QList<Element *>);
+  void    markerLeftRight(bool, QList<Element *>*);
+  void    markerUpDown(bool, QList<Element *>*);
 
   Element* selectElement(float, float, bool, int *index=0);
   void     deselectElements(Element*);
   int      selectElements(int, int, int, int, bool);
   void     selectMarkers();
-  void     newMovingWires(QList<Element *>, Node*, int);
-  int      copySelectedElements(QList<Element *>);
+  void     newMovingWires(QList<Element *>*, Node*, int);
+  int      copySelectedElements(QList<Element *>*);
   bool     deleteElements();
   bool     aligning(int);
   bool     distributeHorizontal();
@@ -232,18 +232,18 @@ public:
   int      placeNodeLabel(WireLabel*);
   Element* getWireLabel(Node*);
   void     insertNodeLabel(WireLabel*);
-  void     copyLabels(int&, int&, int&, int&, QList<Element *>);
+  void     copyLabels(int&, int&, int&, int&, QList<Element *>*);
 
   Painting* selectedPainting(float, float);
-  void      copyPaintings(int&, int&, int&, int&, QList<Element *>);
+  void      copyPaintings(int&, int&, int&, int&, QList<Element *>*);
 
 private:
   void insertComponentNodes(Component*, bool);
-  int  copyWires(int&, int&, int&, int&, QList<Element *>);
-  int  copyComponents(int&, int&, int&, int&, QList<Element *>);
-  void copyComponents2(int&, int&, int&, int&, QList<Element *>);
-  bool copyComps2WiresPaints(int&, int&, int&, int&, QList<Element *>);
-  int  copyElements(int&, int&, int&, int&, QList<Element *>);
+  int  copyWires(int&, int&, int&, int&, QList<Element *>*);
+  int  copyComponents(int&, int&, int&, int&, QList<Element *>*);
+  void copyComponents2(int&, int&, int&, int&, QList<Element *>*);
+  bool copyComps2WiresPaints(int&, int&, int&, int&, QList<Element *>*);
+  int  copyElements(int&, int&, int&, int&, QList<Element *>*);
 
 
 /* ********************************************************************
@@ -273,7 +273,7 @@ private:
   bool loadIntoNothing(Q3TextStream*);
 
   QString createClipboardFile();
-  bool    pasteFromClipboard(Q3TextStream*, QList<Element *>);
+  bool    pasteFromClipboard(Q3TextStream*, QList<Element *>*);
 
   QString createUndoString(char);
   bool    rebuild(QString *);

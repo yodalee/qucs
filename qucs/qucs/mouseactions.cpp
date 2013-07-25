@@ -99,7 +99,7 @@ bool MouseActions::pasteElements(Schematic *Doc)
   QString s = cb->text(QClipboard::Clipboard);
   Q3TextStream stream(&s, QIODevice::ReadOnly);
   movingElements.clear();
-  if(!Doc->paste(&stream, movingElements)) return false;
+  if(!Doc->paste(&stream, &movingElements)) return false;
 
   Element *pe;
   int xmax, xmin, ymax, ymin;
@@ -419,7 +419,7 @@ void MouseActions::MMoveMoving(Schematic *Doc, QMouseEvent *Event)
   MAy3 = MAy1 = MAy2 - MAy1;
 
   movingElements.clear();
-  Doc->copySelectedElements(movingElements);
+  Doc->copySelectedElements(&movingElements);
   Doc->viewport()->repaint();
 
   Wire *pw;

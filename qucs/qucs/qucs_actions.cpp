@@ -847,11 +847,11 @@ void QucsApp::slotCursorLeft()
 
   QList<Element *> movingElements;
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
-  int markerCount = Doc->copySelectedElements(movingElements);
+  int markerCount = Doc->copySelectedElements(&movingElements);
 
   if((movingElements.size() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
-      Doc->markerLeftRight(true, movingElements);
+      Doc->markerLeftRight(true, &movingElements);
       movingElements.clear();
     }
     else {
@@ -876,11 +876,11 @@ void QucsApp::slotCursorRight()
 
   QList<Element *> movingElements;
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
-  int markerCount = Doc->copySelectedElements(movingElements);
+  int markerCount = Doc->copySelectedElements(&movingElements);
 
   if((movingElements.size() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
-      Doc->markerLeftRight(false, movingElements);
+      Doc->markerLeftRight(false, &movingElements);
       movingElements.clear();
     }
     else {
@@ -923,11 +923,11 @@ void QucsApp::slotCursorUp()
 
   QList<Element *> movingElements;
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
-  int markerCount = Doc->copySelectedElements(movingElements);
+  int markerCount = Doc->copySelectedElements(&movingElements);
 
   if((movingElements.size() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
-      Doc->markerUpDown(true, movingElements);
+      Doc->markerUpDown(true, &movingElements);
       movingElements.clear();
     }
     else {
@@ -972,11 +972,11 @@ void QucsApp::slotCursorDown()
 
   QList<Element *> movingElements;
   Schematic *Doc = (Schematic*)DocumentTab->currentPage();
-  int markerCount = Doc->copySelectedElements(movingElements);
+  int markerCount = Doc->copySelectedElements(&movingElements);
 
   if((movingElements.size() - markerCount) < 1) {
     if(markerCount > 0) {  // only move marker if nothing else selected
-      Doc->markerUpDown(false, movingElements);
+      Doc->markerUpDown(false, &movingElements);
       movingElements.clear();
     }
     else {

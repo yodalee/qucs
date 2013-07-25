@@ -1063,10 +1063,10 @@ bool Schematic::rotateElements()
   int x1=INT_MAX, y1=INT_MAX;
   int x2=INT_MIN, y2=INT_MIN;
   QList<Element *> ElementCache;
-  copyLabels(x1, y1, x2, y2, ElementCache);   // must be first of all !
-  copyComponents(x1, y1, x2, y2, ElementCache);
-  copyWires(x1, y1, x2, y2, ElementCache);
-  copyPaintings(x1, y1, x2, y2, ElementCache);
+  copyLabels(x1, y1, x2, y2, &ElementCache);   // must be first of all !
+  copyComponents(x1, y1, x2, y2, &ElementCache);
+  copyWires(x1, y1, x2, y2, &ElementCache);
+  copyPaintings(x1, y1, x2, y2, &ElementCache);
   if(y1 == INT_MAX) return false;   // no element selected
 
   //Wires->setAutoDelete(true);
@@ -1163,7 +1163,7 @@ bool Schematic::mirrorXComponents()
 
   int x1, y1, x2, y2;
   QList<Element *> ElementCache;
-  if(!copyComps2WiresPaints(x1, y1, x2, y2, ElementCache))
+  if(!copyComps2WiresPaints(x1, y1, x2, y2, &ElementCache))
     return false;
   //Wires->setAutoDelete(true);
   //Components->setAutoDelete(true);
@@ -1236,7 +1236,7 @@ bool Schematic::mirrorYComponents()
 
   int x1, y1, x2, y2;
   QList<Element *> ElementCache;
-  if(!copyComps2WiresPaints(x1, y1, x2, y2, ElementCache))
+  if(!copyComps2WiresPaints(x1, y1, x2, y2, &ElementCache))
     return false;
 //  Wires->setAutoDelete(true);
   //Components->setAutoDelete(true);
@@ -1323,7 +1323,7 @@ QString Schematic::copySelected(bool cut)
 
 // ---------------------------------------------------
 // Performs paste function from clipboard
-bool Schematic::paste(Q3TextStream *stream, QList<Element *> pe)
+bool Schematic::paste(Q3TextStream *stream, QList<Element *> *pe)
 {
   return pasteFromClipboard(stream, pe);
 }

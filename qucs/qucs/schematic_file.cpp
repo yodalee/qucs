@@ -140,7 +140,7 @@ bool Schematic::loadIntoNothing(Q3TextStream *stream)
 
 // -------------------------------------------------------------
 // Paste from clipboard.
-bool Schematic::pasteFromClipboard(Q3TextStream *stream, QList<Element *> pe)
+bool Schematic::pasteFromClipboard(Q3TextStream *stream, QList<Element *> *pe)
 {
   QString Line;
 
@@ -190,7 +190,7 @@ bool Schematic::pasteFromClipboard(Q3TextStream *stream, QList<Element *> pe)
     }
     else
     if(Line == "<Wires>") {
-      if(!loadWires(stream, &pe)) return false; }
+      if(!loadWires(stream, pe)) return false; }
     else
     if(Line == "<Diagrams>") {
       if(!loadDiagrams(stream, (QList<Diagram*>*)&pe)) return false;
