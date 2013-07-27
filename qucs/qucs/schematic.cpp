@@ -96,6 +96,8 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
   // The 'i' means state for being unchanged.
   UndoStack.append(new QString(" i\n</>\n</>\n</>\n</>\n"));
   UndoSymbol.append(new QString(" i\n</>\n</>\n</>\n</>\n"));
+  UndoStackIndex=0;
+  UndoSymbolIndex=0;
 
   isVerilog = false;
   creatingLib = false;
@@ -231,12 +233,11 @@ void Schematic::becomeCurrent(bool update)
       sizeOfAll(UsedX1, UsedY1, UsedX2, UsedY2);
       setChanged(true, true);
     }
-/*    
-    ps = UndoSymbol.current();
+    ps = UndoSymbol[UndoSymbolIndex];
     if(ps != UndoSymbol.first())  App->undo->setEnabled(true);
     else  App->undo->setEnabled(false);
     if(ps != UndoSymbol.last())  App->redo->setEnabled(true);
-    else  App->redo->setEnabled(false);*/
+    else  App->redo->setEnabled(false);
   }
   else {
     Nodes = DocNodes;
@@ -244,12 +245,12 @@ void Schematic::becomeCurrent(bool update)
     Diagrams = DocDiags;
     Paintings = DocPaints;
     Components = DocComps;
-/*
-    ps = UndoStack.current();
+
+    ps = UndoStack[UndoStackIndex];
     if(ps != UndoStack.first())  App->undo->setEnabled(true);
     else  App->undo->setEnabled(false);
     if(ps != UndoStack.last())  App->redo->setEnabled(true);
-    else  App->redo->setEnabled(false);*/
+    else  App->redo->setEnabled(false);
 
     if(update)
       reloadGraphs();   // load recent simulation data
@@ -288,44 +289,46 @@ void Schematic::setChanged(bool c, bool fillStack, char Op)
   if(!fillStack)
     return;
 
-/*
+
   // ................................................
   if(symbolMode) {  // for symbol edit mode
-    QString *Curr = UndoSymbol.current();
-    while(Curr != UndoSymbol.last())
-      UndoSymbol.remove();   // remove "Redo" items
+      QString *Curr = UndoSymbol[UndoSymbolIndex];
+      while((UndoSymbolIndex +1) < UndoSymbol.size())
+      UndoSymbol.removeLast();   // remove "Redo" items
 
     UndoSymbol.append(new QString(createSymbolUndoString(Op)));
-
+    UndoSymbolIndex++;
     if(!App->undo->isEnabled()) App->undo->setEnabled(true);
     if(App->redo->isEnabled())  App->redo->setEnabled(false);
 
     while(UndoSymbol.size() > QucsSettings.maxUndo) { // "while..." because
       UndoSymbol.removeFirst();    // "maxUndo" could be decreased meanwhile
       UndoSymbol.last();
+      UndoSymbolIndex=UndoSymbol.size()-1;
     }
     return;
   }
 
   // ................................................
   // for schematic edit mode
-  QString *Curr = UndoStack.current();
-  while(Curr != UndoStack.last())
-    UndoStack.remove();   // remove "Redo" items
+  QString *Curr = UndoStack[UndoStackIndex];
+  while((UndoStackIndex +1) < UndoStack.size())
+      UndoStack.removeLast();   // remove "Redo" items
 
   if(Op == 'm')   // only one for move marker
-    if(UndoStack.current()->at(0) == Op)
-      UndoStack.remove();
+    if(UndoStack[UndoStackIndex]->at(0) == Op)
+      UndoStack.removeAt(UndoStackIndex);
 
   UndoStack.append(new QString(createUndoString(Op)));
+  UndoStackIndex++;
 
   if(!App->undo->isEnabled()) App->undo->setEnabled(true);
   if(App->redo->isEnabled())  App->redo->setEnabled(false);
 
   while(UndoStack.size() > QucsSettings.maxUndo) { // "while..." because
     UndoStack.removeFirst();    // "maxUndo" could be decreased meanwhile
-    UndoStack.last();
-  }*/
+    UndoStackIndex = UndoStack.size()-1;
+  }
 }
 
 // -----------------------------------------------------------
@@ -1344,13 +1347,16 @@ bool Schematic::load()
   lastSaved = QDateTime::currentDateTime();
   UndoStack.clear();
   UndoSymbol.clear();
+  UndoStack.append(new QString(" i\n</>\n</>\n</>\n</>\n"));
+  UndoSymbol.append(new QString(" i\n</>\n</>\n</>\n</>\n"));
+  UndoStackIndex = 0;
+  UndoSymbolIndex = 0;
   symbolMode = true;
   setChanged(false, true); // "not changed" state, but put on undo stack
-#warning undo / redo disabled
-  //UndoSymbol.current()->replace(1,1,'i');
+  UndoSymbol[UndoSymbolIndex]->replace(1,1,'i');
   symbolMode = false;
   setChanged(false, true); // "not changed" state, but put on undo stack
-  //UndoStack.current()->replace(1,1,'i');// state of being unchanged
+  UndoStack[UndoStackIndex]->replace(1,1,'i');// state of being unchanged
 
   // The undo stack of the circuit symbol is initialized when first
   // entering its edit mode.
@@ -1383,18 +1389,20 @@ int Schematic::save()
 
   if(result >= 0) {
     setChanged(false);
-#warning undo / redo disabled
-    /*QString *p, *ps = UndoStack.current();
-    for(p = UndoStack.first(); p != 0; p = UndoStack.next())
-      p->replace(1,1,' ');//at(1) = ' ';  // state of being changed
+    QString *p, *ps = UndoStack[UndoStackIndex];
+    for(int i=0; i<UndoStack.size(); i++){
+        p=UndoStack[i];
+        p->replace(1,1,' ');//at(1) = ' ';  // state of being changed
+    }
     ps->replace(1,1,'i');//(1) = 'i';   // state of being unchanged
-    UndoStack.findRef(ps);  // back to current
 
-    ps = UndoSymbol.current();
-    for(p = UndoSymbol.first(); p != 0; p = UndoSymbol.next())
-      p->replace(1,1,' ');//at(1) = ' ';  // state of being changed
+
+    ps = UndoSymbol[UndoSymbolIndex];
+    for(int i=0; i<UndoSymbol.size(); i++){//p
+        p=UndoSymbol[i];
+        p->replace(1,1,' ');//at(1) = ' ';  // state of being changed
+    }
     ps->replace(1,1,'i');//at(1) = 'i';   // state of being unchanged
-    UndoSymbol.findRef(ps);  // back to current*/
   }
   return result;
 }
@@ -1664,22 +1672,20 @@ int Schematic::adjustPortNumbers()
 // ---------------------------------------------------
 bool Schematic::undo()
 {
-  qDebug() << "undo disabled";
-    /*
   if(symbolMode) {
-    if(UndoSymbol.current() == UndoSymbol.first())  return false;
+      if(UndoSymbol[UndoSymbolIndex] == UndoSymbol.first())  return false;
 
-    rebuildSymbol(UndoSymbol.prev());
+      rebuildSymbol(UndoSymbol[--UndoSymbolIndex]);
     adjustPortNumbers();  // set port names
 
-    QString *ps = UndoSymbol.current();
+    QString *ps = UndoSymbol[UndoSymbolIndex];
     if(ps != UndoSymbol.first())  App->undo->setEnabled(true);
     else  App->undo->setEnabled(false);
     if(ps != UndoSymbol.last())  App->redo->setEnabled(true);
     else  App->redo->setEnabled(false);
 
     if(ps->at(1) == 'i')
-      if(UndoStack.current()->at(1) == 'i') {
+        if(UndoStack[UndoStackIndex]->at(1) == 'i') {
 	setChanged(false, false);
 	return true;
       }
@@ -1690,15 +1696,15 @@ bool Schematic::undo()
 
 
   // ...... for schematic edit mode .......
-  if(UndoStack.current() == UndoStack.getFirst())  return false;
+  if(UndoStack[UndoStackIndex] == UndoStack.first())  return false;
 
-  rebuild(UndoStack.prev());
+  rebuild(UndoStack[--UndoStackIndex]);
   reloadGraphs();  // load recent simulation data
 
-  QString *ps = UndoStack.current();
-  if(ps != UndoStack.getFirst())  App->undo->setEnabled(true);
+  QString *ps = UndoStack[UndoStackIndex];
+  if(ps != UndoStack.first())  App->undo->setEnabled(true);
   else  App->undo->setEnabled(false);
-  if(ps != UndoStack.getLast())  App->redo->setEnabled(true);
+  if(ps != UndoStack.last())  App->redo->setEnabled(true);
   else  App->redo->setEnabled(false);
 
   if(ps->at(1) == 'i') {
@@ -1706,35 +1712,33 @@ bool Schematic::undo()
       setChanged(false, false);
       return true;
     }
-    else if(UndoSymbol.current()->at(1) == 'i') {
+    else if(UndoSymbol[UndoSymbolIndex]->at(1) == 'i') {
       setChanged(false, false);
       return true;
     }
   }
 
-  setChanged(true, false);*/
+  setChanged(true, false);
   return true;
 }
 
 // ---------------------------------------------------
 bool Schematic::redo()
 {
-  qDebug() << "redo disabled";
-  /*
   if(symbolMode) {
-    if(UndoSymbol.current() == UndoSymbol.last())  return false;
+      if(UndoSymbol[UndoSymbolIndex] == UndoSymbol.last())  return false;
 
-    rebuildSymbol(UndoSymbol.next());
+      rebuildSymbol(UndoSymbol[++UndoSymbolIndex]);
     adjustPortNumbers();  // set port names
 
-    QString *ps = UndoSymbol.current();
+    QString *ps = UndoSymbol[UndoSymbolIndex];
     if(ps != UndoSymbol.first())  App->undo->setEnabled(true);
     else  App->undo->setEnabled(false);
     if(ps != UndoSymbol.last())  App->redo->setEnabled(true);
     else  App->redo->setEnabled(false);
 
     if(ps->at(1) == 'i')
-      if(UndoStack.current()->at(1) == 'i') {
+      if(UndoStack[UndoStackIndex]->at(1) == 'i') {
 	setChanged(false, false);
 	return true;
       }
@@ -1745,15 +1749,15 @@ bool Schematic::redo()
 
 
   // ...... for schematic edit mode .......
-  if(UndoStack.current() == UndoStack.getLast())  return false;
+  if(UndoStack[UndoStackIndex] == UndoStack.last())  return false;
 
-  rebuild(UndoStack.next());
+  rebuild(UndoStack[++UndoStackIndex]);
   reloadGraphs();  // load recent simulation data
 
-  QString *ps = UndoStack.current();
-  if(ps != UndoStack.getFirst())  App->undo->setEnabled(true);
+  QString *ps = UndoStack[UndoStackIndex];
+  if(ps != UndoStack.first())  App->undo->setEnabled(true);
   else  App->undo->setEnabled(false);
-  if(ps != UndoStack.getLast())  App->redo->setEnabled(true);
+  if(ps != UndoStack.last())  App->redo->setEnabled(true);
   else  App->redo->setEnabled(false);
 
   if(ps->at(1) == 'i') {
@@ -1761,13 +1765,13 @@ bool Schematic::redo()
       setChanged(false, false);
       return true;
     }
-    else if(UndoSymbol.current()->at(1) == 'i') {
+    else if(UndoSymbol[UndoSymbolIndex]->at(1) == 'i') {
       setChanged(false, false);
       return true;
     }
   }
 
-  setChanged(true, false);*/
+  setChanged(true, false);
   return true;
 }
 
@@ -1829,9 +1833,9 @@ bool Schematic::elementsOnGrid()
   //Wires->setAutoDelete(false);
   // test all wires and wire labels
   Wire *pw;
-  QListIterator<Wire *> iw(Wires);
-  while (iw.hasNext()) {
-    pw = iw.next();
+  for(int i=0; i<Wires.size(); i++){
+
+    pw = Wires[i];
     pl = pw->Label;
     pw->Label = 0;
 
@@ -1856,6 +1860,8 @@ bool Schematic::elementsOnGrid()
       setOnGrid(pw->x1, pw->y1);
       setOnGrid(pw->x2, pw->y2);
       insertWire(pw);
+      i=No;
+
 #warning Wires->at(No)
 //      Wires->at(No);   // restore current list position
       pw->isSelected = false;

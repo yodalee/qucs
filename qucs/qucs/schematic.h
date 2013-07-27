@@ -150,7 +150,7 @@ public:
 
   QList<QString *> UndoStack;
   QList<QString *> UndoSymbol;    // undo stack for circuit symbol
-
+  int UndoStackIndex, UndoSymbolIndex;
 protected:
   bool sizeOfFrame(int&, int&);
   void paintFrame(ViewPainter*);

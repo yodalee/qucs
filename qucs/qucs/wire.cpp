@@ -152,6 +152,7 @@ QString Wire::save()
 {
   QString s  = "<"+QString::number(x1)+" "+QString::number(y1);
           s += " "+QString::number(x2)+" "+QString::number(y2);
+  //WireLabel* l = Label;
   if(Label) {
           s += " \""+Label->Name+"\" ";
           s += QString::number(Label->x1)+" "+QString::number(Label->y1)+" ";
