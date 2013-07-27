@@ -138,7 +138,15 @@
     </message>
     <message>
         <source>No match found!</source>
-        <translation>Nessun risultato trovato!</translation>
+        <translation type="obsolete">Nessun risultato trovato!</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errore</translation>
+    </message>
+    <message>
+        <source>Regular expression for component name is invalid.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -855,6 +863,194 @@
     </message>
 </context>
 <context>
+    <name>FilterDialog</name>
+    <message>
+        <source>E&amp;xit</source>
+        <translation type="unfinished">&amp;Esci</translation>
+    </message>
+    <message>
+        <source>&amp;About Qucs Filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About Qt...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">&amp;File</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished">&amp;Aiuto</translation>
+    </message>
+    <message>
+        <source>Specify order</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>b</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>c</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cutoff/Center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ripple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dB</source>
+        <translation type="unfinished">dB</translation>
+    </message>
+    <message>
+        <source>Angle</source>
+        <translation type="unfinished">Angolo</translation>
+    </message>
+    <message>
+        <source>°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ohm</source>
+        <translation type="unfinished">Ohm</translation>
+    </message>
+    <message>
+        <source>Zout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopband corner</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandwidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attenuation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dual</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopband is first pole</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize cauer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Equal inductors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>+ rather than T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cmin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cmax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>noC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize L</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lmin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lmax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>noL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LC Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Microstrip Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Active Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">Esci</translation>
+    </message>
+    <message>
+        <source>Calculate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+Filter synthesis program
+</source>
+        <translation type="unfinished">
+Programma di sintesi dei filtri
+</translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2009 by</source>
+        <translation type="unfinished">Copyright (C) 2005, 2006 di 
+ {2009 ?}</translation>
+    </message>
+    <message>
+        <source>About Qt</source>
+        <translation type="unfinished">Informazioni su Qt</translation>
+    </message>
+</context>
+<context>
     <name>GraphicTextDialog</name>
     <message>
         <source>Edit Text Properties</source>
@@ -878,11 +1074,11 @@
     </message>
     <message>
         <source>Text size: </source>
-        <translation>Dimensione testo: </translation>
+        <translation type="obsolete">Dimensione testo: </translation>
     </message>
     <message>
         <source>Rotation angle: </source>
-        <translation>Angolo di rotazione: </translation>
+        <translation type="obsolete">Angolo di rotazione: </translation>
     </message>
     <message>
         <source>Use LaTeX style for special characters, e.g. \tau</source>
@@ -907,6 +1103,14 @@
     <message>
         <source>&amp;Cancel</source>
         <translation>&amp;Annulla</translation>
+    </message>
+    <message>
+        <source>  Text size: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>  Rotation angle: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -949,11 +1153,11 @@
     </message>
     <message>
         <source>QucsAttenuator is an attenuator synthesis program. To create a attenuator, simply enter all the input parameters and press the calculation button. Immediatly, the schematic of the attenuator is calculated and put into the clipboard. Now go to Qucs, open an schematic and press CTRL-V (paste from clipboard). The attenuator schematic can now be inserted. Have lots of fun!</source>
-        <translation>QucsAttenuator è un programma per la sintesi di attenuatori. Per creare un attenuatore, inserisci semplicemente tutti i parametri di ingresso e premi il bottone di calcolo. Lo schema dell&apos;attenuatore è immediatamente calcolato e inserito negli appunti. Ora apri uno schema in Qucs e premi CTRL-V (incolla dagli appunti). Lo schema dell&apos;attenuatore può essere così inserito. Buon divertimento!</translation>
+        <translation type="obsolete">QucsAttenuator è un programma per la sintesi di attenuatori. Per creare un attenuatore, inserisci semplicemente tutti i parametri di ingresso e premi il bottone di calcolo. Lo schema dell&apos;attenuatore è immediatamente calcolato e inserito negli appunti. Ora apri uno schema in Qucs e premi CTRL-V (incolla dagli appunti). Lo schema dell&apos;attenuatore può essere così inserito. Buon divertimento!</translation>
     </message>
     <message>
         <source>Qucs Attenuator Help</source>
-        <translation>Aiuto di Qucs Attenuator</translation>
+        <translation type="obsolete">Aiuto di Qucs Attenuator</translation>
     </message>
 </context>
 <context>
@@ -1277,7 +1481,7 @@
     </message>
     <message>
         <source>No subcircuits!</source>
-        <translation>Nessun sottocircuito!</translation>
+        <translation type="obsolete">Nessun sottocircuito!</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1331,7 +1535,7 @@ Libreria creata con successo.</translation>
     </message>
     <message>
         <source>Enter description for &quot;%1&quot;:</source>
-        <translation>Inserire una descrizione per &quot;%1&quot;:</translation>
+        <translation type="obsolete">Inserire una descrizione per &quot;%1&quot;:</translation>
     </message>
     <message>
         <source>Manage User Libraries</source>
@@ -1355,7 +1559,7 @@ Libreria creata con successo.</translation>
     </message>
     <message>
         <source>No user library!</source>
-        <translation>Nessuna libreria utente!</translation>
+        <translation type="obsolete">Nessuna libreria utente!</translation>
     </message>
     <message>
         <source>Please insert a new library name!</source>
@@ -1409,6 +1613,67 @@ Scrittura della nuova libreria fallita!</translation>
     <message>
         <source>No permission to delete library subdirectory &quot;%1&quot;.</source>
         <translation>La cancellazione della sottodirectory &quot;%1&quot; della libreria non è permessa.</translation>
+    </message>
+    <message>
+        <source>Add subcircuit description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter description for:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation type="unfinished">Descrizione:</translation>
+    </message>
+    <message>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No projects!</source>
+        <translation type="unfinished">Nessun progetto!</translation>
+    </message>
+    <message>
+        <source>Next...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving library...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading subcircuit &quot;%1&quot;.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creating Qucs netlist.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Cannot create netlist for &quot;%1&quot;.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creating Verilog netlist.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creating VHDL netlist.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error creating library.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1491,6 +1756,10 @@ Scrittura della nuova libreria fallita!</translation>
     <message>
         <source>transparent</source>
         <translation>trasparente</translation>
+    </message>
+    <message>
+        <source>Z0: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5082,7 +5351,7 @@ Usage:  qucsedit [-r] file
     </message>
     <message>
         <source>-</source>
-        <translation type="obsolete">-</translation>
+        <translation type="unfinished">-</translation>
     </message>
     <message>
         <source>C-S zero-bias depletion capacitance</source>
@@ -7538,6 +7807,118 @@ Usage:  qucsedit [-r] file
         <source>Microstrip Lange Coupler</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cannot save settings file !</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34nMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34nMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34pMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34pMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30nMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30nMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30pMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30pMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>hicumL2V2p31n verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weight factor for the low current minority charge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter describing the slope of hjEi(VBE)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smoothing parameter for hjEi(VBE) at high voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time constant for modeling carrier jam at low VCE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Barrier voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normalization parameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smoothing parameter for barrier voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>fitting factor for critical current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flag for turning on and off of correlated noise implementation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Emitter resistance flicker noise coefficient</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Emitter resistance flicker noise exponent factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandgap difference between B and B-E junction used for hjEi0 and hf0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temperature coefficient for ahjEi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temperature coefficient for hjEi0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temperature coefficient for Rth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First order relative TC of parameter Rth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HICUM L2 V2.31</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> &lt;invalid&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QucsActions</name>
@@ -7804,7 +8185,7 @@ Esce dall&apos;applicazione</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation>Taglia</translation>
+        <translation type="obsolete">Taglia</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
@@ -7824,7 +8205,7 @@ Taglia la parte selezionata e la copia negli appunti</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Copia</translation>
+        <translation type="obsolete">Copia</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
@@ -7844,7 +8225,7 @@ Copia la parte selezionata negli appunti</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation>Incolla</translation>
+        <translation type="obsolete">Incolla</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
@@ -7884,7 +8265,7 @@ Cancella i componenti selezionati</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Annulla</translation>
+        <translation type="obsolete">Annulla</translation>
     </message>
     <message>
         <source>&amp;Undo</source>
@@ -7904,7 +8285,7 @@ Annulla l&apos;ultimo comando</translation>
     </message>
     <message>
         <source>Redo</source>
-        <translation>Ripeti</translation>
+        <translation type="obsolete">Ripeti</translation>
     </message>
     <message>
         <source>&amp;Redo</source>
@@ -8708,11 +9089,11 @@ Errori:
     </message>
     <message>
         <source>Content of &apos;</source>
-        <translation>Contenuto di &apos;</translation>
+        <translation type="obsolete">Contenuto di &apos;</translation>
     </message>
     <message>
         <source>&apos;</source>
-        <translation>&apos;</translation>
+        <translation type="obsolete">&apos;</translation>
     </message>
     <message>
         <source> - Project: </source>
@@ -9026,7 +9407,7 @@ Continuare ?</translation>
     </message>
     <message>
         <source>Delete Group</source>
-        <translation>Cancella gruppo</translation>
+        <translation type="obsolete">Cancella gruppo</translation>
     </message>
     <message>
         <source>Cannot delete the open file: </source>
@@ -9222,7 +9603,7 @@ Crea un nuovo documento schema o vista dati</translation>
     </message>
     <message>
         <source>New Text</source>
-        <translation type="unfinished">Nuovo file Testo</translation>
+        <translation type="obsolete">Nuovo file Testo</translation>
     </message>
     <message>
         <source>New &amp;Text</source>
@@ -10224,19 +10605,19 @@ Centra verticalmente gli elementi selezionati</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Salva</translation>
+        <translation type="obsolete">Salva</translation>
     </message>
     <message>
         <source>Save All</source>
-        <translation>Salva Tutti</translation>
+        <translation type="obsolete">Salva Tutti</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Chiudi</translation>
+        <translation type="obsolete">Chiudi</translation>
     </message>
     <message>
         <source>Print...</source>
-        <translation>Stampa...</translation>
+        <translation type="obsolete">Stampa...</translation>
     </message>
     <message>
         <source>Print Fit to Page</source>
@@ -10414,20 +10795,82 @@ Convert data file to various file formats</source>
 Shows/hides the Octave dock window</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Insert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Content of </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open examples directory...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print Document</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Examples</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Opens a file explorer with example documents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Examples
+
+Opens a file explorer with example documents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Technical Papers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Technical &amp;Reports</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>T&amp;utorials</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">Modifica</translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QucsAttenuator</name>
     <message>
         <source>E&amp;xit</source>
-        <translation>&amp;Esci</translation>
+        <translation type="obsolete">&amp;Esci</translation>
     </message>
     <message>
         <source>Help...</source>
-        <translation>Aiuto...</translation>
+        <translation type="obsolete">Aiuto...</translation>
     </message>
     <message>
         <source>&amp;About QucsAttenuator...</source>
-        <translation>&amp;A proposito di QucsAttenuator...</translation>
+        <translation type="obsolete">&amp;A proposito di QucsAttenuator...</translation>
     </message>
     <message>
         <source>About Qt...</source>
@@ -10532,7 +10975,27 @@ Programma di sintesi attenuatori
     </message>
     <message>
         <source>Error: Set Attenuation more than %1 dB</source>
-        <translation>Errore: Imposta attenuazione a più di %1 dB</translation>
+        <translation type="obsolete">Errore: Imposta attenuazione a più di %1 dB</translation>
+    </message>
+    <message>
+        <source>&amp;Quit</source>
+        <translation type="unfinished">&amp;Esci</translation>
+    </message>
+    <message>
+        <source>&amp;About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qucs Attenuator Help</source>
+        <translation type="unfinished">Aiuto di Qucs Attenuator</translation>
+    </message>
+    <message>
+        <source>QucsAttenuator is an attenuator synthesis program. To create a attenuator, simply enter all the input parameters and press the calculation button. Immediatly, the schematic of the attenuator is calculated and put into the clipboard. Now go to Qucs, open an schematic and press CTRL-V (paste from clipboard). The attenuator schematic can now be inserted. Have lots of fun!</source>
+        <translation type="unfinished">QucsAttenuator è un programma per la sintesi di attenuatori. Per creare un attenuatore, inserisci semplicemente tutti i parametri di ingresso e premi il bottone di calcolo. Lo schema dell&apos;attenuatore è immediatamente calcolato e inserito negli appunti. Ora apri uno schema in Qucs e premi CTRL-V (incolla dagli appunti). Lo schema dell&apos;attenuatore può essere così inserito. Buon divertimento!</translation>
+    </message>
+    <message>
+        <source>Error: Set Attenuation less than %1 dB</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -12642,6 +13105,30 @@ fine di aprirli utilizzando il programma appropriato.</translation>
         <source>Source Code Editor</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Edit the standard paths and external applications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Octave path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qucs Home:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the octave bin directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the home directory</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QucsTranscalc</name>
@@ -13545,6 +14032,10 @@ Errori:
         <source>ERROR: Cannot simulate a text file!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>ERROR: Program not found: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpiceDialog</name>
@@ -13687,15 +14178,15 @@ Errori:
     <name>TextDoc</name>
     <message>
         <source>Error</source>
-        <translation>Errore</translation>
+        <translation type="obsolete">Errore</translation>
     </message>
     <message>
         <source>There is no selection!</source>
-        <translation>Nessuna selezione!</translation>
+        <translation type="obsolete">Nessuna selezione!</translation>
     </message>
     <message>
         <source>Page %1 of %2</source>
-        <translation>Pagina %1 di %2</translation>
+        <translation type="obsolete">Pagina %1 di %2</translation>
     </message>
     <message>
         <source>Edit Text Symbol</source>

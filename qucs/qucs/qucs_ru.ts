@@ -138,7 +138,15 @@
     </message>
     <message>
         <source>No match found!</source>
-        <translation>Нет соответствия!</translation>
+        <translation type="obsolete">Нет соответствия!</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Ошибка</translation>
+    </message>
+    <message>
+        <source>Regular expression for component name is invalid.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -851,6 +859,193 @@
     </message>
 </context>
 <context>
+    <name>FilterDialog</name>
+    <message>
+        <source>E&amp;xit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;About Qucs Filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About Qt...</source>
+        <translation type="unfinished">О Qt...</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">&amp;Файл</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished">&amp;Справка</translation>
+    </message>
+    <message>
+        <source>Specify order</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>b</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>c</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cutoff/Center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hz</source>
+        <translation type="unfinished">Гц</translation>
+    </message>
+    <message>
+        <source>kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ripple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dB</source>
+        <translation type="unfinished">дБ</translation>
+    </message>
+    <message>
+        <source>Angle</source>
+        <translation type="unfinished">Угол</translation>
+    </message>
+    <message>
+        <source>°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ohm</source>
+        <translation type="unfinished">Ом</translation>
+    </message>
+    <message>
+        <source>Zout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopband corner</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandwidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attenuation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dual</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopband is first pole</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize cauer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Equal inductors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>+ rather than T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cmin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cmax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>noC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize L</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lmin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lmax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>noL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LC Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Microstrip Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Active Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">Выйти</translation>
+    </message>
+    <message>
+        <source>Calculate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About...</source>
+        <translation type="unfinished">О...</translation>
+    </message>
+    <message>
+        <source>
+Filter synthesis program
+</source>
+        <translation type="unfinished">
+Программа синтеза фильтров
+</translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2009 by</source>
+        <translation type="unfinished">Copyright (C) 2005, 2006  {2009 ?}</translation>
+    </message>
+    <message>
+        <source>About Qt</source>
+        <translation type="unfinished">О Qt</translation>
+    </message>
+</context>
+<context>
     <name>GraphicTextDialog</name>
     <message>
         <source>Edit Text Properties</source>
@@ -874,11 +1069,11 @@
     </message>
     <message>
         <source>Text size: </source>
-        <translation>Размер текста: </translation>
+        <translation type="obsolete">Размер текста: </translation>
     </message>
     <message>
         <source>Rotation angle: </source>
-        <translation>Угол поворота: </translation>
+        <translation type="obsolete">Угол поворота: </translation>
     </message>
     <message>
         <source>Use LaTeX style for special characters, e.g. \tau</source>
@@ -903,6 +1098,14 @@
     <message>
         <source>&amp;Cancel</source>
         <translation>О&amp;тменить</translation>
+    </message>
+    <message>
+        <source>  Text size: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>  Rotation angle: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -945,11 +1148,11 @@
     </message>
     <message>
         <source>QucsAttenuator is an attenuator synthesis program. To create a attenuator, simply enter all the input parameters and press the calculation button. Immediatly, the schematic of the attenuator is calculated and put into the clipboard. Now go to Qucs, open an schematic and press CTRL-V (paste from clipboard). The attenuator schematic can now be inserted. Have lots of fun!</source>
-        <translation>QucsAttenuator - это программа синтеза аттеньюаторов. Для создания аттеньюатора нужно просто ввести все входные параметры и нажать кнопку расчета. Сразу после этого схема аттеньюатора рассчитывается и помещается в буфер обмена. Теперь нужно перейти в Qucs, открыть схемный документ и нажать CTRL-V (вставить из буфера обмена). Схема аттеньюатра теперь может быть вставлена. Удачи!</translation>
+        <translation type="obsolete">QucsAttenuator - это программа синтеза аттеньюаторов. Для создания аттеньюатора нужно просто ввести все входные параметры и нажать кнопку расчета. Сразу после этого схема аттеньюатора рассчитывается и помещается в буфер обмена. Теперь нужно перейти в Qucs, открыть схемный документ и нажать CTRL-V (вставить из буфера обмена). Схема аттеньюатра теперь может быть вставлена. Удачи!</translation>
     </message>
     <message>
         <source>Qucs Attenuator Help</source>
-        <translation>Справка по Qucs Attenuator</translation>
+        <translation type="obsolete">Справка по Qucs Attenuator</translation>
     </message>
 </context>
 <context>
@@ -1277,7 +1480,7 @@
     </message>
     <message>
         <source>No subcircuits!</source>
-        <translation>Нет подсхем!</translation>
+        <translation type="obsolete">Нет подсхем!</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1331,7 +1534,7 @@ Successfully created library.</source>
     </message>
     <message>
         <source>Enter description for &quot;%1&quot;:</source>
-        <translation>Введите описание для &quot;%1&quot;:</translation>
+        <translation type="obsolete">Введите описание для &quot;%1&quot;:</translation>
     </message>
     <message>
         <source>Manage User Libraries</source>
@@ -1355,7 +1558,7 @@ Successfully created library.</source>
     </message>
     <message>
         <source>No user library!</source>
-        <translation>Нет библиотеки пользователя!</translation>
+        <translation type="obsolete">Нет библиотеки пользователя!</translation>
     </message>
     <message>
         <source>Please insert a new library name!</source>
@@ -1408,6 +1611,67 @@ Successfully created library.</source>
     <message>
         <source>No permission to delete library subdirectory &quot;%1&quot;.</source>
         <translation>Нет прав на удаление подкаталога &quot;%1&quot; библиотеки. </translation>
+    </message>
+    <message>
+        <source>Add subcircuit description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter description for:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation type="unfinished">Описание:</translation>
+    </message>
+    <message>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No projects!</source>
+        <translation type="unfinished">Нет проектов!</translation>
+    </message>
+    <message>
+        <source>Next...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving library...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading subcircuit &quot;%1&quot;.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creating Qucs netlist.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Cannot create netlist for &quot;%1&quot;.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creating Verilog netlist.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creating VHDL netlist.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error creating library.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1490,6 +1754,10 @@ Successfully created library.</source>
     <message>
         <source>transparent</source>
         <translation>прозрачный</translation>
+    </message>
+    <message>
+        <source>Z0: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3716,7 +3984,7 @@ Usage:  qucsedit [-r] file
     </message>
     <message>
         <source> &lt;invalid&gt;</source>
-        <translation type="obsolete"> &lt;неправильно&gt;</translation>
+        <translation type="unfinished"> &lt;неправильно&gt;</translation>
     </message>
     <message>
         <source>initial phase in degrees</source>
@@ -4598,7 +4866,7 @@ Usage:  qucsedit [-r] file
     </message>
     <message>
         <source>-</source>
-        <translation type="obsolete">-</translation>
+        <translation type="unfinished">-</translation>
     </message>
     <message>
         <source>HICUM Level 2 v2.1 verilog device</source>
@@ -7634,6 +7902,114 @@ Usage:  qucsedit [-r] file
         <source>Microstrip Lange Coupler</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cannot save settings file !</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34nMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34nMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34pMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34pMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30nMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30nMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30pMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30pMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>hicumL2V2p31n verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weight factor for the low current minority charge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter describing the slope of hjEi(VBE)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smoothing parameter for hjEi(VBE) at high voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time constant for modeling carrier jam at low VCE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Barrier voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normalization parameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smoothing parameter for barrier voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>fitting factor for critical current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flag for turning on and off of correlated noise implementation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Emitter resistance flicker noise coefficient</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Emitter resistance flicker noise exponent factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandgap difference between B and B-E junction used for hjEi0 and hf0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temperature coefficient for ahjEi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temperature coefficient for hjEi0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temperature coefficient for Rth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First order relative TC of parameter Rth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HICUM L2 V2.31</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QucsActions</name>
@@ -8112,7 +8488,7 @@ Quits the application</source>
     </message>
     <message>
         <source>Cut</source>
-        <translation>Вырезать</translation>
+        <translation type="obsolete">Вырезать</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
@@ -8136,7 +8512,7 @@ Cuts the selected section and puts it to the clipboard</source>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Скопировать</translation>
+        <translation type="obsolete">Скопировать</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
@@ -8160,7 +8536,7 @@ Copies the selected section to the clipboard</source>
     </message>
     <message>
         <source>Paste</source>
-        <translation>Вставить</translation>
+        <translation type="obsolete">Вставить</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
@@ -8280,7 +8656,7 @@ Copies the selected section to the clipboard</source>
     </message>
     <message>
         <source>Delete Group</source>
-        <translation>Удалить группу</translation>
+        <translation type="obsolete">Удалить группу</translation>
     </message>
     <message>
         <source>Error</source>
@@ -8498,11 +8874,11 @@ Do you want to save the changes before closing?</source>
     </message>
     <message>
         <source>Content of &apos;</source>
-        <translation>Содержание &apos;</translation>
+        <translation type="obsolete">Содержание &apos;</translation>
     </message>
     <message>
         <source>&apos;</source>
-        <translation>&apos;</translation>
+        <translation type="obsolete">&apos;</translation>
     </message>
     <message>
         <source>Cannot create project directory !</source>
@@ -8728,7 +9104,7 @@ Overwrite ?</source>
     </message>
     <message>
         <source>New Text</source>
-        <translation>Новый текст</translation>
+        <translation type="obsolete">Новый текст</translation>
     </message>
     <message>
         <source>New &amp;Text</source>
@@ -9004,7 +9380,7 @@ Searches for the same piece of text again</source>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Отменить</translation>
+        <translation type="obsolete">Отменить</translation>
     </message>
     <message>
         <source>&amp;Undo</source>
@@ -9026,7 +9402,7 @@ Makes the last action undone</source>
     </message>
     <message>
         <source>Redo</source>
-        <translation>Вернуть</translation>
+        <translation type="obsolete">Вернуть</translation>
     </message>
     <message>
         <source>&amp;Redo</source>
@@ -10266,19 +10642,19 @@ Center vertically selected elements</source>
     </message>
     <message>
         <source>Save</source>
-        <translation>Сохранить</translation>
+        <translation type="obsolete">Сохранить</translation>
     </message>
     <message>
         <source>Save All</source>
-        <translation>Сохранить все</translation>
+        <translation type="obsolete">Сохранить все</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрыть</translation>
+        <translation type="obsolete">Закрыть</translation>
     </message>
     <message>
         <source>Print...</source>
-        <translation>Напечатать...</translation>
+        <translation type="obsolete">Напечатать...</translation>
     </message>
     <message>
         <source>Verilog Sources</source>
@@ -10410,20 +10786,82 @@ Convert data file to various file formats</source>
 Shows/hides the Octave dock window</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Insert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Content of </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open examples directory...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print Document</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Examples</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Opens a file explorer with example documents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Examples
+
+Opens a file explorer with example documents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Technical Papers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Technical &amp;Reports</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>T&amp;utorials</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QucsAttenuator</name>
     <message>
         <source>E&amp;xit</source>
-        <translation>В&amp;ыход</translation>
+        <translation type="obsolete">В&amp;ыход</translation>
     </message>
     <message>
         <source>Help...</source>
-        <translation>Справка...</translation>
+        <translation type="obsolete">Справка...</translation>
     </message>
     <message>
         <source>&amp;About QucsAttenuator...</source>
-        <translation>&amp;О QucsAttenuator...</translation>
+        <translation type="obsolete">&amp;О QucsAttenuator...</translation>
     </message>
     <message>
         <source>About Qt...</source>
@@ -10527,7 +10965,27 @@ Attenuator synthesis program
     </message>
     <message>
         <source>Error: Set Attenuation more than %1 dB</source>
-        <translation>Ошибка: Установите ослабление более %1 dB</translation>
+        <translation type="obsolete">Ошибка: Установите ослабление более %1 dB</translation>
+    </message>
+    <message>
+        <source>&amp;Quit</source>
+        <translation type="unfinished">&amp;Закончить</translation>
+    </message>
+    <message>
+        <source>&amp;About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qucs Attenuator Help</source>
+        <translation type="unfinished">Справка по Qucs Attenuator</translation>
+    </message>
+    <message>
+        <source>QucsAttenuator is an attenuator synthesis program. To create a attenuator, simply enter all the input parameters and press the calculation button. Immediatly, the schematic of the attenuator is calculated and put into the clipboard. Now go to Qucs, open an schematic and press CTRL-V (paste from clipboard). The attenuator schematic can now be inserted. Have lots of fun!</source>
+        <translation type="unfinished">QucsAttenuator - это программа синтеза аттеньюаторов. Для создания аттеньюатора нужно просто ввести все входные параметры и нажать кнопку расчета. Сразу после этого схема аттеньюатора рассчитывается и помещается в буфер обмена. Теперь нужно перейти в Qucs, открыть схемный документ и нажать CTRL-V (вставить из буфера обмена). Схема аттеньюатра теперь может быть вставлена. Удачи!</translation>
+    </message>
+    <message>
+        <source>Error: Set Attenuation less than %1 dB</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -14159,6 +14617,30 @@ open files with an appropriate program.</source>
         <source>Source Code Editor</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Edit the standard paths and external applications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Octave path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qucs Home:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the octave bin directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the home directory</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QucsTranscalc</name>
@@ -15081,6 +15563,10 @@ Errors:
         <source>ERROR: Cannot simulate a text file!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>ERROR: Program not found: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpiceDialog</name>
@@ -15231,15 +15717,15 @@ Errors:
     <name>TextDoc</name>
     <message>
         <source>Error</source>
-        <translation>Ошибка</translation>
+        <translation type="obsolete">Ошибка</translation>
     </message>
     <message>
         <source>There is no selection!</source>
-        <translation>Нет выделения!</translation>
+        <translation type="obsolete">Нет выделения!</translation>
     </message>
     <message>
         <source>Page %1 of %2</source>
-        <translation>Страница %1 из %2</translation>
+        <translation type="obsolete">Страница %1 из %2</translation>
     </message>
     <message>
         <source>Edit Text Symbol</source>

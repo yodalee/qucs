@@ -138,7 +138,15 @@
     </message>
     <message>
         <source>No match found!</source>
-        <translation>Nincs hasonló találat!</translation>
+        <translation type="obsolete">Nincs hasonló találat!</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Hiba</translation>
+    </message>
+    <message>
+        <source>Regular expression for component name is invalid.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -804,6 +812,193 @@
     </message>
 </context>
 <context>
+    <name>FilterDialog</name>
+    <message>
+        <source>E&amp;xit</source>
+        <translation type="unfinished">&amp;Kilépés</translation>
+    </message>
+    <message>
+        <source>&amp;About Qucs Filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About Qt...</source>
+        <translation type="unfinished">Qt Névjegy...</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">&amp;Fájl</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished">&amp;Súgó</translation>
+    </message>
+    <message>
+        <source>Specify order</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>b</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>c</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cutoff/Center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hz</source>
+        <translation type="unfinished">Hz</translation>
+    </message>
+    <message>
+        <source>kHz</source>
+        <translation type="unfinished">kHz</translation>
+    </message>
+    <message>
+        <source>MHz</source>
+        <translation type="unfinished">MHz</translation>
+    </message>
+    <message>
+        <source>GHz</source>
+        <translation type="unfinished">GHz</translation>
+    </message>
+    <message>
+        <source>Ripple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dB</source>
+        <translation type="unfinished">dB</translation>
+    </message>
+    <message>
+        <source>Angle</source>
+        <translation type="unfinished">Szög</translation>
+    </message>
+    <message>
+        <source>°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ohm</source>
+        <translation type="unfinished">Ohm</translation>
+    </message>
+    <message>
+        <source>Zout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopband corner</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandwidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attenuation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dual</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopband is first pole</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize cauer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Equal inductors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>+ rather than T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cmin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cmax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>noC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize L</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lmin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lmax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>noL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LC Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Microstrip Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Active Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">Kilépés</translation>
+    </message>
+    <message>
+        <source>Calculate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About...</source>
+        <translation type="unfinished">Névjegy...</translation>
+    </message>
+    <message>
+        <source>
+Filter synthesis program
+</source>
+        <translation type="unfinished">
+Szűrő méretező program
+</translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2009 by</source>
+        <translation type="unfinished">Copyright (C) 2005, 2006 by {2009 ?}</translation>
+    </message>
+    <message>
+        <source>About Qt</source>
+        <translation type="unfinished">Qt Névjegy</translation>
+    </message>
+</context>
+<context>
     <name>GraphicTextDialog</name>
     <message>
         <source>Edit Text Properties</source>
@@ -823,11 +1018,11 @@
     </message>
     <message>
         <source>Text size: </source>
-        <translation>Szöveg méret:</translation>
+        <translation type="obsolete">Szöveg méret:</translation>
     </message>
     <message>
         <source>Rotation angle: </source>
-        <translation>Forgatási szög:</translation>
+        <translation type="obsolete">Forgatási szög:</translation>
     </message>
     <message>
         <source>Use LaTeX style for special characters, e.g. \tau</source>
@@ -852,6 +1047,14 @@
     <message>
         <source>&amp;Cancel</source>
         <translation type="unfinished">&amp;Mégsem</translation>
+    </message>
+    <message>
+        <source>  Text size: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>  Rotation angle: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -888,11 +1091,11 @@ fizikai tulajdonságait számítja ki.</translation>
     </message>
     <message>
         <source>QucsAttenuator is an attenuator synthesis program. To create a attenuator, simply enter all the input parameters and press the calculation button. Immediatly, the schematic of the attenuator is calculated and put into the clipboard. Now go to Qucs, open an schematic and press CTRL-V (paste from clipboard). The attenuator schematic can now be inserted. Have lots of fun!</source>
-        <translation>QucsAttenuator egy csillapító méretező program. A csillapítókészítéshez egyszerüen csak meg kell adnia a bemeneti paramétereket, és meg kell nyomni a kalkuláció gombot. Azonnal a vágólapra helyezi a kiszámolt csillapító kapcsolási rajzát. Ezután a Qucs-ba beilleszthető a rajz a Szerkesztés / Beillesztés menüben vagy a CTRL-V billenytükombinációval. így a csaillapítórajz beillesztkető és szimulálható. Jó szórakozást!</translation>
+        <translation type="obsolete">QucsAttenuator egy csillapító méretező program. A csillapítókészítéshez egyszerüen csak meg kell adnia a bemeneti paramétereket, és meg kell nyomni a kalkuláció gombot. Azonnal a vágólapra helyezi a kiszámolt csillapító kapcsolási rajzát. Ezután a Qucs-ba beilleszthető a rajz a Szerkesztés / Beillesztés menüben vagy a CTRL-V billenytükombinációval. így a csaillapítórajz beillesztkető és szimulálható. Jó szórakozást!</translation>
     </message>
     <message>
         <source>Qucs Attenuator Help</source>
-        <translation>Qucs Csillapító Help</translation>
+        <translation type="obsolete">Qucs Csillapító Help</translation>
     </message>
 </context>
 <context>
@@ -1221,7 +1424,7 @@ fizikai tulajdonságait számítja ki.</translation>
     </message>
     <message>
         <source>No subcircuits!</source>
-        <translation>Nincs beágyazott kapcsolás!</translation>
+        <translation type="obsolete">Nincs beágyazott kapcsolás!</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1275,7 +1478,7 @@ Az alkatrész katalógus létrehozása sikeres.</translation>
     </message>
     <message>
         <source>Enter description for &quot;%1&quot;:</source>
-        <translation>&quot;%1&quot; leírása:</translation>
+        <translation type="obsolete">&quot;%1&quot; leírása:</translation>
     </message>
     <message>
         <source>Manage User Libraries</source>
@@ -1299,7 +1502,7 @@ Az alkatrész katalógus létrehozása sikeres.</translation>
     </message>
     <message>
         <source>No user library!</source>
-        <translation>Nincs felhasználói alkatrész katalógus!</translation>
+        <translation type="obsolete">Nincs felhasználói alkatrész katalógus!</translation>
     </message>
     <message>
         <source>Please insert a new library name!</source>
@@ -1354,6 +1557,67 @@ Az alkatrész katalógus írása sikertelen!</translation>
         <source>No permission to delete library subdirectory &quot;%1&quot;.</source>
         <translation>Nincs joga a &quot;%1&quot; alkatrész-katalógus alkönyvtár törléséhez. </translation>
     </message>
+    <message>
+        <source>Add subcircuit description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter description for:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation type="unfinished">Leírás:</translation>
+    </message>
+    <message>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No projects!</source>
+        <translation type="unfinished">Nincsenek projektek!</translation>
+    </message>
+    <message>
+        <source>Next...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving library...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading subcircuit &quot;%1&quot;.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creating Qucs netlist.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Cannot create netlist for &quot;%1&quot;.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creating Verilog netlist.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creating VHDL netlist.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error creating library.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MarkerDialog</name>
@@ -1392,6 +1656,10 @@ Az alkatrész katalógus írása sikertelen!</translation>
     <message>
         <source>Cancel</source>
         <translation>Mégsem</translation>
+    </message>
+    <message>
+        <source>Z0: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2106,7 +2374,7 @@ Ismeretlen mező!</translation>
     </message>
     <message>
         <source> &lt;invalid&gt;</source>
-        <translation type="obsolete">&lt;érvénytelen&gt;</translation>
+        <translation type="unfinished">&lt;érvénytelen&gt;</translation>
     </message>
     <message>
         <source>Cannot load dataset: </source>
@@ -7363,6 +7631,118 @@ Digitális szimuláció</translation>
         <source>Microstrip Lange Coupler</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cannot save settings file !</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34nMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>-</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34nMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34pMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim3v34pMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30nMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30nMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30pMOS verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bsim4v30pMOS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>hicumL2V2p31n verilog device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weight factor for the low current minority charge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter describing the slope of hjEi(VBE)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smoothing parameter for hjEi(VBE) at high voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time constant for modeling carrier jam at low VCE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Barrier voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normalization parameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smoothing parameter for barrier voltage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>fitting factor for critical current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flag for turning on and off of correlated noise implementation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Emitter resistance flicker noise coefficient</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Emitter resistance flicker noise exponent factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandgap difference between B and B-E junction used for hjEi0 and hf0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temperature coefficient for ahjEi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temperature coefficient for hjEi0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temperature coefficient for Rth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First order relative TC of parameter Rth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HICUM L2 V2.31</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QucsActions</name>
@@ -7560,7 +7940,7 @@ Felülírjam?</translation>
     </message>
     <message>
         <source>Delete Group</source>
-        <translation>Csoport törlés</translation>
+        <translation type="obsolete">Csoport törlés</translation>
     </message>
     <message>
         <source>Error</source>
@@ -7872,11 +8252,11 @@ Hibák:
     </message>
     <message>
         <source>Content of &apos;</source>
-        <translation>&apos;</translation>
+        <translation type="obsolete">&apos;</translation>
     </message>
     <message>
         <source>&apos;</source>
-        <translation>&apos; összetevői</translation>
+        <translation type="obsolete">&apos; összetevői</translation>
     </message>
     <message>
         <source>Cannot create project directory !</source>
@@ -8534,7 +8914,7 @@ Az alkatrészek tulajdonság értékeit változtatja</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation>Kivágás</translation>
+        <translation type="obsolete">Kivágás</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
@@ -8554,7 +8934,7 @@ Kivágja a kijelölt részeket és a vágólapra helyezi</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Másolás</translation>
+        <translation type="obsolete">Másolás</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
@@ -8574,7 +8954,7 @@ Copies the selected section to the clipboard</source>
     </message>
     <message>
         <source>Paste</source>
-        <translation>Beillesztés</translation>
+        <translation type="obsolete">Beillesztés</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
@@ -8610,7 +8990,7 @@ Törli a kijelölt részeket</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Visszavonás</translation>
+        <translation type="obsolete">Visszavonás</translation>
     </message>
     <message>
         <source>&amp;Undo</source>
@@ -8630,7 +9010,7 @@ Visszavonja az utolsó parancsot</translation>
     </message>
     <message>
         <source>Redo</source>
-        <translation>Újra</translation>
+        <translation type="obsolete">Újra</translation>
     </message>
     <message>
         <source>&amp;Redo</source>
@@ -9903,23 +10283,23 @@ A kiválasztott elemeket vízszintesen egyvonalba mozgatja</translation>
     </message>
     <message>
         <source>New Text</source>
-        <translation>Következő szöveg</translation>
+        <translation type="obsolete">Következő szöveg</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Mentés</translation>
+        <translation type="obsolete">Mentés</translation>
     </message>
     <message>
         <source>Save All</source>
-        <translation>Mindent ment</translation>
+        <translation type="obsolete">Mindent ment</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Bezár</translation>
+        <translation type="obsolete">Bezár</translation>
     </message>
     <message>
         <source>Print...</source>
-        <translation>Nyomtatás...</translation>
+        <translation type="obsolete">Nyomtatás...</translation>
     </message>
     <message>
         <source>Verilog Sources</source>
@@ -10046,20 +10426,82 @@ Convert data file to various file formats</source>
 Shows/hides the Octave dock window</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Insert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Content of </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open examples directory...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print Document</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Examples</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Opens a file explorer with example documents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Examples
+
+Opens a file explorer with example documents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Technical Papers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Technical &amp;Reports</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>T&amp;utorials</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">Szerkesztés</translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QucsAttenuator</name>
     <message>
         <source>E&amp;xit</source>
-        <translation>&amp;Kilépés</translation>
+        <translation type="obsolete">&amp;Kilépés</translation>
     </message>
     <message>
         <source>Help...</source>
-        <translation>Súgó...</translation>
+        <translation type="obsolete">Súgó...</translation>
     </message>
     <message>
         <source>&amp;About QucsAttenuator...</source>
-        <translation>QucsAttenuator (Csillapító méretező) &amp;Névjegy...</translation>
+        <translation type="obsolete">QucsAttenuator (Csillapító méretező) &amp;Névjegy...</translation>
     </message>
     <message>
         <source>About Qt...</source>
@@ -10163,7 +10605,27 @@ Csillapító méretező program
     </message>
     <message>
         <source>Error: Set Attenuation more than %1 dB</source>
-        <translation>HIBA: Állítsd a csillapítás nagyobbra mint %1 dB</translation>
+        <translation type="obsolete">HIBA: Állítsd a csillapítás nagyobbra mint %1 dB</translation>
+    </message>
+    <message>
+        <source>&amp;Quit</source>
+        <translation type="unfinished">&amp;Kilépés</translation>
+    </message>
+    <message>
+        <source>&amp;About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qucs Attenuator Help</source>
+        <translation type="unfinished">Qucs Csillapító Help</translation>
+    </message>
+    <message>
+        <source>QucsAttenuator is an attenuator synthesis program. To create a attenuator, simply enter all the input parameters and press the calculation button. Immediatly, the schematic of the attenuator is calculated and put into the clipboard. Now go to Qucs, open an schematic and press CTRL-V (paste from clipboard). The attenuator schematic can now be inserted. Have lots of fun!</source>
+        <translation type="unfinished">QucsAttenuator egy csillapító méretező program. A csillapítókészítéshez egyszerüen csak meg kell adnia a bemeneti paramétereket, és meg kell nyomni a kalkuláció gombot. Azonnal a vágólapra helyezi a kiszámolt csillapító kapcsolási rajzát. Ezután a Qucs-ba beilleszthető a rajz a Szerkesztés / Beillesztés menüben vagy a CTRL-V billenytükombinációval. így a csaillapítórajz beillesztkető és szimulálható. Jó szórakozást!</translation>
+    </message>
+    <message>
+        <source>Error: Set Attenuation less than %1 dB</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -12195,6 +12657,30 @@ a fájlt a megfelelő program nyissa meg.</translation>
         <source>Source Code Editor</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Edit the standard paths and external applications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Octave path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qucs Home:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the octave bin directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the home directory</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QucsTranscalc</name>
@@ -13090,6 +13576,10 @@ Hibák:
         <source>ERROR: Cannot simulate a text file!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>ERROR: Program not found: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpiceDialog</name>
@@ -13232,15 +13722,15 @@ Hibák:
     <name>TextDoc</name>
     <message>
         <source>Error</source>
-        <translation>Hiba</translation>
+        <translation type="obsolete">Hiba</translation>
     </message>
     <message>
         <source>There is no selection!</source>
-        <translation>Nincs kiválasztás!</translation>
+        <translation type="obsolete">Nincs kiválasztás!</translation>
     </message>
     <message>
         <source>Page %1 of %2</source>
-        <translation>%1/%2 oldal</translation>
+        <translation type="obsolete">%1/%2 oldal</translation>
     </message>
     <message>
         <source>Edit Text Symbol</source>
