@@ -612,8 +612,7 @@ int Schematic::insertWire(Wire *w)
                         pw->Label->pOwner = pw;
                     }
                     Wires.removeOne(nw);    // delete wire
-                    i=savedIndex-1;
-                    //          Wires->findRef(pw);      // set back to current wire
+                    i=Wires.findIndex(pw);      // set back to current wire
                 }
                 break;
             }
@@ -1443,6 +1442,7 @@ int Schematic::copySelectedElements(QList<Element *> *p)
         pp = pc->Ports[j];
        newMovingWires(p, pp->Connection, count);
     }
+    _i = p->findIndex(pc);
   }
 
   for(; _i<p->size(); _i++)  // new wires
@@ -1458,6 +1458,7 @@ int Schematic::copySelectedElements(QList<Element *> *p)
         if(pw->Type == isWire) {  // not working on labels
           newMovingWires(p, pw->Port1, count);
           newMovingWires(p, pw->Port2, count);
+          _i = p->findIndex(pw);
         }
   }
   // ..............................................
@@ -2621,7 +2622,7 @@ void Schematic::oneLabel(Node *n1)
       if(pNode->y1) continue;
       pNode->y1 = 1;  // mark Node as already checked
       Cons.append(pNode);
-      //Cons.findRef(pn); //set back index to pn??
+      i=Cons.findIndex(pn); //set back index to pn??
 
       if(pw->Label) {
         if(named) {
@@ -2714,7 +2715,7 @@ Element* Schematic::getWireLabel(Node *pn_)
         if(pNode->y1) continue;
         pNode->y1 = 1;  // mark Node as already checked
         Cons.append(pNode);
-//        Cons.findRef(pn);
+        i=Cons.findIndex(pn);
       }
     }
   }
