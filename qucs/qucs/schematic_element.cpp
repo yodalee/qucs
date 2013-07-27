@@ -603,6 +603,7 @@ int Schematic::insertWire(Wire *w)
                 if(n2 == 1) {
                     pn->Connections.removeOne(nw);   // remove connection
                     Nodes.removeOne(pn2);     // delete node 2 if open
+                    i=Wires.findIndex(pw);
                     pn2 = pn;
                 }
 
