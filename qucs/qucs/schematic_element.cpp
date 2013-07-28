@@ -1284,8 +1284,9 @@ void Schematic::newMovingWires(QList<Element *>* p, Node *pn, int pos)
     if(pn->State & 16)  // node was already worked on
       break;
 
+    if(pn->Connections.isEmpty())  return;
+    
     pe = pn->Connections.first();
-    if(pe == 0)  return;
 
     if(pn->Connections.size() > 1)
       break;
