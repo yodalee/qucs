@@ -1992,16 +1992,22 @@ void Schematic::mousePressEvent(QMouseEvent *Event)
   // slotInsertGround places a new Ground on selElem
   Component *Comp = (Component*)App->view->selElem;
   
+  // one way of inserting selected components
   if (Comp) {
     qDebug() << " Comp description" << Comp->Description;
     
+    // new instance
+    Component *item = Comp->newOne();
+        
+    qDebug() << "add object at " << Event->pos();
     QPointF pt = mapToScene(Event->pos());
-    qDebug() << "add object " << Event->pos();
-    
-    Comp->setPos(pt);
-    scene->addItem(Comp);
+    item->setPos(pt);
+    scene->addItem(item);
     scene->update();
   }
+  
+  // propagate event to parent class
+  QGraphicsView::mousePressEvent(Event);
 }
 
 // -----------------------------------------------------------
