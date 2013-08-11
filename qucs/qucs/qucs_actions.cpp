@@ -353,6 +353,7 @@ void QucsApp::slotInsertEquation(bool on)
 // Is called when the mouse is clicked upon the ground toolbar button.
 void QucsApp::slotInsertGround(bool on)
 {
+  qDebug() << "insert ground pressed";
   editText->setHidden(true); // disable text edit of component property
   MouseReleaseAction = 0;
   MouseDoubleClickAction = 0;
