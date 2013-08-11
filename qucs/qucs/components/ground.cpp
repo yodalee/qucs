@@ -18,6 +18,7 @@
 #include "ground.h"
 #include "node.h"
 
+#include <QPainter>
 
 Ground::Ground()
 {
@@ -38,6 +39,8 @@ Ground::Ground()
   ty = 0;
   Model = "GND";
   Name  = "";
+  
+  setFlags(ItemIsSelectable|ItemIsMovable);
 }
 
 Ground::~Ground()
@@ -61,10 +64,24 @@ Element* Ground::info(QString& Name, char* &BitmapFile, bool getNewOne)
 
 QRectF Ground::boundingRect() const
 {
+  // return outer bounds of item as a rectangle
+  return *(new QRectF(x1, y1, x2-x1, y2-y1));
 }
 
 void Ground::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
 {
+  Q_UNUSED(item);
+  Q_UNUSED(widget);
+  
+  // loop to paint component lines
+  foreach (Line *l, Lines) {
+    painter->setPen(l->style);
+    painter->drawLine(l->x1, l->y1, l->x2, l->y2);
+  }
+    
+  // visualize boundingRect
+  painter->setPen(QPen(Qt::red,1));
+  painter->drawRect(boundingRect());
 }
 
 // -------------------------------------------------------
