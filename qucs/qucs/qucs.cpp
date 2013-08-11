@@ -421,6 +421,7 @@ void QucsApp::slotSetCompView (int index)
 // Is called when the mouse is clicked within the Component QIconView.
 void QucsApp::slotSelectComponent(QListWidgetItem *item)
 {
+  qDebug() << "QucsApp, clicked to select a component";
   editText->setHidden(true); // disable text edit of component property
 
   // delete previously selected elements
@@ -461,8 +462,11 @@ void QucsApp::slotSelectComponent(QListWidgetItem *item)
 
   char * Dummy2;
   QString Dummy1;
-  if (Infos)
+  if (Infos) {
     view->selElem = (*Infos) (Dummy1, Dummy2, true);
+    Component *Comp = (Component*)view->selElem;
+    qDebug() << "selected: " << Comp->Description;
+  }
 }
 
 // ####################################################################
