@@ -60,6 +60,9 @@
 #include "components/verilogfile.h"
 #include "components/vafile.h"
 
+// temporary, to manually instantiate it
+#include "components/ground.h"
+
 // just dummies for empty lists
 Q3PtrList<Wire>      SymbolWires;
 Q3PtrList<Node>      SymbolNodes;
@@ -1955,13 +1958,16 @@ bool Schematic::scrollRight(int step)
   return true;
 }
 
-void Schematic::mousePressEvent(QMouseEvent *e)
+void Schematic::mousePressEvent(QMouseEvent *Event)
 {
-    double rad = 1;
-       QPointF pt = mapToScene(e->pos());
-       scene->addEllipse(pt.x()-rad, pt.y()-rad, rad*2.0, rad*2.0, 
-           QPen(), QBrush(Qt::SolidPattern));
-    
+  qDebug() << "Schematic::mousePressEvent";
+  
+  QPointF pt = mapToScene(Event->pos());
+  qDebug() << "add object " << Event->pos();
+  Component *item = new Ground();
+  item->setPos(pt);
+  scene->addItem(item);
+  scene->update();    
 }
 
 // -----------------------------------------------------------
