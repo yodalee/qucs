@@ -1961,13 +1961,20 @@ bool Schematic::scrollRight(int step)
 void Schematic::mousePressEvent(QMouseEvent *Event)
 {
   qDebug() << "Schematic::mousePressEvent";
+
+  // slotInsertGround places a new Ground on selElem
+  Component *Comp = (Component*)App->view->selElem;
   
-  QPointF pt = mapToScene(Event->pos());
-  qDebug() << "add object " << Event->pos();
-  Component *item = new Ground();
-  item->setPos(pt);
-  scene->addItem(item);
-  scene->update();    
+  if (Comp) {
+    qDebug() << " Comp description" << Comp->Description;
+    
+    QPointF pt = mapToScene(Event->pos());
+    qDebug() << "add object " << Event->pos();
+    
+    Comp->setPos(pt);
+    scene->addItem(Comp);
+    scene->update();
+  }
 }
 
 // -----------------------------------------------------------
