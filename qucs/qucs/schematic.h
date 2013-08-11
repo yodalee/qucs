@@ -115,7 +115,7 @@ public:
   // schematic Scene on its own QGraphisView
   QGraphicsScene *scene;
   
-  void mousePressEvent(QMouseEvent * e);
+  void mousePressEvent(QMouseEvent * Event);
   
 
   // The pointers points to the current lists, either to the schematic
