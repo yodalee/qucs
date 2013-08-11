@@ -45,6 +45,8 @@ Resistor::Resistor(bool european)
   ty = y2+4;
   Model = "R";
   Name  = "R";
+  
+  setFlags(ItemIsSelectable|ItemIsMovable);
 }
 
 // -------------------------------------------------------
@@ -105,8 +107,22 @@ Element* Resistor::info_us(QString& Name, char* &BitmapFile, bool getNewOne)
 
 QRectF Resistor::boundingRect() const
 {
+  // return outer bounds of item as a rectangle
+  return *(new QRectF(x1, y1, x2-x1, y2-y1));
 }
 
 void Resistor::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
 {
+  Q_UNUSED(item);
+  Q_UNUSED(widget);
+    
+  // loop to paint component lines
+  foreach (Line *l, Lines) {
+    painter->setPen(l->style);
+    painter->drawLine(l->x1, l->y1, l->x2, l->y2);
+  }
+    
+  // visualize boundingRect
+  painter->setPen(QPen(Qt::red,1));
+  painter->drawRect(boundingRect());      
 }
