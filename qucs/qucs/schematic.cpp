@@ -2035,18 +2035,21 @@ void Schematic::mousePressEvent(QMouseEvent *Event)
   * Zoom the view in and out.
   *
   */
-void Schematic::wheelEvent(QWheelEvent *event)
+void Schematic::wheelEvent(QWheelEvent *Event)
 {
-  setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-     
-  // Scale the view / do the zoom
-  double scaleFactor = 1.15;
-  if(event->delta() > 0) {
-      // Zoom in
-      scale(scaleFactor, scaleFactor);
-  } else {
-      // Zooming out
-      scale(1.0 / scaleFactor, 1.0 / scaleFactor);
+  // use key and mouse wheel to zoom
+  if(Event->state() & Qt::ControlModifier) {
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    
+    // Scale the view / do the zoom
+    double scaleFactor = 1.15;
+    if(Event->delta() > 0) {
+        // Zoom in
+        scale(scaleFactor, scaleFactor);
+    } else {
+        // Zooming out
+        scale(1.0 / scaleFactor, 1.0 / scaleFactor);
+    }
   }
   
   // Don't call superclass handler here
