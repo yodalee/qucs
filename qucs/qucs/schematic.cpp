@@ -105,8 +105,28 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
   
   // instanatiate scene, and set it to view
   scene = new QGraphicsScene;
-  this->setSceneRect(50, 50, 350, 350);
+  // !out this->setSceneRect(50, 50, 350, 350);
   this->setScene(scene);
+  
+  // scene is sort of A4-landscape, 0.1mm pitch
+  this->setSceneRect(-50, -50, 3000, 2100);
+  
+  // add page frame
+  scene->addRect(sceneRect(), QPen(Qt::gray,10));
+  
+
+  // small cross at origin
+  // it should be a few pixels at every scale
+  int dx = -int(Scale*float(ViewX1)) - 0;
+  int dy = -int(Scale*float(ViewY1)) - 0;
+  scene->addLine(-3+dx, dy, 4+dx, dy, QPen(Qt::black,0)); 
+  scene->addLine( dx,-3+dy, dx, 4+dy, QPen(Qt::black,0));
+
+  // Rough grid
+  for (int x=0; x<=1000; x+=20)
+      for (int y=0; y<=1000; y+=20)
+          scene->addRect(x, y, 0, 0, QPen(Qt::black,0));
+
   
   FileInfo = QFileInfo (Name_);
   if(App) {
@@ -134,7 +154,7 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
 //    setVScrollBarMode(Q3ScrollView::AlwaysOn);
 //    setHScrollBarMode(Q3ScrollView::AlwaysOn);
     this->viewport()->setPaletteBackgroundColor(QucsSettings.BGColor);
-//  !out  viewport()->setMouseTracking(true);
+    this->viewport()->setMouseTracking(true);
 //  !out  viewport()->setAcceptDrops(true);  // enable drag'n drop
 #warning removed those signals, crashes on it...
     /*connect(horizontalScrollBar(),
@@ -149,14 +169,14 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
     // ...........................................................
 
     // to repair some strange  scrolling artefacts
-    connect(this, SIGNAL(horizontalSliderReleased()),
-		viewport(), SLOT(update()));
-    connect(this, SIGNAL(verticalSliderReleased()),
-		viewport(), SLOT(update()));
+// !out    connect(this, SIGNAL(horizontalSliderReleased()),
+//		viewport(), SLOT(update()));
+//    connect(this, SIGNAL(verticalSliderReleased()),
+//		viewport(), SLOT(update()));
 
     // to prevent user from editing something that he doesn't see
-    connect(this, SIGNAL(horizontalSliderPressed()), App, SLOT(slotHideEdit()));
-    connect(this, SIGNAL(verticalSliderPressed()), App, SLOT(slotHideEdit()));
+// !out   connect(this, SIGNAL(horizontalSliderPressed()), App, SLOT(slotHideEdit()));
+//    connect(this, SIGNAL(verticalSliderPressed()), App, SLOT(slotHideEdit()));
   } // of "if(App)"
 }
 
@@ -2001,6 +2021,7 @@ void Schematic::mousePressEvent(QMouseEvent *Event)
         
     qDebug() << "add object at " << Event->pos();
     QPointF pt = mapToScene(Event->pos());
+    qDebug() << "add object at View" << Event->pos() << "Scene" << pt;
     item->setPos(pt);
     scene->addItem(item);
     scene->update();
@@ -2008,6 +2029,28 @@ void Schematic::mousePressEvent(QMouseEvent *Event)
   
   // propagate event to parent class
   QGraphicsView::mousePressEvent(Event);
+}
+
+/**
+  * Zoom the view in and out.
+  *
+  */
+void Schematic::wheelEvent(QWheelEvent *event)
+{
+  setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+     
+  // Scale the view / do the zoom
+  double scaleFactor = 1.15;
+  if(event->delta() > 0) {
+      // Zoom in
+      scale(scaleFactor, scaleFactor);
+  } else {
+      // Zooming out
+      scale(1.0 / scaleFactor, 1.0 / scaleFactor);
+  }
+  
+  // Don't call superclass handler here
+  // as wheel is normally used for moving scrollbars
 }
 
 // -----------------------------------------------------------

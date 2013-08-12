@@ -116,6 +116,7 @@ public:
   QGraphicsScene *scene;
   
   void mousePressEvent(QMouseEvent * Event);
+  void wheelEvent(QWheelEvent *event);
   
 
   // The pointers points to the current lists, either to the schematic
