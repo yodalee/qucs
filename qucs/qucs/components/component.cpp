@@ -899,6 +899,27 @@ bool Component::load(const QString& _s)
   return true;
 }
 
+QRectF Component::boundingRect() const
+{
+  return *(new QRectF(x1, y1, x2-x1, y2-y1));
+}
+
+void Component::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
+{
+  Q_UNUSED(item);
+  Q_UNUSED(widget);
+
+  // loop to paint component lines
+  foreach (Line *l, Lines) {
+  painter->setPen(l->style);
+  painter->drawLine(l->x1, l->y1, l->x2, l->y2);
+  }
+
+  // visualize boundingRect
+  painter->setPen(QPen(Qt::red,1));
+  painter->drawRect(boundingRect());
+}
+
 // *******************************************************************
 // ***  The following functions are used to load the schematic symbol
 // ***  from file. (e.g. subcircuit, library component)

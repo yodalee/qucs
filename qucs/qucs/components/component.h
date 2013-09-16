@@ -22,6 +22,7 @@
 #include <QPen>
 #include <QPoint>
 #include <QWidget>
+#include <QGraphicsItem>
 
 #include "element.h"
 
@@ -30,7 +31,7 @@ class ViewPainter;
 class QString;
 
 
-class Component : public Element {
+class Component : public Element, public QGraphicsItem {
 public:
   Component();
   virtual ~Component() {};
@@ -55,6 +56,9 @@ public:
   void    mirrorY();  // mirror about Y axis
   QString save();
   bool    load(const QString&);
+
+  QRectF boundingRect() const;
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget);
 
   // to hold track of the component appearance for saving and copying
   bool mirroredX;   // is it mirrored about X axis or not
