@@ -42,11 +42,11 @@
 // ***********************************************************************
 Component::Component()
 {
-  Type = isAnalogComponent;
+  ElemType = isAnalogComponent;
 
   mirroredX = false;
   rotated = 0;
-  isSelected = false;
+  ElemSelected = false;
   isActive = COMP_IS_ACTIVE;
   showName = true;
 
@@ -300,7 +300,7 @@ void Component::paint(ViewPainter *p)
     p->drawLine(cx+x1, cy+y2, cx+x2, cy+y1);
   }
 
-  if(isSelected) {
+  if(ElemSelected) {
     p->Painter->setPen(QPen(Qt::darkGray,3));
     p->drawRoundRect(cx+x1, cy+y1, x2-x1, y2-y1);
   }
@@ -1227,7 +1227,7 @@ Property * Component::getProperty(const QString& name)
 // ---------------------------------------------------------------------
 void Component::copyComponent(Component *pc)
 {
-  Type = pc->Type;
+  ElemType = pc->ElemType;
   x1 = pc->x1;
   y1 = pc->y1;
   x2 = pc->x2;
@@ -1302,7 +1302,7 @@ void MultiViewComponent::recreate(Schematic *Doc)
 // ***********************************************************************
 GateComponent::GateComponent()
 {
-  Type = isComponent;   // both analog and digital
+  ElemType = isComponent;   // both analog and digital
   Name  = "Y";
 
   // the list order must be preserved !!!

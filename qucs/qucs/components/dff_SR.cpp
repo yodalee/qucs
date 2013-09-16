@@ -13,7 +13,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  */
 #include <QtGui>
 #include "dff_SR.h"
@@ -22,7 +22,7 @@
 
 dff_SR::dff_SR()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("D flip flop with set and reset verilog device");
 
   Props.append (new Property ("TR_H", "6", false,
@@ -43,8 +43,8 @@ dff_SR::dff_SR()
 Component * dff_SR::newOne()
 {
   dff_SR * p = new dff_SR();
-  p->Props.getFirst()->Value = Props.getFirst()->Value; 
-  p->recreate(0); 
+  p->Props.getFirst()->Value = Props.getFirst()->Value;
+  p->recreate(0);
   return p;
 }
 
@@ -85,7 +85,7 @@ void dff_SR::createSymbol()
   Texts.append(new Text( 11,  7,  "Q", Qt::darkBlue, 12.0));
   Texts.current()->over=true;
   Texts.append(new Text( -5, 17,  "R", Qt::darkBlue, 12.0));
- 
+
   Ports.append(new Port(0,  -60));  // S
   Ports.append(new Port(-50,-20));  // D
   Ports.append(new Port(-50, 20));  // CLK
@@ -121,7 +121,7 @@ QString dff_SR::vhdlCode( int )
       "      state := '0';\n"+
       "    elsif ("+CLK+" = '1' and "+CLK+"'event) then\n"+
       "      state := "+D+";\n"+
-      "    end if;\n"+ 
+      "    end if;\n"+
       "    "+Q+" <= state"+td+
       "    "+QB+" <= not state"+td+
       "  end process;\n";
@@ -132,9 +132,9 @@ QString dff_SR::verilogCode( int )
 {
   QString td = Props.at(2)->Value;        // delay time
   if(!Verilog_Delay(td, Name)) return td; // time does not have VHDL format
-  
+
   QString l = "";
- 
+
   QString S     = Ports.at(0)->Connection->Name;
   QString D     = Ports.at(1)->Connection->Name;
   QString CLK   = Ports.at(2)->Connection->Name;

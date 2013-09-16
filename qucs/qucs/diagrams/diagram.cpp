@@ -73,8 +73,8 @@ Diagram::Diagram(int _cx, int _cy)
   rotZ = 225;
   hideLines = true;  // hide invisible lines
 
-  Type = isDiagram;
-  isSelected = false;
+  ElemType = isDiagram;
+  ElemSelected = false;
   GridPen = QPen(Qt::lightGray,0);
   Graphs.setAutoDelete(true);
   Arcs.setAutoDelete(true);
@@ -128,7 +128,7 @@ void Diagram::paint(ViewPainter *p)
       pm->paint(p, cx, cy);
 
 
-  if(isSelected) {
+  if(ElemSelected) {
     int x_, y_;
     float fx_, fy_;
     p->map(cx, cy-y2, x_, y_);

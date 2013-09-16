@@ -230,7 +230,7 @@ bool Schematic::connectHWires1(Wire *w)
     pw = (Wire*)n->Connections.last();  // last connection is the new wire itself
     for(pw = (Wire*)n->Connections.prev(); pw!=0; pw = (Wire*)n->Connections.prev())
     {
-        if(pw->Type != isWire) continue;
+        if(pw->ElemType != isWire) continue;
         if(!pw->isHorizontal()) continue;
         if(pw->x1 < w->x1)
         {
@@ -244,7 +244,7 @@ bool Schematic::connectHWires1(Wire *w)
             {
                 w->Label = n->Label;
                 w->Label->pOwner = w;
-                w->Label->Type = isHWireLabel;
+                w->Label->ElemType = isHWireLabel;
             }
             w->x1 = pw->x1;
             w->Port1 = pw->Port1;      // new wire lengthens an existing one
@@ -293,7 +293,7 @@ bool Schematic::connectVWires1(Wire *w)
     pw = (Wire*)n->Connections.last();  // last connection is the new wire itself
     for(pw = (Wire*)n->Connections.prev(); pw!=0; pw = (Wire*)n->Connections.prev())
     {
-        if(pw->Type != isWire) continue;
+        if(pw->ElemType != isWire) continue;
         if(pw->isHorizontal()) continue;
         if(pw->y1 < w->y1)
         {
@@ -307,7 +307,7 @@ bool Schematic::connectVWires1(Wire *w)
             {
                 w->Label = n->Label;
                 w->Label->pOwner = w;
-                w->Label->Type = isVWireLabel;
+                w->Label->ElemType = isVWireLabel;
             }
             w->y1 = pw->y1;
             w->Port1 = pw->Port1;         // new wire lengthens an existing one
@@ -466,7 +466,7 @@ bool Schematic::connectHWires2(Wire *w)
     pw = (Wire*)n->Connections.last(); // last connection is the new wire itself
     for(pw = (Wire*)n->Connections.prev(); pw!=0; pw = (Wire*)n->Connections.prev())
     {
-        if(pw->Type != isWire) continue;
+        if(pw->ElemType != isWire) continue;
         if(!pw->isHorizontal()) continue;
         if(pw->x2 > w->x2)
         {
@@ -520,7 +520,7 @@ bool Schematic::connectVWires2(Wire *w)
     pw = (Wire*)n->Connections.last(); // last connection is the new wire itself
     for(pw = (Wire*)n->Connections.prev(); pw!=0; pw = (Wire*)n->Connections.prev())
     {
-        if(pw->Type != isWire) continue;
+        if(pw->ElemType != isWire) continue;
         if(pw->isHorizontal()) continue;
         if(pw->y2 > w->y2)
         {
@@ -738,9 +738,9 @@ void Schematic::selectWireLine(Element *pe, Node *pn, bool ctrl)
         if(pn->Connections.first() == pe)  pe = pn->Connections.last();
         else  pe = pn->Connections.first();
 
-        if(pe->Type != isWire) break;
-        if(ctrl) pe->isSelected ^= ctrl;
-        else pe->isSelected = true;
+        if(pe->ElemType != isWire) break;
+        if(ctrl) pe->ElemSelected ^= ctrl;
+        else pe->ElemSelected = true;
 
         if(((Wire*)pe)->Port1 == pn)  pn = ((Wire*)pe)->Port2;
         else  pn = ((Wire*)pe)->Port1;
@@ -763,7 +763,7 @@ Wire* Schematic::selectedWire(int x, int y)
 Wire* Schematic::splitWire(Wire *pw, Node *pn)
 {
     Wire *newWire = new Wire(pn->cx, pn->cy, pw->x2, pw->y2, pn, pw->Port2);
-    newWire->isSelected = pw->isSelected;
+    newWire->ElemSelected = pw->ElemSelected;
 
     pw->x2 = pn->cx;
     pw->y2 = pn->cy;
@@ -794,7 +794,7 @@ bool Schematic::oneTwoWires(Node *n)
     Wire *e1 = (Wire*)n->Connections.getFirst();  // two wires -> one wire
     Wire *e2 = (Wire*)n->Connections.getLast();
 
-    if(e1->Type == isWire) if(e2->Type == isWire)
+    if(e1->ElemType == isWire) if(e2->ElemType == isWire)
             if(e1->isHorizontal() == e2->isHorizontal())
             {
                 if(e1->x1 == e2->x2) if(e1->y1 == e2->y2)
@@ -813,9 +813,9 @@ bool Schematic::oneTwoWires(Node *n)
                     e1->Label = n->Label;
                     e1->Label->pOwner = e1;
                     if(e1->isHorizontal())
-                        e1->Label->Type = isHWireLabel;
+                        e1->Label->ElemType = isHWireLabel;
                     else
-                        e1->Label->Type = isVWireLabel;
+                        e1->Label->ElemType = isVWireLabel;
                 }
 
                 e1->x2 = e2->x2;
@@ -875,7 +875,7 @@ int Schematic::copyWires(int& x1, int& y1, int& x2, int& y2,
     Wire *pw;
     WireLabel *pl;
     for(pw = Wires->first(); pw != 0; )  // find bounds of all selected wires
-        if(pw->isSelected)
+        if(pw->ElemSelected)
         {
             if(pw->x1 < x1) x1 = pw->x1;
             if(pw->x2 > x2) x2 = pw->x2;
@@ -1035,13 +1035,13 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
                     // The element can be deselected, so toggle its isSelected member
                     // TODO: I don't see a need for the xor here, a simple ! on the current value
                     // would be clearer and have the same effect?
-                    pl->isSelected ^= flag;
+                    pl->ElemSelected ^= flag;
                     return pl;
                 }
                 if(pe_sel)
                 {
                     // There is another currently
-                    pe_sel->isSelected = false;
+                    pe_sel->ElemSelected = false;
                     return pl;
                 }
                 if(pe_1st == 0)
@@ -1052,7 +1052,7 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
                     // pe_1st is returned if no other selected element
                     pe_1st = pl;
                 }
-                if(pl->isSelected)
+                if(pl->ElemSelected)
                 {
                     // if current label is already selected, store a pointer to it.
                     // This can be used to cycle through
@@ -1062,58 +1062,16 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
         }
     }
 
-    // test all wires and wire labels
-    for(Wire *pw = Wires->last(); pw != 0; pw = Wires->prev())
-    {
-        if(pw->getSelected(x, y))
-        {
-            if(flag)
-            {
-                // The element can be deselected
-                pw->isSelected ^= flag;
-                return pw;
-            }
-            if(pe_sel)
-            {
-                pe_sel->isSelected = false;
-                return pw;
-            }
-            if(pe_1st == 0)
-            {
-                pe_1st = pw;   // give access to elements lying beneath
-            }
-            if(pw->isSelected)
-            {
-                pe_sel = pw;
-            }
-        }
-        pl = pw->Label; // test any label associated with the wire
-        if(pl)
-        {
-            if(pl->getSelected(x, y))
-            {
-                if(flag)
-                {
-                    // The element can be deselected
-                    pl->isSelected ^= flag;
-                    return pl;
-                }
-                if(pe_sel)
-                {
-                    pe_sel->isSelected = false;
-                    return pl;
-                }
-                if(pe_1st == 0)
-                {
-                    // give access to elements lying beneath
-                    pe_1st = pl;
-                }
-                if(pl->isSelected)
-                {
-                    pe_sel = pl;
-                }
-            }
-        }
+  // test all wires and wire labels
+  for(Wire *pw = Wires->last(); pw != 0; pw = Wires->prev()) {
+    if(pw->getSelected(x, y)) {
+      if(flag) { pw->ElemSelected ^= flag; return pw; }
+      if(pe_sel) {
+        pe_sel->ElemSelected = false;
+        return pw;
+      }
+      if(pe_1st == 0) pe_1st = pw;  // give access to elements lying beneath
+      if(pw->ElemSelected) pe_sel = pw;
     }
 
     // test all components
@@ -1124,19 +1082,19 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
             if(flag)
             {
                 // The element can be deselected
-                pc->isSelected ^= flag;
+                pc->ElemSelected ^= flag;
                 return pc;
             }
             if(pe_sel)
             {
-                pe_sel->isSelected = false;
+                pe_sel->ElemSelected = false;
                 return pc;
             }
             if(pe_1st == 0)
             {
                 pe_1st = pc;
             }  // give access to elements lying beneath
-            if(pc->isSelected)
+            if(pc->ElemSelected)
             {
                 pe_sel = pc;
             }
@@ -1146,7 +1104,7 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
             n = pc->getTextSelected(x, y, Corr);
             if(n >= 0)     // was property text clicked ?
             {
-                pc->Type = isComponentText;
+                pc->ElemType = isComponentText;
                 if(index)  *index = n;
                 return pc;
             }
@@ -1169,19 +1127,19 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
                     if(flag)
                     {
                         // The element can be deselected
-                        pm->isSelected ^= flag;
+                        pm->ElemSelected ^= flag;
                         return pm;
                     }
                     if(pe_sel)
                     {
-                        pe_sel->isSelected = false;
+                        pe_sel->ElemSelected = false;
                         return pm;
                     }
                     if(pe_1st == 0)
                     {
                         pe_1st = pm;   // give access to elements beneath
                     }
-                    if(pm->isSelected)
+                    if(pm->ElemSelected)
                     {
                         pe_sel = pm;
                     }
@@ -1190,13 +1148,13 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
         }
 
         // resize area clicked ?
-        if(pd->isSelected)
+        if(pd->ElemSelected)
         {
             if(pd->resizeTouched(fX, fY, Corr))
             {
                 if(pe_1st == 0)
                 {
-                    pd->Type = isDiagramResize;
+                    pd->ElemType = isDiagramResize;
                     return pd;
                 }
             }
@@ -1211,7 +1169,7 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
                     if(y > pd->cy)
                     {
                         if(x < pd->cx+pd->xAxis.numGraphs) continue;
-                        pd->Type = isDiagramHScroll;
+                        pd->ElemType = isDiagramHScroll;
                         return pd;
                     }
                 }
@@ -1219,7 +1177,7 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
                 {
                     if(x < pd->cx)        // clicked on scroll bar ?
                     {
-                        pd->Type = isDiagramVScroll;
+                        pd->ElemType = isDiagramVScroll;
                         return pd;
                     }
                 }
@@ -1277,13 +1235,13 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
     // test all paintings
     for(Painting *pp = Paintings->last(); pp != 0; pp = Paintings->prev())
     {
-        if(pp->isSelected)
+        if(pp->ElemSelected)
         {
             if(pp->resizeTouched(fX, fY, Corr))
             {
                 if(pe_1st == 0)
                 {
-                    pp->Type = isPaintingResize;
+                    pp->ElemType = isPaintingResize;
                     return pp;
                 }
             }
@@ -1294,19 +1252,19 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
             if(flag)
             {
                 // The element can be deselected
-                pp->isSelected ^= flag;
+                pp->ElemSelected ^= flag;
                 return pp;
             }
             if(pe_sel)
             {
-                pe_sel->isSelected = false;
+                pe_sel->ElemSelected = false;
                 return pp;
             }
             if(pe_1st == 0)
             {
                 pe_1st = pp;    // give access to elements lying beneath
             }
-            if(pp->isSelected)
+            if(pp->ElemSelected)
             {
                 pe_sel = pp;
             }
@@ -1339,7 +1297,7 @@ void Schematic::highlightWireLabels ()
         pltestouter = pwouter->Label;
         if (pltestouter)
         {
-            if (pltestouter->isSelected)
+            if (pltestouter->ElemSelected)
             {
                 // Search for matching labels
                 for(Wire *pwinner = Wires->last(); pwinner != 0; pwinner = Wires->prev())
@@ -1365,39 +1323,39 @@ void Schematic::deselectElements(Element *e)
 {
     // test all components
     for(Component *pc = Components->first(); pc != 0; pc = Components->next())
-        if(e != pc)  pc->isSelected = false;
+        if(e != pc)  pc->ElemSelected = false;
 
     // test all wires
     for(Wire *pw = Wires->first(); pw != 0; pw = Wires->next())
     {
-        if(e != pw)  pw->isSelected = false;
-        if(pw->Label) if(pw->Label != e)  pw->Label->isSelected = false;
+        if(e != pw)  pw->ElemSelected = false;
+        if(pw->Label) if(pw->Label != e)  pw->Label->ElemSelected = false;
     }
 
     // test all node labels
     for(Node *pn = Nodes->first(); pn != 0; pn = Nodes->next())
-        if(pn->Label) if(pn->Label != e)  pn->Label->isSelected = false;
+        if(pn->Label) if(pn->Label != e)  pn->Label->ElemSelected = false;
 
     // test all diagrams
     for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next())
     {
-        if(e != pd)  pd->isSelected = false;
+        if(e != pd)  pd->ElemSelected = false;
 
         // test graphs of diagram
         for(Graph *pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next())
         {
-            if(e != pg) pg->isSelected = false;
+            if(e != pg) pg->ElemSelected = false;
 
             // test markers of graph
             for(Marker *pm = pg->Markers.first(); pm != 0; pm = pg->Markers.next())
-                if(e != pm) pm->isSelected = false;
+                if(e != pm) pm->ElemSelected = false;
         }
 
     }
 
     // test all paintings
     for(Painting *pp = Paintings->first(); pp != 0; pp = Paintings->next())
-        if(e != pp)  pp->isSelected = false;
+        if(e != pp)  pp->ElemSelected = false;
 }
 
 // ---------------------------------------------------
@@ -1423,7 +1381,7 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
         pc->Bounding(cx1, cy1, cx2, cy2);
         if(cx1 >= x1) if(cx2 <= x2) if(cy1 >= y1) if(cy2 <= y2)
                     {
-                        pc->isSelected = true;
+                        pc->ElemSelected = true;
                         z++;
                         continue;
                     }
@@ -1436,11 +1394,11 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
     {
         if(pw->x1 >= x1) if(pw->x2 <= x2) if(pw->y1 >= y1) if(pw->y2 <= y2)
                     {
-                        pw->isSelected = true;
+                        pw->ElemSelected = true;
                         z++;
                         continue;
                     }
-        if(pw->isSelected &= flag) z++;
+        if(pw->ElemSelected &= flag) z++;
     }
 
 
@@ -1454,11 +1412,11 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
             if(pl->x1 >= x1) if((pl->x1+pl->x2) <= x2)
                     if(pl->y1 >= y1) if((pl->y1+pl->y2) <= y2)
                         {
-                            pl->isSelected = true;
+                            pl->ElemSelected = true;
                             z++;
                             continue;
                         }
-            if(pl->isSelected &= flag) z++;
+            if(pl->ElemSelected &= flag) z++;
         }
     }
 
@@ -1472,11 +1430,11 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
             if(pl->x1 >= x1) if((pl->x1+pl->x2) <= x2)
                     if((pl->y1-pl->y2) >= y1) if(pl->y1 <= y2)
                         {
-                            pl->isSelected = true;
+                            pl->ElemSelected = true;
                             z++;
                             continue;
                         }
-            if(pl->isSelected &= flag) z++;
+            if(pl->ElemSelected &= flag) z++;
         }
     }
 
@@ -1487,7 +1445,7 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
         // test graphs of diagram
         for(Graph *pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next())
         {
-            if(pg->isSelected &= flag) z++;
+            if(pg->ElemSelected &= flag) z++;
 
             // test markers of graph
             for(Marker *pm = pg->Markers.first(); pm!=0; pm = pg->Markers.next())
@@ -1495,11 +1453,11 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
                 pm->Bounding(cx1, cy1, cx2, cy2);
                 if(cx1 >= x1) if(cx2 <= x2) if(cy1 >= y1) if(cy2 <= y2)
                             {
-                                pm->isSelected = true;
+                                pm->ElemSelected = true;
                                 z++;
                                 continue;
                             }
-                if(pm->isSelected &= flag) z++;
+                if(pm->ElemSelected &= flag) z++;
             }
         }
 
@@ -1507,11 +1465,11 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
         pd->Bounding(cx1, cy1, cx2, cy2);
         if(cx1 >= x1) if(cx2 <= x2) if(cy1 >= y1) if(cy2 <= y2)
                     {
-                        pd->isSelected = true;
+                        pd->ElemSelected = true;
                         z++;
                         continue;
                     }
-        if(pd->isSelected &= flag) z++;
+        if(pd->ElemSelected &= flag) z++;
     }
 
     // test all paintings *******************************************
@@ -1520,11 +1478,11 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
         pp->Bounding(cx1, cy1, cx2, cy2);
         if(cx1 >= x1) if(cx2 <= x2) if(cy1 >= y1) if(cy2 <= y2)
                     {
-                        pp->isSelected = true;
+                        pp->ElemSelected = true;
                         z++;
                         continue;
                     }
-        if(pp->isSelected &= flag) z++;
+        if(pp->ElemSelected &= flag) z++;
     }
 
     return z;
@@ -1537,7 +1495,7 @@ void Schematic::selectMarkers()
     for(Diagram *pd = Diagrams->first(); pd != 0; pd = Diagrams->next())
         for(Graph *pg = pd->Graphs.first(); pg != 0; pg = pd->Graphs.next())
             for(Marker *pm = pg->Markers.first(); pm!=0; pm = pg->Markers.next())
-                pm->isSelected = true;
+                pm->ElemSelected = true;
 }
 
 // ---------------------------------------------------
@@ -1562,7 +1520,7 @@ void Schematic::newMovingWires(Q3PtrList<Element> *p, Node *pn, int pos)
 
         if(pn->Connections.count() > 1)
             break;
-        if(pe->Type != isWire)  // is it connected to exactly one wire ?
+        if(pe->ElemType != isWire)  // is it connected to exactly one wire ?
             break;
 
         // .................................................
@@ -1578,7 +1536,7 @@ void Schematic::newMovingWires(Q3PtrList<Element> *p, Node *pn, int pos)
                 Element *pe2 = pn2->Connections.getFirst();
                 if(pe2 == pe) pe2 = pn2->Connections.getLast();
                 // connected wire connected to exactly one wire ?
-                if(pe2->Type == isWire)
+                if(pe2->ElemType == isWire)
                     pw2  = (Wire*)pe2;
             }
 
@@ -1677,7 +1635,7 @@ int Schematic::copySelectedElements(Q3PtrList<Element> *p)
     // test all components *********************************
     // Insert components before wires in order to prevent short-cut removal.
     for(pc = Components->first(); pc != 0; )
-        if(pc->isSelected)
+        if(pc->ElemSelected)
         {
             p->append(pc);
             count++;
@@ -1697,10 +1655,10 @@ int Schematic::copySelectedElements(Q3PtrList<Element> *p)
     // test all wires and wire labels ***********************
     for(pw = Wires->first(); pw != 0; )
     {
-        if(pw->Label) if(pw->Label->isSelected)
+        if(pw->Label) if(pw->Label->ElemSelected)
                 p->append(pw->Label);
 
-        if(pw->isSelected)
+        if(pw->ElemSelected)
         {
             p->append(pw);
 
@@ -1729,11 +1687,11 @@ int Schematic::copySelectedElements(Q3PtrList<Element> *p)
     }
 
     for(pe = (Element*)pc; pe != 0; pe = p->next())  // new wires
-        if(pe->isSelected)
+        if(pe->ElemSelected)
             break;
 
     for(pw = (Wire*)pe; pw != 0; pw = (Wire*)p->next())
-        if(pw->Type == isWire)    // not working on labels
+        if(pw->ElemType == isWire)    // not working on labels
         {
             newMovingWires(p, pw->Port1, count);
             newMovingWires(p, pw->Port2, count);
@@ -1858,7 +1816,7 @@ int Schematic::copyElements(int& x1, int& y1, int& x2, int& y2,
 
     // find upper most selected diagram
     for(Diagram *pd = Diagrams->last(); pd != 0; pd = Diagrams->prev())
-        if(pd->isSelected)
+        if(pd->ElemSelected)
         {
             pd->Bounding(bx1, by1, bx2, by2);
             if(bx1 < x1) x1 = bx1;
@@ -1870,7 +1828,7 @@ int Schematic::copyElements(int& x1, int& y1, int& x2, int& y2,
         }
     // find upper most selected painting
     for(Painting *pp = Paintings->last(); pp != 0; pp = Paintings->prev())
-        if(pp->isSelected)
+        if(pp->ElemSelected)
         {
             pp->Bounding(bx1, by1, bx2, by2);
             if(bx1 < x1) x1 = bx1;
@@ -1892,7 +1850,7 @@ bool Schematic::deleteElements()
 
     Component *pc = Components->first();
     while(pc != 0)      // all selected component
-        if(pc->isSelected)
+        if(pc->ElemSelected)
         {
             deleteComp(pc);
             pc = Components->current();
@@ -1904,14 +1862,14 @@ bool Schematic::deleteElements()
     while(pw != 0)        // all selected wires and their labels
     {
         if(pw->Label)
-            if(pw->Label->isSelected)
+            if(pw->Label->ElemSelected)
             {
                 delete pw->Label;
                 pw->Label = 0;
                 sel = true;
             }
 
-        if(pw->isSelected)
+        if(pw->ElemSelected)
         {
             deleteWire(pw);
             pw = Wires->current();
@@ -1923,7 +1881,7 @@ bool Schematic::deleteElements()
     // all selected labels on nodes ***************************
     for(Node *pn = Nodes->first(); pn != 0; pn = Nodes->next())
         if(pn->Label)
-            if(pn->Label->isSelected)
+            if(pn->Label->ElemSelected)
             {
                 delete pn->Label;
                 pn->Label = 0;
@@ -1932,7 +1890,7 @@ bool Schematic::deleteElements()
 
     Diagram *pd = Diagrams->first();
     while(pd != 0)      // test all diagrams
-        if(pd->isSelected)
+        if(pd->ElemSelected)
         {
             Diagrams->remove();
             pd = Diagrams->current();
@@ -1954,7 +1912,7 @@ bool Schematic::deleteElements()
                     }
                     else  pm = pg->Markers.next();
 
-                if(pg->isSelected)
+                if(pg->ElemSelected)
                 {
                     pd->Graphs.remove();
                     pg = pd->Graphs.current();
@@ -2090,7 +2048,7 @@ bool Schematic::aligning(int Mode)
             break;
 
         case isNodeLabel:
-            if(((Element*)(((WireLabel*)pe)->pOwner))->Type & isComponent)
+            if(((Element*)(((WireLabel*)pe)->pOwner))->ElemType & isComponent)
             {
                 pc = (Component*)(((WireLabel*)pe)->pOwner);
                 pc->Bounding(bx1, by1, bx2, by2);
@@ -2166,7 +2124,7 @@ bool Schematic::distributeHorizontal()
     // Go backwards in order to insert node labels before its component.
     for(pe = ElementCache.last(); pe != 0; pe = ElementCache.prev())
     {
-        switch(pe->Type)
+        switch(pe->ElemType)
         {
         case isComponent:
         case isAnalogComponent:
@@ -2199,7 +2157,7 @@ bool Schematic::distributeHorizontal()
 
         case isNodeLabel:
             pl = (WireLabel*)pe;
-            if(((Element*)(pl->pOwner))->Type & isComponent)
+            if(((Element*)(pl->pOwner))->ElemType & isComponent)
                 pe->cx += x - ((Component*)(pl->pOwner))->cx;
             else
             {
@@ -2267,7 +2225,7 @@ bool Schematic::distributeVertical()
     // Go backwards in order to insert node labels before its component.
     for(pe = ElementCache.last(); pe != 0; pe = ElementCache.prev())
     {
-        switch(pe->Type)
+        switch(pe->ElemType)
         {
         case isComponent:
         case isAnalogComponent:
@@ -2299,7 +2257,7 @@ bool Schematic::distributeVertical()
             break;
 
         case isNodeLabel:
-            if(((Element*)(((WireLabel*)pe)->pOwner))->Type & isComponent)
+            if(((Element*)(((WireLabel*)pe)->pOwner))->ElemType & isComponent)
                 pe->cy += y - ((Component*)(((WireLabel*)pe)->pOwner))->cy;
             else
             {
@@ -2387,7 +2345,7 @@ void Schematic::insertComponentNodes(Component *c, bool noOptimize)
     {
         pn = pp->Connection;
         for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next())
-            if(pe->Type == isWire)
+            if(pe->ElemType == isWire)
             {
                 if(((Wire*)pe)->Port1 == pn)  pL = &(((Wire*)pe)->Port2->Connections);
                 else  pL = &(((Wire*)pe)->Port1->Connections);
@@ -2415,7 +2373,7 @@ void Schematic::insertRawComponent(Component *c, bool noOptimize)
     {
         c->Model = "x";    // prevent that this ground is found as label
         Element *pe = getWireLabel(c->Ports.getFirst()->Connection);
-        if(pe) if((pe->Type & isComponent) == 0)
+        if(pe) if((pe->ElemType & isComponent) == 0)
             {
                 delete ((Conductor*)pe)->Label;
                 ((Conductor*)pe)->Label = 0;
@@ -2503,7 +2461,7 @@ void Schematic::insertComponent(Component *c)
         {
             c->Model = "x";    // prevent that this ground is found as label
             Element *pe = getWireLabel(c->Ports.getFirst()->Connection);
-            if(pe) if((pe->Type & isComponent) == 0)
+            if(pe) if((pe->ElemType & isComponent) == 0)
                 {
                     delete ((Conductor*)pe)->Label;
                     ((Conductor*)pe)->Label = 0;
@@ -2609,7 +2567,7 @@ bool Schematic::activateSelectedComponents()
     int a;
     bool sel = false;
     for(Component *pc = Components->first(); pc != 0; pc = Components->next())
-        if(pc->isSelected)
+        if(pc->ElemSelected)
         {
             a = pc->isActive - 1;
 
@@ -2703,7 +2661,7 @@ Component* Schematic::searchSelSubcircuit()
     // test all components
     for(Component *pc = Components->first(); pc != 0; pc = Components->next())
     {
-        if(!pc->isSelected) continue;
+        if(!pc->ElemSelected) continue;
         if(pc->Model != "Sub")
             if(pc->Model != "VHDL")
                 if(pc->Model != "Verilog") continue;
@@ -2761,7 +2719,7 @@ int Schematic::copyComponents(int& x1, int& y1, int& x2, int& y2,
     // find bounds of all selected components
     for(pc = Components->first(); pc != 0; )
     {
-        if(pc->isSelected)
+        if(pc->ElemSelected)
         {
             pc->Bounding(bx1, by1, bx2, by2);  // is needed because of "distribute
             if(bx1 < x1) x1 = bx1;             // uniformly"
@@ -2804,7 +2762,7 @@ void Schematic::copyComponents2(int& x1, int& y1, int& x2, int& y2,
     // find bounds of all selected components
     for(pc = Components->first(); pc != 0; )
     {
-        if(pc->isSelected)
+        if(pc->ElemSelected)
         {
             // is better for unsymmetrical components
             if(pc->cx < x1)  x1 = pc->cx;
@@ -2874,7 +2832,7 @@ void Schematic::oneLabel(Node *n1)
 
         for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next())
         {
-            if(pe->Type != isWire)
+            if(pe->ElemType != isWire)
             {
                 if(((Component*)pe)->isActive == COMP_IS_ACTIVE)
                     if(((Component*)pe)->Model == "GND")
@@ -2932,7 +2890,7 @@ int Schematic::placeNodeLabel(WireLabel *pl)
     Element *pe = getWireLabel(pn);
     if(pe)      // name found ?
     {
-        if(pe->Type & isComponent)
+        if(pe->ElemType & isComponent)
         {
             delete pl;
             return -2;  // ground potential
@@ -2943,7 +2901,7 @@ int Schematic::placeNodeLabel(WireLabel *pl)
     }
 
     pn->Label = pl;   // insert node label
-    pl->Type = isNodeLabel;
+    pl->ElemType = isNodeLabel;
     pl->pOwner = pn;
     return 0;
 }
@@ -2968,7 +2926,7 @@ Element* Schematic::getWireLabel(Node *pn_)
         else
             for(pe = pn->Connections.first(); pe!=0; pe = pn->Connections.next())
             {
-                if(pe->Type != isWire)
+                if(pe->ElemType != isWire)
                 {
                     if(((Component*)pe)->isActive == COMP_IS_ACTIVE)
                         if(((Component*)pe)->Model == "GND") return pe;
@@ -3013,7 +2971,7 @@ void Schematic::insertNodeLabel(WireLabel *pl)
     Nodes->append(pn);
 
     pn->Label = pl;
-    pl->Type  = isNodeLabel;
+    pl->ElemType  = isNodeLabel;
     pl->pOwner = pn;
 }
 
@@ -3026,7 +2984,7 @@ void Schematic::copyLabels(int& x1, int& y1, int& x2, int& y2,
     for(Wire *pw = Wires->first(); pw != 0; pw = Wires->next())
     {
         pl = pw->Label;
-        if(pl) if(pl->isSelected)
+        if(pl) if(pl->ElemSelected)
             {
                 if(pl->x1 < x1) x1 = pl->x1;
                 if(pl->y1-pl->y2 < y1) y1 = pl->y1-pl->y2;
@@ -3039,7 +2997,7 @@ void Schematic::copyLabels(int& x1, int& y1, int& x2, int& y2,
     for(Node *pn = Nodes->first(); pn != 0; pn = Nodes->next())
     {
         pl = pn->Label;
-        if(pl) if(pl->isSelected)
+        if(pl) if(pl->ElemSelected)
             {
                 if(pl->x1 < x1) x1 = pl->x1;
                 if(pl->y1-pl->y2 < y1) y1 = pl->y1-pl->y2;
@@ -3078,7 +3036,7 @@ void Schematic::copyPaintings(int& x1, int& y1, int& x2, int& y2,
     int bx1, by1, bx2, by2;
     // find boundings of all selected paintings
     for(pp = Paintings->first(); pp != 0; )
-        if(pp->isSelected)
+        if(pp->ElemSelected)
         {
             pp->Bounding(bx1, by1, bx2, by2);
             if(bx1 < x1) x1 = bx1;

@@ -19,8 +19,8 @@
 //#include "schematic.h"
 Element::Element()
 {
-  Type = isDummyElement;
-  isSelected = false;
+  ElemType = isDummy;
+  ElemSelected = false;
   cx = cy = x1 = y1 = x2 = y2 = 0;
 }
 

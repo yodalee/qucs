@@ -27,7 +27,7 @@
 Rectangle::Rectangle(bool _filled)
 {
   Name = "Rectangle ";
-  isSelected = false;
+  ElemSelected = false;
   Pen = QPen(QColor());
   Brush = QBrush(Qt::lightGray);
   filled = _filled;
@@ -43,7 +43,7 @@ Rectangle::~Rectangle()
 // --------------------------------------------------------------------------
 void Rectangle::paint(ViewPainter *p)
 {
-  if(isSelected) {
+  if(ElemSelected) {
     p->Painter->setPen(QPen(Qt::darkGray,Pen.width()+5));
     if(filled)  p->Painter->setBrush(Brush);
     p->drawRect(cx, cy, x2, y2);

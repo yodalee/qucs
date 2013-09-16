@@ -34,7 +34,7 @@ WireLabel::WireLabel(const QString& _Name, int _cx, int _cy,
   setName(_Name);
   initValue = "";
 
-  Type = _Type;
+  ElemType = _Type;
   isSelected = false;
   isHighlighted = false;
 }
@@ -66,7 +66,7 @@ void WireLabel::paintScheme(QPainter *p)
 // ----------------------------------------------------------------
 void WireLabel::setCenter(int x_, int y_, bool relative)
 {
-  switch(Type) {
+  switch(ElemType) {
     case isMovingLabel:
       if(relative) {
         x1 += x_;  cx += x_;
@@ -126,7 +126,7 @@ void WireLabel::paint(ViewPainter *p)
   x2 = p->drawText(Name, x1, y1, &y2);
 
   int xpaint=0, ypaint=4, phi=0;
-  switch(Type) {
+  switch(ElemType) {
     case isVWireLabel:  ypaint=0; xpaint=4; phi=16*140; break;
     case isHWireLabel:  phi=16*50; break;
     case isNodeLabel:   ypaint = 0;
@@ -185,7 +185,7 @@ void WireLabel::paint(ViewPainter *p)
   x2 = int(double(x2) / p->Scale);
   y2 = int(double(y2) / p->Scale);
 
-  if(isSelected)
+  if(ElemSelected)
   {
     p->Painter->setPen(QPen(Qt::darkGray,3));
     p->drawRoundRect(x1-2, y1-2, x2+6, y2+5);

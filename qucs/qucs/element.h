@@ -148,8 +148,8 @@ public:
   virtual void setCenter(int, int, bool relative=false);
   virtual void getCenter(int&, int&);
 
-  bool isSelected;
-  int  Type;    // whether it is Component, Wire, ...
+  bool ElemSelected;
+  int  ElemType;    // whether it is Component, Wire, ...
   int  cx, cy, x1, y1, x2, y2;  // center and relative boundings
 };
 

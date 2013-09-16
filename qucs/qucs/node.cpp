@@ -23,7 +23,7 @@
 Node::Node(int _x, int _y)
 {
   Label = 0;
-  Type  = isNode;
+  ElemType  = isNode;
   State = 0;
   DType = "";
 
@@ -46,8 +46,8 @@ void Node::paint(ViewPainter *p)
                p->drawEllipse(cx-4, cy-4, 8, 8);
              }
              return;
-    case 2:  if(Connections.getFirst()->Type == isWire)
-               if(Connections.getLast()->Type == isWire) return;
+    case 2:  if(Connections.getFirst()->ElemType == isWire)
+               if(Connections.getLast()->ElemType == isWire) return;
              p->fillRect(cx-2, cy-2, 4, 4, Qt::darkBlue);
              break;
     default: p->Painter->setBrush(Qt::darkBlue);  // more than 2 connections

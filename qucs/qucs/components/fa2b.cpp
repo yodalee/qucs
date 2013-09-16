@@ -22,7 +22,7 @@
 
 fa2b::fa2b()
 {
-  Type = isComponent; // Analogue and digital component.
+  ElemType = isComponent; // Analogue and digital component.
   Description = QObject::tr ("2bit full adder verilog device");
 
   Props.append (new Property ("TR", "6", false,
