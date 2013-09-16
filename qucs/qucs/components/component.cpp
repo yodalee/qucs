@@ -64,6 +64,8 @@ Component::Component()
   Props.setAutoDelete(true);
 
   containingSchematic = NULL;
+
+  setFlags(ItemIsSelectable|ItemIsMovable);
 }
 
 // -------------------------------------------------------
