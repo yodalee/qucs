@@ -913,12 +913,16 @@ void Component::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, Q
 
   // loop to paint component lines
   foreach (Line *l, Lines) {
-  painter->setPen(l->style);
-  painter->drawLine(l->x1, l->y1, l->x2, l->y2);
+    QPen pen(l->style);
+    pen.setCosmetic(true); // do not scale thickness
+    painter->setPen(pen);
+    painter->drawLine(l->x1, l->y1, l->x2, l->y2);
   }
 
   // visualize boundingRect
-  painter->setPen(QPen(Qt::red,1));
+  QPen pen(QPen(Qt::red,1));
+  pen.setCosmetic(true); // do not scale thickness
+  painter->setPen(pen);
   painter->drawRect(boundingRect());
 }
 
