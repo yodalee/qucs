@@ -919,13 +919,35 @@ void Component::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, Q
     painter->drawLine(l->x1, l->y1, l->x2, l->y2);
   }
 
-  // loop to paint component arcs
-  foreach (Arc *a, Arcs) {
-    QPen pen(a->style);
-    pen.setCosmetic(true); // do not scale thickness
-    painter->setPen(pen);
-    painter->drawArc(a->x, a->y, a->w, a->h, a->angle, a->arclen);
+  foreach(Arc *a, Arcs) {
+    painter->setPen(a->style);
+    painter->drawArc(cx+a->x, cy+a->y, a->w, a->h, a->angle, a->arclen);
   }
+
+  foreach(Area *a, Rects) {
+      painter->setPen(a->Pen);
+      painter->setBrush(a->Brush);
+      painter->drawRect(cx+a->x, cy+a->y, a->w, a->h);
+
+  }
+
+  foreach(Area *a, Ellips) {
+    painter->setPen(a->Pen);
+    painter->setBrush(a->Brush);
+    painter->drawEllipse(cx+a->x, cy+a->y, a->w, a->h);
+  }
+
+
+  foreach(Text *t, Texts) {
+    painter->drawText(0, 0, 0, 0, Qt::AlignLeft|Qt::TextDontClip, t->s);
+    }
+
+  foreach(Property *p, Props) {
+    if(p->display) {
+      painter->drawText(0, 0, 0, 0, Qt::TextDontClip, p->Name+"="+p->Value);
+    }
+  }
+
 
   // visualize boundingRect
   QPen pen(QPen(Qt::red,1));
