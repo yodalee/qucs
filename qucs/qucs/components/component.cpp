@@ -919,6 +919,14 @@ void Component::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, Q
     painter->drawLine(l->x1, l->y1, l->x2, l->y2);
   }
 
+  // loop to paint component arcs
+  foreach (Arc *a, Arcs) {
+    QPen pen(a->style);
+    pen.setCosmetic(true); // do not scale thickness
+    painter->setPen(pen);
+    painter->drawArc(a->x, a->y, a->w, a->h, a->angle, a->arclen);
+  }
+
   // visualize boundingRect
   QPen pen(QPen(Qt::red,1));
   pen.setCosmetic(true); // do not scale thickness
