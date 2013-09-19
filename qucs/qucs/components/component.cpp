@@ -920,15 +920,16 @@ void Component::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, Q
   }
 
   foreach(Arc *a, Arcs) {
-    painter->setPen(a->style);
+    QPen pen(a->style);
+    pen.setCosmetic(true); // do not scale thickness
+    painter->setPen(pen);
     painter->drawArc(cx+a->x, cy+a->y, a->w, a->h, a->angle, a->arclen);
   }
 
   foreach(Area *a, Rects) {
-      painter->setPen(a->Pen);
-      painter->setBrush(a->Brush);
-      painter->drawRect(cx+a->x, cy+a->y, a->w, a->h);
-
+    painter->setPen(a->Pen);
+    painter->setBrush(a->Brush);
+    painter->drawRect(cx+a->x, cy+a->y, a->w, a->h);
   }
 
   foreach(Area *a, Ellips) {
@@ -937,10 +938,9 @@ void Component::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, Q
     painter->drawEllipse(cx+a->x, cy+a->y, a->w, a->h);
   }
 
-
   foreach(Text *t, Texts) {
     painter->drawText(0, 0, 0, 0, Qt::AlignLeft|Qt::TextDontClip, t->s);
-    }
+  }
 
   foreach(Property *p, Props) {
     if(p->display) {
