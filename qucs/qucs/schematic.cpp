@@ -102,24 +102,23 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
 
   isVerilog = false;
   creatingLib = false;
-  
+
   // instanatiate scene, and set it to view
   scene = new QGraphicsScene;
   // !out this->setSceneRect(50, 50, 350, 350);
   this->setScene(scene);
-  
+
   // scene is sort of A4-landscape, 0.1mm pitch
   this->setSceneRect(-50, -50, 3000, 2100);
-  
+
   // add page frame
   scene->addRect(sceneRect(), QPen(Qt::gray,10));
-  
 
   // small cross at origin
   // it should be a few pixels at every scale
   int dx = -int(Scale*float(ViewX1)) - 0;
   int dy = -int(Scale*float(ViewY1)) - 0;
-  scene->addLine(-3+dx, dy, 4+dx, dy, QPen(Qt::black,0)); 
+  scene->addLine(-3+dx, dy, 4+dx, dy, QPen(Qt::black,0));
   scene->addLine( dx,-3+dy, dx, 4+dy, QPen(Qt::black,0));
 
   // Rough grid
@@ -131,9 +130,9 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
   FileInfo = QFileInfo (Name_);
   if(App) {
     if(Name_.isEmpty()) {
-      
+
       qDebug() << "adding new schematic";
-      
+
       //Constructor already add the schematic as a tab
       App->DocumentTab->addTab(this, QPixmap(empty_xpm),
                             QObject::tr("untitled"));
@@ -151,8 +150,9 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
     Frame_Text2 = tr("Date:");
     Frame_Text3 = tr("Revision:");
 
-//    setVScrollBarMode(Q3ScrollView::AlwaysOn);
-//    setHScrollBarMode(Q3ScrollView::AlwaysOn);
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+
     this->viewport()->setPaletteBackgroundColor(QucsSettings.BGColor);
     this->viewport()->setMouseTracking(true);
 //  !out  viewport()->setAcceptDrops(true);  // enable drag'n drop
@@ -2011,11 +2011,11 @@ void Schematic::mousePressEvent(QMouseEvent *Event)
 
   // slotInsertGround places a new Ground on selElem
   Component *Comp = (Component*)App->view->selElem;
-  
+
   // one way of inserting selected components
   if (Comp) {
     qDebug() << " Comp description" << Comp->Description;
-    
+
     // new instance
     Component *item = Comp->newOne();
         
@@ -2026,7 +2026,7 @@ void Schematic::mousePressEvent(QMouseEvent *Event)
     scene->addItem(item);
     scene->update();
   }
-  
+
   // propagate event to parent class
   QGraphicsView::mousePressEvent(Event);
 }
@@ -2040,7 +2040,7 @@ void Schematic::wheelEvent(QWheelEvent *Event)
   // use key and mouse wheel to zoom
   if(Event->state() & Qt::ControlModifier) {
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-    
+
     // Scale the view / do the zoom
     double scaleFactor = 1.15;
     if(Event->delta() > 0) {
@@ -2051,7 +2051,7 @@ void Schematic::wheelEvent(QWheelEvent *Event)
         scale(1.0 / scaleFactor, 1.0 / scaleFactor);
     }
   }
-  
+
   // Don't call superclass handler here
   // as wheel is normally used for moving scrollbars
 }
