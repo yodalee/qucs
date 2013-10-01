@@ -111,13 +111,13 @@ public:
   bool scrollDown(int);
   bool scrollLeft(int);
   bool scrollRight(int);
-  
+
   // schematic Scene on its own QGraphisView
   QGraphicsScene *scene;
-  
+
   void mousePressEvent(QMouseEvent * Event);
-  void wheelEvent(QWheelEvent *Event);
-  
+//  void wheelEvent(QWheelEvent *Event);
+
 
   // The pointers points to the current lists, either to the schematic
   // elements "Doc..." or to the symbol elements "SymbolPaints".
@@ -161,7 +161,7 @@ protected:
   void contentsMousePressEvent(QMouseEvent*);
   void contentsMouseDoubleClickEvent(QMouseEvent*);
   void contentsMouseReleaseEvent(QMouseEvent*);
-  void contentsWheelEvent(QWheelEvent*);
+  void wheelEvent(QWheelEvent*);
   void contentsDropEvent(QDropEvent*);
   void contentsDragEnterEvent(QDragEnterEvent*);
   void contentsDragLeaveEvent(QDragLeaveEvent*);

@@ -108,9 +108,10 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
   // !out this->setSceneRect(50, 50, 350, 350);
   this->setScene(scene);
 
-  // scene is sort of A4-landscape, 0.1mm pitch
-  this->setSceneRect(-50, -50, 3000, 2100);
+  // Define extent of scene visualized by the view.
+  this->setSceneRect(0, 0, ViewX2, ViewY2);
 
+// setSceneRect(this->visibleRect());
   // add page frame
   scene->addRect(sceneRect(), QPen(Qt::gray,10));
 
@@ -153,16 +154,28 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
+    QSize areaSize = this->viewport()->size();
+    QSize  widgetSize = App->DocumentTab->size();
+
+    qDebug() << areaSize;
+    qDebug() << widgetSize;
+
+    verticalScrollBar()->setPageStep(areaSize.height());
+    horizontalScrollBar()->setPageStep(areaSize.width());
+    verticalScrollBar()->setRange(0, widgetSize.height() - areaSize.height());
+    horizontalScrollBar()->setRange(0, widgetSize.width() - areaSize.width());
+
+
     this->viewport()->setPaletteBackgroundColor(QucsSettings.BGColor);
     this->viewport()->setMouseTracking(true);
-//  !out  viewport()->setAcceptDrops(true);  // enable drag'n drop
-#warning removed those signals, crashes on it...
+//    viewport()->setAcceptDrops(true);  // enable drag'n drop
+
     /*connect(horizontalScrollBar(),
 		SIGNAL(prevLine()), SLOT(slotScrollLeft()));
     connect(horizontalScrollBar(),
-		SIGNAL(nextLine()), SLOT(slotScrollRight()));
-    connect(verticalScrollBar(),
-		SIGNAL(prevLine()), SLOT(slotScrollUp()));
+		SIGNAL(nextLine()), SLOT(slotScrollRight()));*/
+    connect(verticalScrollBar(),SIGNAL(valueChanged(int)),
+		this, SLOT(slotScrollUp()));/*
     connect(verticalScrollBar(),
 		SIGNAL(nextLine()), SLOT(slotScrollDown()));*/
 
@@ -1869,8 +1882,8 @@ void Schematic::switchPaintMode()
 // **********      Function for serving mouse wheel moving    **********
 // **********                                                 **********
 // *********************************************************************
-void Schematic::contentsWheelEvent(QWheelEvent *Event)
-{ /* !out
+void Schematic::wheelEvent(QWheelEvent *Event)
+{
   App->editText->setHidden(true);  // disable edit of component property
   int delta = Event->delta() >> 1;     // use smaller steps
 
@@ -1878,7 +1891,7 @@ void Schematic::contentsWheelEvent(QWheelEvent *Event)
   if((Event->state() & Qt::ShiftModifier) ||
      (Event->orientation() == Qt::Horizontal)) { // scroll horizontally ?
       if(delta > 0) { if(scrollLeft(delta)) scroll(-delta, 0); }
-      else { if(scrollRight(delta)) scrollBy(-delta, 0); }
+      else { if(scrollRight(delta)) scroll(-delta, 0); }
       viewport()->update(); // because QScrollView thinks nothing has changed
       App->view->drawn = false;
   }
@@ -1889,18 +1902,18 @@ void Schematic::contentsWheelEvent(QWheelEvent *Event)
       else Scaling = 1.1*60.0/float(delta);
       zoom(Scaling);
       Scaling -= 1.0;
-      scrollBy( int(Scaling * float(Event->pos().x())),
-                int(Scaling * float(Event->pos().y())) );
+      scroll( int(Scaling * float(Event->pos().x())),
+              int(Scaling * float(Event->pos().y())) );
   }
   // ...................................................................
   else {     // scroll vertically !
-      if(delta > 0) { if(scrollUp(delta)) scrollBy(0, -delta); }
-      else { if(scrollDown(delta)) scrollBy(0, -delta); }
+      if(delta > 0) { if(scrollUp(delta)) scroll(0, -delta); }
+      else { if(scrollDown(delta)) scroll(0, -delta); }
       viewport()->update(); // because QScrollView thinks nothing has changed
       App->view->drawn = false;
   }
 
-  Event->accept();   // QScrollView must not handle this event */
+//  Event->accept();   // QScrollView must not handle this event
 }
 
 // -----------------------------------------------------------
@@ -1908,23 +1921,39 @@ void Schematic::contentsWheelEvent(QWheelEvent *Event)
 // area accordingly.
 bool Schematic::scrollUp(int step)
 {
+  qDebug() << "scrollUp" << step;
+  qDebug() << "sceneRect" << sceneRect();
+  qDebug() << sceneRect().top() << sceneRect().bottom();
+  qDebug() << verticalScrollBar()->value();
+  qDebug() << "viewport()->rect();" << viewport()->rect();
+
   int diff;
-/* !out
-  diff = contentsY() - step;
+  diff = viewport()->rect().top() - step;
+  qDebug() << "diff" << diff;
+//  this->scrollContentsBy(0,step);
+//  QRect vi = viewport()->rect();
   if(diff < 0) {     // scroll outside the active area ?  (upwards)
-    resizeContents(contentsWidth(), contentsHeight()-diff);
+//    resizeContents(contentsWidth(), contentsHeight()-diff);
+//      setSceneRect(vi.moveTo(vi.left(),vi.top()-diff));
+    setSceneRect(0,-100,800,800);
+    viewport()->update();
     ViewY1 += diff;
-    scrollBy(0, diff);
+    verticalScrollBar()->setValue(-100);
+
+//    scroll(0, diff);
+//    viewport()->scroll(0,-1);
+//    translate(0,-1);
     return false;
   }
+//  return true;
 
   diff = ViewY2 - UsedY2 - 20;    // keep border of 20
   if(diff > 0) {      // make active area smaller ?
     if(step < diff) diff = step;
-    resizeContents(contentsWidth(), contentsHeight()-diff);
+//    resizeContents(contentsWidth(), contentsHeight()-diff);
     ViewY2 -= diff;
   }
-*/
+
   return true;
 }
 
@@ -2007,7 +2036,7 @@ bool Schematic::scrollRight(int step)
 
 void Schematic::mousePressEvent(QMouseEvent *Event)
 {
-  qDebug() << "Schematic::mousePressEvent";
+  qDebug() << "Schematic::mousePressEvent" << Event->pos();
 
   // slotInsertGround places a new Ground on selElem
   Component *Comp = (Component*)App->view->selElem;
@@ -2018,8 +2047,7 @@ void Schematic::mousePressEvent(QMouseEvent *Event)
 
     // new instance
     Component *item = Comp->newOne();
-        
-    qDebug() << "add object at " << Event->pos();
+
     QPointF pt = mapToScene(Event->pos());
     qDebug() << "add object at View" << Event->pos() << "Scene" << pt;
     item->setPos(pt);
@@ -2035,7 +2063,7 @@ void Schematic::mousePressEvent(QMouseEvent *Event)
   * Zoom the view in and out.
   *
   */
-void Schematic::wheelEvent(QWheelEvent *Event)
+/*void Schematic::wheelEvent(QWheelEvent *Event)
 {
   // use key and mouse wheel to zoom
   if(Event->state() & Qt::ControlModifier) {
@@ -2054,12 +2082,13 @@ void Schematic::wheelEvent(QWheelEvent *Event)
 
   // Don't call superclass handler here
   // as wheel is normally used for moving scrollbars
-}
+}*/
 
 // -----------------------------------------------------------
 // Is called if the scroll arrow of the ScrollBar is pressed.
 void Schematic::slotScrollUp()
 {
+    qDebug() << "slotScrollUp";
   App->editText->setHidden(true);  // disable edit of component property
   scrollUp(verticalScrollBar()->lineStep());
   viewport()->update(); // because QScrollView thinks nothing has changed
