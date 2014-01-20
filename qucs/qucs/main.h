@@ -97,5 +97,6 @@ bool    Verilog_Time(QString&, const QString&);
 bool    Verilog_Delay(QString&, const QString&);
 QString Verilog_Param(const QString);
 bool    checkVersion(QString&);
+void    createIcons();
 
 #endif // ifndef QUCS_MAIN_H
