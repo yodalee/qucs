@@ -127,7 +127,7 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
       for (int y=0; y<=1000; y+=20)
           scene->addRect(x, y, 0, 0, QPen(Qt::black,0));
 
-  
+
   FileInfo = QFileInfo (Name_);
   if(App) {
     if(Name_.isEmpty()) {
@@ -739,7 +739,7 @@ void Schematic::paintSchToViewpainter(ViewPainter *p, bool printAll, bool toImag
 
     for(Painting *pp = Paintings->first(); pp != 0; pp = Paintings->next())
       if(pp->ElemSelected || printAll) {
-        selected = pp->isSelected;
+        selected = pp->ElemSelected;
         pp->ElemSelected = false;
         pp->paint(p);   // paint all selected paintings
         pp->ElemSelected = selected;
@@ -761,7 +761,7 @@ void Schematic::paintSchToViewpainter(ViewPainter *p, bool printAll, bool toImag
 
         selected = pd->ElemSelected;
         pd->ElemSelected = false;
-        pd->paint(&p);  // paint all selected diagrams with graphs and markers
+        // !out pd->paint(&p);  // paint all selected diagrams with graphs and markers
         pd->ElemSelected = selected;
 
       // revert selection of graphs and markers
@@ -2328,7 +2328,7 @@ void Schematic::getSelAreaWidthAndHeight(int &wsel, int &hsel, int& xmin_sel_, i
         ymax= INT_MIN;
 
      for(Component *pc = Components->first(); pc != 0; pc = Components->next()) {
-         if (pc->isSelected) {
+         if (pc->ElemSelected) {
            int x1,y1,x2,y2,d1,d2,d3,d4;
            pc->entireBounds(x1,y1,x2,y2,this->textCorr());
            d1 = std::min(x1,x2);
@@ -2344,7 +2344,7 @@ void Schematic::getSelAreaWidthAndHeight(int &wsel, int &hsel, int& xmin_sel_, i
 
     for(Wire *pw = Wires->first(); pw != 0; pw = Wires->next()) {
 
-        if (pw->isSelected) {
+        if (pw->ElemSelected) {
             int xc,yc;
             pw->getCenter(xc,yc);
 
@@ -2359,7 +2359,7 @@ void Schematic::getSelAreaWidthAndHeight(int &wsel, int &hsel, int& xmin_sel_, i
 
 
 
-        if (pd->isSelected) {
+        if (pd->ElemSelected) {
             int x1,y1,x2,y2,d1,d2,d3,d4;
             pd->Bounding(x1,y1,x2,y2);
 
@@ -2376,7 +2376,7 @@ void Schematic::getSelAreaWidthAndHeight(int &wsel, int &hsel, int& xmin_sel_, i
 
     for(Painting *pp = Paintings->first(); pp != 0; pp = Paintings->next()) {
 
-       if (pp->isSelected) {
+       if (pp->ElemSelected) {
            int x1,y1,x2,y2,d1,d2,d3,d4;
            pp->Bounding(x1,y1,x2,y2);
            d1 = std::min(x1,x2);

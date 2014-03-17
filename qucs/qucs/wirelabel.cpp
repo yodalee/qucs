@@ -35,7 +35,7 @@ WireLabel::WireLabel(const QString& _Name, int _cx, int _cy,
   initValue = "";
 
   ElemType = _Type;
-  isSelected = false;
+  ElemSelected = false;
   isHighlighted = false;
 }
 

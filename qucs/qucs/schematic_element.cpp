@@ -668,7 +668,7 @@ int Schematic::insertWire(Wire *w)
             // check all connections of the current node
             for(pe=pn->Connections.first(); pe!=0; pe=pn->Connections.next())
             {
-                if(pe->Type != isWire) continue;
+                if(pe->ElemType != isWire) continue;
                 nw = (Wire*)pe;
                 // wire lies within the new ?
                 if(pw->isHorizontal() != nw->isHorizontal()) continue;
@@ -1032,7 +1032,7 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
             {
                 if(flag)
                 {
-                    // The element can be deselected, so toggle its isSelected member
+                    // The element can be deselected, so toggle its ElemSelected member
                     // TODO: I don't see a need for the xor here, a simple ! on the current value
                     // would be clearer and have the same effect?
                     pl->ElemSelected ^= flag;
@@ -1191,19 +1191,19 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
                     if(flag)
                     {
                         // The element can be deselected
-                        pg->isSelected ^= flag;
+                        pg->ElemSelected ^= flag;
                         return pg;
                     }
                     if(pe_sel)
                     {
-                        pe_sel->isSelected = false;
+                        pe_sel->ElemSelected = false;
                         return pg;
                     }
                     if(pe_1st == 0)
                     {
                         pe_1st = pg;   // access to elements lying beneath
                     }
-                    if(pg->isSelected)
+                    if(pg->ElemSelected)
                     {
                         pe_sel = pg;
                     }
@@ -1213,19 +1213,19 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
             if(flag)
             {
                 // The element can be deselected
-                pd->isSelected ^= flag;
+                pd->ElemSelected ^= flag;
                 return pd;
             }
             if(pe_sel)
             {
-                pe_sel->isSelected = false;
+                pe_sel->ElemSelected = false;
                 return pd;
             }
             if(pe_1st == 0)
             {
                 pe_1st = pd;    // give access to elements lying beneath
             }
-            if(pd->isSelected)
+            if(pd->ElemSelected)
             {
                 pe_sel = pd;
             }
@@ -1272,6 +1272,7 @@ Element* Schematic::selectElement(float fX, float fY, bool flag, int *index)
     }
 
     return pe_1st;
+  }
 }
 
 void Schematic::highlightWireLabels ()
@@ -1385,7 +1386,7 @@ int Schematic::selectElements(int x1, int y1, int x2, int y2, bool flag)
                         z++;
                         continue;
                     }
-        if(pc->isSelected &= flag) z++;
+        if(pc->ElemSelected &= flag) z++;
     }
 
 
@@ -1715,12 +1716,12 @@ int Schematic::copySelectedElements(Q3PtrList<Element> *p)
         {
             if(pn->Label)
             {
-                pn->Label->Type = isMovingLabel;
+                pn->Label->ElemType = isMovingLabel;
                 if(pn->State & 1)
                 {
-                    if(!(pn->State & 2)) pn->Label->Type = isHMovingLabel;
+                    if(!(pn->State & 2)) pn->Label->ElemType = isHMovingLabel;
                 }
-                else if(pn->State & 2) pn->Label->Type = isVMovingLabel;
+                else if(pn->State & 2) pn->Label->ElemType = isVMovingLabel;
                 p->append(pn->Label);    // do not forget the node labels
             }
             Nodes->remove();
@@ -1735,13 +1736,13 @@ int Schematic::copySelectedElements(Q3PtrList<Element> *p)
     // test all node labels
     // do this last to avoid double copying
     for(pn = Nodes->first(); pn != 0; pn = Nodes->next())
-        if(pn->Label) if(pn->Label->isSelected)
+        if(pn->Label) if(pn->Label->ElemSelected)
                 p->append(pn->Label);
 
 
     // test all paintings **********************************
     for(Painting *ppa = Paintings->first(); ppa != 0; )
-        if(ppa->isSelected)
+        if(ppa->ElemSelected)
         {
             p->append(ppa);
             Paintings->take();
@@ -1752,7 +1753,7 @@ int Schematic::copySelectedElements(Q3PtrList<Element> *p)
     count = 0;  // count markers now
     // test all diagrams **********************************
     for(pd = Diagrams->first(); pd != 0; )
-        if(pd->isSelected)
+        if(pd->ElemSelected)
         {
             p->append(pd);
             Diagrams->take();
@@ -1762,7 +1763,7 @@ int Schematic::copySelectedElements(Q3PtrList<Element> *p)
         {
             for(Graph *pg = pd->Graphs.first(); pg!=0; pg = pd->Graphs.next())
                 for(Marker *pm = pg->Markers.first(); pm != 0; )
-                    if(pm->isSelected)
+                    if(pm->ElemSelected)
                     {
                         count++;
                         p->append(pm);
@@ -1904,7 +1905,7 @@ bool Schematic::deleteElements()
             {
                 // all markers of diagram
                 for(Marker *pm = pg->Markers.first(); pm != 0; )
-                    if(pm->isSelected)
+                    if(pm->ElemSelected)
                     {
                         pg->Markers.remove();
                         pm = pg->Markers.current();
@@ -1929,7 +1930,7 @@ bool Schematic::deleteElements()
     Painting *pp = Paintings->first();
     while(pp != 0)      // test all paintings
     {
-        if(pp->isSelected)
+        if(pp->ElemSelected)
             if(pp->Name.at(0) != '.')    // do not delete "PortSym", "ID_text"
             {
                 sel = true;
@@ -2007,7 +2008,7 @@ bool Schematic::aligning(int Mode)
     // re-insert elements
     // Go backwards in order to insert node labels before its component.
     for(Element *pe = ElementCache.last(); pe != 0; pe = ElementCache.prev())
-        switch(pe->Type)
+        switch(pe->ElemType)
         {
         case isComponent:
         case isAnalogComponent:
@@ -2090,7 +2091,7 @@ bool Schematic::distributeHorizontal()
     WireLabel *pl;
     // Node labels are not counted for, so put them to the end.
     /*  for(pe = ElementCache.last(); pe != 0; pe = ElementCache.prev())
-        if(pe->Type == isNodeLabel) {
+        if(pe->ElemElemType == isNodeLabel) {
           ElementCache.append(pe);
           ElementCache.removeRef(pe);
         }*/

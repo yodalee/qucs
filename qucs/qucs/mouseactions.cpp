@@ -84,7 +84,7 @@ MouseActions::~MouseActions()
 void MouseActions::setPainter(Schematic *Doc)
 {
   // contents to viewport transformation
-/* !out  
+/* !out
   Doc->PostPaintEvent(_Translate,-Doc->contentsX(), -Doc->contentsY());
   Doc->PostPaintEvent(_Scale,Doc->Scale, Doc->Scale);
   Doc->PostPaintEvent(_Translate,-Doc->ViewX1, -Doc->ViewY1);
@@ -468,7 +468,7 @@ void MouseActions::MMoveMoving2(Schematic *Doc, QMouseEvent *Event)
   if(drawn) // erase old scheme
     for(pe = movingElements.first(); pe != 0; pe = movingElements.next())
       pe->paintScheme(Doc);
-//      if(pe->Type == isWire)  if(((Wire*)pe)->Label)
+//      if(pe->ElemType == isWire)  if(((Wire*)pe)->Label)
 //        if(!((Wire*)pe)->Label->isSelected)
 //          ((Wire*)pe)->Label->paintScheme(&painter);
 
@@ -484,7 +484,7 @@ void MouseActions::MMoveMoving2(Schematic *Doc, QMouseEvent *Event)
   // paint afterwards to avoid conflict between wire and label painting
   for(pe = movingElements.first(); pe != 0; pe = movingElements.next())
     pe->paintScheme(Doc);
-//    if(pe->Type == isWire)  if(((Wire*)pe)->Label)
+//    if(pe->ElemType == isWire)  if(((Wire*)pe)->Label)
 //      if(!((Wire*)pe)->Label->isSelected)
 //        ((Wire*)pe)->Label->paintScheme(&painter);
 
@@ -843,7 +843,7 @@ void MouseActions::rightPressMenu(Schematic *Doc, QMouseEvent *Event, float fX, 
 
   while (true) {
       if (focusElement) {
-          if (focusElement->Type == isDiagram) {
+          if (focusElement->ElemType == isDiagram) {
 
               ComponentMenu->insertItem(QObject::tr("Export as image"), QucsMain,
                       SLOT(slotSaveDiagramToGraphicsFile()));
