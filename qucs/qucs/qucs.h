@@ -47,6 +47,7 @@ class QTreeWidget;
 class QTreeWidgetItem;
 class QListWidget;
 class QShortcut;
+class QPushButton;
 
 typedef bool (Schematic::*pToggleFunc) ();
 typedef void (MouseActions::*pMouseFunc) (Schematic*, QMouseEvent*);
@@ -115,8 +116,9 @@ public slots:
   void slotZoomOut(); // Zoom out by 2
 
   void slotToPage();
-  void slotSearchComponent(const QString &);
   void slotSelectComponent(QListWidgetItem*);
+  void slotSearchComponent(const QString &);
+  void slotSearchClear();
 
   void slotEditElement();
   void slotPowerMatching();
@@ -190,6 +192,7 @@ private:
 
   QLabel          *CompSearchLabel;
   QLineEdit       *CompSearch;
+  QPushButton     *CompSearchClear;
   QComboBox       *CompChoose;
 
 // ********** Properties ************************************************
