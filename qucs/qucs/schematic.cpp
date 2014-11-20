@@ -116,10 +116,6 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
 
 Schematic::~Schematic()
 {
-	if(App) {
-		App->editText->reparent(App, 0, QPoint(0, 0));
-		App->DocumentTab->removePage(this);  // delete tab in TabBar
-	}
 }
 
 // ---------------------------------------------------
