@@ -70,6 +70,8 @@ TextDoc::TextDoc(QucsApp *App_, const QString& Name_) : QPlainTextEdit(), QucsDo
       App_, SLOT(slotUpdateUndo(bool)));
   connect(this, SIGNAL(signalRedoState(bool)),
       App_, SLOT(slotUpdateRedo(bool)));
+  connect(this, SIGNAL(signalFileChanged(bool)),
+      App_, SLOT(slotFileChanged(bool)));
 
   syntaxHighlight = new SyntaxHighlighter(this);
   syntaxHighlight->setLanguage(language);
@@ -332,14 +334,12 @@ void TextDoc::slotCursorPosChanged()
 void TextDoc::slotSetChanged()
 {
   if((document()->isModified() && !DocChanged) || SetChanged) {
-    App->DocumentTab->setTabIconSet(this, QPixmap(smallsave_xpm));
     DocChanged = true;
   }
   else if((!document()->isModified() && DocChanged)) {
-    App->DocumentTab->setTabIconSet(this, QPixmap(empty_xpm));
     DocChanged = false;
   }
-
+  emit signalFileChanged(DocChanged);
   emit signalUndoState(document()->isUndoAvailable());
   emit signalRedoState(document()->isRedoAvailable());
 }

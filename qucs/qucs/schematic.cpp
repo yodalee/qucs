@@ -118,6 +118,8 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
       App_, SLOT(slotUpdateUndo(bool)));
   connect(this, SIGNAL(signalRedoState(bool)),
       App_, SLOT(slotUpdateRedo(bool)));
+  connect(this, SIGNAL(signalFileChanged(bool)),
+      App_, SLOT(slotFileChanged(bool)));
 }
 
 Schematic::~Schematic()
@@ -241,9 +243,9 @@ void Schematic::setName (const QString& Name_)
 void Schematic::setChanged(bool c, bool fillStack, char Op)
 {
   if((!DocChanged) && c)
-    App->DocumentTab->setTabIconSet(this, QPixmap(smallsave_xpm));
+    emit signalFileChanged(true);
   else if(DocChanged && (!c))
-    App->DocumentTab->setTabIconSet(this, QPixmap(empty_xpm));
+    emit signalFileChanged(false);
   DocChanged = c;
 
   showBias = -1;   // schematic changed => bias points may be invalid
