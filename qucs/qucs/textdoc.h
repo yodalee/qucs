@@ -87,6 +87,7 @@ public:
 signals:
   void signalCursorPosChanged(int, int);
   void signalFileChanged(bool);
+  void signalFileName(QString);
   void signalUndoState(bool);
   void signalRedoState(bool);
 

@@ -150,6 +150,7 @@ private slots:
   void slotNextTab();
   void slotHideEdit();
   void slotFileChanged(bool);
+  void slotFileName(QString);
 signals:
   void signalKillEmAll();
 

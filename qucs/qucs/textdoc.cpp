@@ -72,6 +72,8 @@ TextDoc::TextDoc(QucsApp *App_, const QString& Name_) : QPlainTextEdit(), QucsDo
       App_, SLOT(slotUpdateRedo(bool)));
   connect(this, SIGNAL(signalFileChanged(bool)),
       App_, SLOT(slotFileChanged(bool)));
+  connect(this, SIGNAL(signalFileName(QString)),
+      App_, SLOT(slotFileName(QString)));
 
   syntaxHighlight = new SyntaxHighlighter(this);
   syntaxHighlight->setLanguage(language);
@@ -202,8 +204,7 @@ void TextDoc::setName (const QString& Name_)
   setLanguage (DocName);
 
   QFileInfo Info (DocName);
-  if (App)
-    App->DocumentTab->setTabLabel (this, Info.fileName ());
+  emit signalFileName(Info.fileName());
 
   DataSet = Info.baseName (true) + ".dat";
   DataDisplay = Info.baseName (true) + ".dpl";

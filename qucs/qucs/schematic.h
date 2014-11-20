@@ -152,6 +152,7 @@ signals:
   void signalUndoState(bool);
   void signalRedoState(bool);
   void signalFileChanged(bool);
+  void signalFileName(QString);
 
 protected:
   bool sizeOfFrame(int&, int&);

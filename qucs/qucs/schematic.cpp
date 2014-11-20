@@ -120,6 +120,8 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
       App_, SLOT(slotUpdateRedo(bool)));
   connect(this, SIGNAL(signalFileChanged(bool)),
       App_, SLOT(slotFileChanged(bool)));
+  connect(this, SIGNAL(signalFileName(QString)),
+      App_, SLOT(slotFileName(QString)));
 }
 
 Schematic::~Schematic()
@@ -226,7 +228,7 @@ void Schematic::setName (const QString& Name_)
 {
   DocName = Name_;
   QFileInfo Info (DocName);
-  if (App) App->DocumentTab->setTabLabel (this, Info.fileName ());
+  emit signalFileName(Info.fileName());
 
   QString base = Info.baseName (true);
   QString ext = Info.extension (false);

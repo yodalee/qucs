@@ -2945,6 +2945,13 @@ void QucsApp::slotFileChanged(bool changed)
 }
 
 // -----------------------------------------------------------
+// set document tab text
+void QucsApp::slotFileName(QString name)
+{
+  DocumentTab->setTabText(DocumentTab->currentIndex(), name);
+}
+
+// -----------------------------------------------------------
 // Searches the qucs path list for all schematic files and creates
 // a hash for lookup later
 void QucsApp::updateSchNameHash(void)
