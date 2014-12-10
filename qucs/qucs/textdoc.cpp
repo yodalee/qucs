@@ -55,7 +55,6 @@ TextDoc::TextDoc(QucsApp *App_, const QString& Name_) : QPlainTextEdit(), QucsDo
 
   tmpPosX = tmpPosY = 1;  // set to 1 to trigger line highlighting
   Scale = (float)TextFont.pointSize();
-  //TODO (not supported) setUndoDepth(QucsSettings.maxUndo);
   setLanguage (Name_);
 
   viewport()->setFocus();
@@ -67,6 +66,10 @@ TextDoc::TextDoc(QucsApp *App_, const QString& Name_) : QPlainTextEdit(), QucsDo
           SLOT(slotCursorPosChanged()));
   connect(this, SIGNAL(signalCursorPosChanged(int, int)),
       App_, SLOT(printCursorPosition(int, int)));
+  connect(this, SIGNAL(signalUndoState(bool)),
+      App_, SLOT(slotUpdateUndo(bool)));
+  connect(this, SIGNAL(signalRedoState(bool)),
+      App_, SLOT(slotUpdateRedo(bool)));
 
   syntaxHighlight = new SyntaxHighlighter(this);
   syntaxHighlight->setLanguage(language);
@@ -216,14 +219,8 @@ void TextDoc::becomeCurrent (bool)
   slotCursorPosChanged();
   viewport()->setFocus ();
 
-  if (document()->isUndoAvailable())
-    App->undo->setEnabled (true);
-  else
-    App->undo->setEnabled (false);
-  if (document()->isRedoAvailable ())
-    App->redo->setEnabled (true);
-  else
-    App->redo->setEnabled (false);
+  emit signalUndoState(document()->isUndoAvailable());
+  emit signalRedoState(document()->isRedoAvailable());
 
   // update appropriate menu entries
   App->symEdit->setMenuText (tr("Edit Text Symbol"));
@@ -343,8 +340,8 @@ void TextDoc::slotSetChanged()
     DocChanged = false;
   }
 
-  App->undo->setEnabled(document()->isUndoAvailable());
-  App->redo->setEnabled(document()->isRedoAvailable());
+  emit signalUndoState(document()->isUndoAvailable());
+  emit signalRedoState(document()->isRedoAvailable());
 }
 
 /*!

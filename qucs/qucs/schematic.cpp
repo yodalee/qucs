@@ -114,6 +114,10 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
       App_, SLOT(slotHideEdit()));
   connect(this, SIGNAL(verticalSliderPressed()),
       App_, SLOT(slotHideEdit()));
+  connect(this, SIGNAL(signalUndoState(bool)),
+      App_, SLOT(slotUpdateUndo(bool)));
+  connect(this, SIGNAL(signalRedoState(bool)),
+      App_, SLOT(slotUpdateRedo(bool)));
 }
 
 Schematic::~Schematic()
@@ -198,8 +202,8 @@ void Schematic::becomeCurrent(bool update)
       setChanged(true, true);
     }
 
-    App->undo->setEnabled(undoSymbolIdx != 0);
-    App->redo->setEnabled(undoSymbolIdx != undoSymbol.size()-1);
+    emit signalUndoState(undoSymbolIdx != 0);
+    emit signalRedoState(undoSymbolIdx != undoSymbol.size()-1);
   }
   else {
     Nodes = &DocNodes;
@@ -208,9 +212,8 @@ void Schematic::becomeCurrent(bool update)
     Paintings = &DocPaints;
     Components = &DocComps;
 
-    App->undo->setEnabled(undoActionIdx != 0);
-    App->redo->setEnabled(undoActionIdx != undoAction.size()-1);
-
+    emit signalUndoState(undoActionIdx != 0);
+    emit signalRedoState(undoActionIdx != undoAction.size()-1);
     if(update)
       reloadGraphs();   // load recent simulation data
   }
@@ -259,8 +262,8 @@ void Schematic::setChanged(bool c, bool fillStack, char Op)
     undoSymbol.append(new QString(createSymbolUndoString(Op)));
     undoSymbolIdx++;
 
-    if(!App->undo->isEnabled()) App->undo->setEnabled(true);
-    if(App->redo->isEnabled())  App->redo->setEnabled(false);
+    emit signalUndoState(true);
+    emit signalRedoState(false);
 
     while(static_cast<unsigned int>(undoSymbol.size()) > QucsSettings.maxUndo) { // "while..." because
       delete undoSymbol.first();
@@ -288,8 +291,8 @@ void Schematic::setChanged(bool c, bool fillStack, char Op)
   undoAction.append(new QString(createUndoString(Op)));
   undoActionIdx++;
 
-  if(!App->undo->isEnabled()) App->undo->setEnabled(true);
-  if(App->redo->isEnabled())  App->redo->setEnabled(false);
+  emit signalUndoState(true);
+  emit signalRedoState(false);
 
   while(static_cast<unsigned int>(undoAction.size()) > QucsSettings.maxUndo) { // "while..." because
     delete undoAction.first(); // "maxUndo" could be decreased meanwhile
@@ -1588,8 +1591,8 @@ bool Schematic::undo()
     rebuildSymbol(undoSymbol.at(--undoSymbolIdx));
     adjustPortNumbers();  // set port names
 
-    App->undo->setEnabled(undoSymbolIdx != 0);
-    App->redo->setEnabled(undoSymbolIdx != undoSymbol.size()-1);
+    emit signalUndoState(undoSymbolIdx != 0);
+    emit signalRedoState(undoSymbolIdx != undoSymbol.size()-1);
 
     if(undoSymbol.at(undoSymbolIdx)->at(1) == 'i' && 
         undoAction.at(undoActionIdx)->at(1) == 'i') {
@@ -1608,8 +1611,8 @@ bool Schematic::undo()
   rebuild(undoAction.at(--undoActionIdx));
   reloadGraphs();  // load recent simulation data
 
-  App->undo->setEnabled(undoActionIdx != 0);
-  App->redo->setEnabled(undoActionIdx != undoAction.size()-1);
+  emit signalUndoState(undoActionIdx != 0);
+  emit signalRedoState(undoActionIdx != undoAction.size()-1);
 
   if(undoAction.at(undoActionIdx)->at(1) == 'i') {
     if(undoSymbol.isEmpty()) {
@@ -1635,8 +1638,8 @@ bool Schematic::redo()
     rebuildSymbol(undoSymbol.at(++undoSymbolIdx));
     adjustPortNumbers();  // set port names
 
-    App->undo->setEnabled(undoSymbolIdx != 0);
-    App->redo->setEnabled(undoSymbolIdx != undoSymbol.size()-1);
+    emit signalUndoState(undoSymbolIdx != 0);
+    emit signalRedoState(undoSymbolIdx != undoSymbol.size()-1);
 
     if(undoSymbol.at(undoSymbolIdx)->at(1) == 'i'
         && undoAction.at(undoActionIdx)->at(1) == 'i') {
@@ -1656,8 +1659,8 @@ bool Schematic::redo()
   rebuild(undoAction.at(++undoActionIdx));
   reloadGraphs();  // load recent simulation data
 
-  App->undo->setEnabled(undoActionIdx != 0);
-  App->redo->setEnabled(undoActionIdx != undoAction.size()-1);
+  emit signalUndoState(undoActionIdx != 0);
+  emit signalRedoState(undoActionIdx != undoAction.size()-1);
 
   if (undoAction.at(undoActionIdx)->at(1) == 'i') {
     if(undoSymbol.isEmpty()) {
