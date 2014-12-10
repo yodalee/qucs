@@ -108,6 +108,8 @@ Schematic::Schematic(QucsApp *App_, const QString& Name_)
       viewport(), SLOT(update()));
   connect(this, SIGNAL(verticalSliderReleased()),
       viewport(), SLOT(update()));
+  connect(this, SIGNAL(signalCursorPosChanged(int, int)), 
+      App_, SLOT(printCursorPosition(int, int)));
   connect(this, SIGNAL(horizontalSliderPressed()), 
       App_, SLOT(slotHideEdit()));
   connect(this, SIGNAL(verticalSliderPressed()),
@@ -160,7 +162,8 @@ bool Schematic::createSubcircuitSymbol()
 // ---------------------------------------------------
 void Schematic::becomeCurrent(bool update)
 {
-  App->printCursorPosition(0, 0);
+  QString *ps;
+  emit signalCursorPosChanged(0, 0);
 
   // update appropriate menu entry
   if (symbolMode) {
@@ -511,7 +514,7 @@ void Schematic::PostPaintEvent (PE pe, int x1, int y1, int x2, int y2, int a, in
 // ---------------------------------------------------
 void Schematic::contentsMouseMoveEvent(QMouseEvent *Event)
 {
-  App->printCursorPosition(Event->pos().x(), Event->pos().y());
+  emit signalCursorPosChanged(Event->pos().x(), Event->pos().y());
   if(App->MouseMoveAction)
     (App->view->*(App->MouseMoveAction))(this, Event);
 }
