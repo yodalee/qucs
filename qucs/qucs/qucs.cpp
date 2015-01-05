@@ -327,11 +327,13 @@ void QucsApp::initView()
   CompSearch->setPlaceholderText(tr("Search Components"));
   CompSearchClear = new QPushButton(tr("Clear"));
 
+  CompGroupLayout->setSpacing(5);
   CompGroupLayout->addWidget(CompChoose);
   CompGroupLayout->addWidget(CompComps);
   CompGroupLayout->addLayout(CompSearchLayout);
   CompSearchLayout->addWidget(CompSearch);
   CompSearchLayout->addWidget(CompSearchClear);
+  CompGroupLayout->addSpacing(-20);
   CompGroup->setLayout(CompGroupLayout);
 
   TabView->addTab(CompGroup,tr("Components"));
