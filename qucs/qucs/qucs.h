@@ -30,6 +30,7 @@ class MouseActions;
 class SearchDialog;
 class OctaveWindow;
 class MessageDock;
+class TextWindow;
 
 class QLabel;
 class QAction;
@@ -374,6 +375,8 @@ private:
   void launchTool(const QString&, const QString&, const QString& = ""); // tool, description and args
   friend class SaveDialog;
   QString lastExportFilename;
+
+  TextWindow *textWindow;
 };
 
 #endif /* QUCS_H */

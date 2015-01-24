@@ -133,6 +133,7 @@ textdoc.h
 viewpainter.h
 wire.h
 wirelabel.h
+textwindow.h
 )
 
 #
@@ -144,6 +145,7 @@ SET(QUCS_MOC_HDRS
   schematic.h
   textdoc.h
   messagedock.h
+  textwindow.h
 )
 
 #

@@ -42,6 +42,7 @@
 #include <QSettings>
 #include <QDebug>
 
+#include "textwindow.h"
 #include "main.h"
 #include "qucs.h"
 #include "qucsdoc.h"
@@ -227,6 +228,7 @@ void QucsApp::initView()
 #endif
 
   DocumentTab = new QTabWidget(this);
+  textWindow = new TextWindow(this);
   setCentralWidget(DocumentTab);
 
   connect(DocumentTab,
@@ -1556,6 +1558,9 @@ void QucsApp::slotTextNew()
   statusBar()->message(tr("Creating new text editor..."));
   editText->setHidden(true); // disable text edit of component property
   new TextDoc(this, "");
+
+  textWindow->show();
+  textWindow->slotFileNew();
 
   statusBar()->message(tr("Ready."));
 }
