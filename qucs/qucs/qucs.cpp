@@ -1558,7 +1558,8 @@ void QucsApp::slotTextNew()
   statusBar()->message(tr("Creating new text editor..."));
   editText->setHidden(true); // disable text edit of component property
 
-  textWindow->show();
+  textWindow->showMaximized();
+  textWindow->raise();
   textWindow->slotFileNew();
 
   statusBar()->message(tr("Ready."));

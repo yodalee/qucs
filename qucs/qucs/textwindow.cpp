@@ -20,6 +20,10 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <QString>
 #include <QStatusBar>
 #include <QPlainTextEdit>
@@ -30,7 +34,12 @@
 TextWindow::TextWindow(QWidget *parent) :
   QMainWindow(parent)
 {
+  setWindowTitle("Qucs Text Editor " PACKAGE_VERSION);
+
+  //*************************
   //set up UI, blah blah blah
+  //*************************
+
   DocumentTab = new QTabWidget(this);
   setCentralWidget(DocumentTab);
   DocumentTab->setTabsClosable(true);
