@@ -21,14 +21,24 @@
  */
 
 #include <QString>
+#include <QStatusBar>
+#include <QPlainTextEdit>
 
 #include "textwindow.h"
+#include "textdoc.h"
 
 TextWindow::TextWindow(QWidget *parent) :
   QMainWindow(parent)
 {
-  DocumentTab = new QTabWidget();
-  DocumentTab->setTabPosition(QTabWidget::West);
+  //set up UI, blah blah blah
+  DocumentTab = new QTabWidget(this);
+  setCentralWidget(DocumentTab);
+  DocumentTab->setTabsClosable(true);
+
+#ifdef HAVE_QTABWIDGET_SETMOVABLE
+  // make tabs draggable if supported
+  DocumentTab->setMovable (true);
+#endif
 }
 
 TextWindow::~TextWindow()
@@ -37,6 +47,12 @@ TextWindow::~TextWindow()
 
 void TextWindow::slotFileNew()
 {
+  statusBar()->message(tr("Creating new textwidget..."));
+
+  QPlainTextEdit *doc = new QPlainTextEdit(this);
+  DocumentTab->addTab(doc, "");
+
+  statusBar()->message(tr("Ready."));
 }
 
 void TextWindow::slotFileOpen()
